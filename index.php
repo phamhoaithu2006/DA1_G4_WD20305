@@ -13,6 +13,7 @@ require_once './models/ProductModel.php';
 
 // Route
 $act = $_GET['act'] ?? '/';
+$id = $_GET['id'] ?? '';
 
 
 // Để bảo bảo tính chất chỉ gọi 1 hàm Controller để xử lý request thì mình sử dụng match
