@@ -26,6 +26,9 @@
                 <a href="#" class="list-group-item list-group-item-action">Quản lý tài chính liên quan tour</a>
                 <a href="#" class="list-group-item list-group-item-action">Báo cáo vận hành tour</a>
             </div>
+            <div>
+                <button class="btn btn-primary mt-auto">Đăng xuất</button>
+            </div>
 
 
         </div>
