@@ -21,5 +21,6 @@ $id = $_GET['id'] ?? '';
 match ($act) {
     // Trang chủ
     '/'=>(new ProductController())->Home(),
+    // Thêm các route khác ở đây
 
 };

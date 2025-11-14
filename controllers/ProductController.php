@@ -15,4 +15,9 @@ class ProductController
         $thoiTiet = "Hôm nay trời có vẻ là mưa";
         require_once './views/trangchu.php';
     }
+    public function adminHome()
+    {
+        $title = "This is admin home page";
+        require_once './views/admin/admin.php';
+    }
 }

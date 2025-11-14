@@ -1,4 +1,5 @@
-<?php require_once __DIR__ . '/layout/sidebar.php'; ?>
+<?php require_once __DIR__ . '/main.php';
+?>
 
 <style>
 .content-wrapper {
@@ -22,9 +23,8 @@
     margin-bottom: 40px;
 }
 </style>
-
 <!-- Bọc nội dung -->
-<div class="content-wrapper">
+<div class="">
 
     <!-- Banner -->
     <div class="hero">
@@ -34,7 +34,6 @@
             <a href="#" class="btn btn-primary btn-lg mt-2">Bắt đầu ngay</a>
         </div>
     </div>
-
     <!-- Giới thiệu -->
     <div class="container my-5">
         <h2 class="text-center mb-4">Giới thiệu</h2>

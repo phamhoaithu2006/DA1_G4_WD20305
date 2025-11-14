@@ -16,7 +16,8 @@
         <div style="width: 240px; background: #f8f9fa; min-height: 100vh;" class="p-3 border-end">
 
             <!-- Logo -->
-            <img src="commons/image/logo-fpt-polytechnic.png" alt="" width="150" class="mb-4">
+            <img src="https://insacmau.com/wp-content/uploads/2023/02/logo-fpt-polytechnic.png" alt="Logo FPT"
+                width="150" class="mb-4">
 
             <div class="list-group" style="margin-top: 20px;">
                 <a href="#" class="list-group-item list-group-item-action">Quản lý tour và sản phẩm du lịch</a>
@@ -27,6 +28,7 @@
                 <a href="#" class="list-group-item list-group-item-action">Báo cáo vận hành tour</a>
             </div>
             <div>
+
                 <button class="btn btn-primary mt-auto">Đăng xuất</button>
             </div>
 
