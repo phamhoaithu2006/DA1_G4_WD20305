@@ -94,7 +94,7 @@
                 </ul>
             </div>
             <?php else: ?>
-            <a class="btn btn-outline-primary" href="views\admin\admin.php">Đăng nhập / Đăng ký</a>
+            <a class="btn btn-outline-primary" href="<?= BASE_URL ?>?act=admin-dashboard">Đăng nhập / Đăng ký</a>
             <?php endif; ?>
         </div>
     </nav>
