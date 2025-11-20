@@ -69,7 +69,7 @@ $hdvName = $_SESSION['hdv_name'] ?? 'HDV';
                                     <?php endforeach;
                                 else: ?>
                                     <tr>
-                                        <td colspan="3" class="text-center">Không có khách.</td>
+                                        <td colspan="3" class="text-center">Không có khách</td>
                                     </tr>
                                 <?php endif; ?>
                             </tbody>

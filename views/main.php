@@ -56,46 +56,18 @@
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?action=client-products"><b>Sản phẩm</b></a>
+                    <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?action=client-products"><b>Admin</b></a>
                 </li>
             </ul>
-
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?action=client-products"><b>HDV</b></a>
+                </li>
+            </ul>
         </div>
 
         <div>
-            <?php if (isset($_SESSION['userLogin'])): ?>
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        <?= $_SESSION['userLogin']['name'] ?>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" href="<?= BASE_URL ?>?action=client-view-cart">Giỏ hàng</a>
-                        </li>
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="<?= BASE_URL ?>?action=client-view-order">Đơn hàng</a></li>
-                        <li>
-
-                            <?php if ($_SESSION['userLogin']['role'] == '1'): ?>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="<?= BASE_URL ?>?action=admin-dashboard">Trang admin</a></li>
-
-                    <?php endif; ?>
-
-                    <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="<?= BASE_URL ?>?action=logout">Logout</a></li>
-                    </ul>
-                </div>
-            <?php else: ?>
-                <a class="btn btn-outline-primary" href="<?= BASE_URL ?>?act=admin">Đăng nhập / Đăng ký</a>
-            <?php endif; ?>
+            <a class="btn btn-outline-primary" href="<?= BASE_URL ?>?act=admin">Đăng nhập</a>
         </div>
     </nav>
 

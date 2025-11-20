@@ -18,7 +18,7 @@ $act = $_GET['act'] ?? '/';
 $id = $_GET['id'] ?? '';
 
 
-// Để bảo bảo tính chất chỉ gọi 1 hàm Controller để xử lý request thì mình sử dụng match
+// Để bảo bảo tính chất chỉ gọi 1 hàm controller để xử lý request thì mình sử dụng match
 
 match ($act) {
     // Trang chủ
@@ -35,4 +35,12 @@ match ($act) {
     'hdv-dashboard' => (new HDVController())->dashboard(),
     'hdv-tour' => (new HDVController())->tourList(),
     'hdv-tour-detail' => (new HDVController())->tourDetail($id),
+    // Nhật ký & cập nhật tour của hdv
+    'hdv-diary-form' => (new HDVController())->diaryForm(),
+    'hdv-diary-save' => (new HDVController())->diarySave(),
+    'hdv-checkin-checkout' => (new HDVController())->checkInOut(),
+    'hdv-checkin-save' => (new HDVController())->checkInSave(),
+    'hdv-checkout-save' => (new HDVController())->checkOutSave(),
+    'hdv-special-requests' => (new HDVController())->specialRequests(),
+    'hdv-special-request-save' => (new HDVController())->specialRequestSave(),
 };
