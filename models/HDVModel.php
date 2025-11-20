@@ -400,7 +400,7 @@ function getCustomersWithSpecialRequests($tourId)
     return $stmt->fetchAll();
 }
 
-// Lưu, cập nhật yêu cầu đặc biệt
+// Lưu & cập nhật yêu cầu đặc biệt
 function saveSpecialRequest($data)
 {
     $conn = connectDB();

@@ -30,7 +30,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $editMode ? 'Cập nhật' : 'Thêm mới' ?> nhật ký tour</title>
+    <title><?= $editMode ? 'Cập nhật' : 'Thêm mới' ?> Nhật ký tour</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -122,7 +122,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 
                                 <?php if ($editMode && !empty($log['Images'])): ?>
                                     <div class="mt-3">
-                                        <small class="text-muted">Hình hiện tại:</small>
+                                        <small class="text-muted">Hình hiện tại</small>
                                         <div class="d-flex flex-wrap">
                                             <?php
                                             $imgs = json_decode($log['Images'], true) ?? [];

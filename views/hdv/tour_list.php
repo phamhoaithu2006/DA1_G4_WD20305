@@ -22,7 +22,7 @@ $hdvName = $_SESSION['hdv_name'] ?? 'HDV';
 <body class="bg-light">
     <nav class="navbar navbar-expand navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">HDV - <?= htmlspecialchars($hdvName) ?></a>
+            <a class="navbar-brand" href="#">Hướng dẫn viên: <?= htmlspecialchars($hdvName) ?></a>
             <div class="d-flex">
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-logout">Đăng xuất</a>
             </div>

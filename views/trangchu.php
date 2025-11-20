@@ -25,7 +25,7 @@
 </div>
 
 <!-- Features Section -->
-<div class="container py-4"> <!--  thêm container + padding -->
+<div class="container py-4">
     <div class="text-center mb-4">
         <h2 class="fw-bold">Các chức năng</h2>
         <p class="text-muted">Khám phá các chức năng chính</p>

@@ -120,12 +120,12 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 
                                                                 <div class="mb-3">
                                                                     <label class="form-label">Bệnh lý/Sức khỏe</label>
-                                                                    <textarea class="form-control" name="medical_condition" rows="3" placeholder="Nhập thông tin bệnh lý, tình trạng sức khỏe..."><?= htmlspecialchars($customer['MedicalCondition'] ?? '') ?></textarea>
+                                                                    <textarea class="form-control" name="medical_condition" rows="3" placeholder="Nhập thông tin bệnh lý, tình trạng sức khỏe, ..."><?= htmlspecialchars($customer['MedicalCondition'] ?? '') ?></textarea>
                                                                 </div>
 
                                                                 <div class="mb-3">
                                                                     <label class="form-label">Yêu cầu khác</label>
-                                                                    <textarea class="form-control" name="other_requests" rows="3" placeholder="Các yêu cầu đặc biệt khác..."><?= htmlspecialchars($customer['OtherRequests'] ?? '') ?></textarea>
+                                                                    <textarea class="form-control" name="other_requests" rows="3" placeholder="Các yêu cầu đặc biệt khác"><?= htmlspecialchars($customer['OtherRequests'] ?? '') ?></textarea>
                                                                 </div>
 
                                                                 <div class="mb-3">

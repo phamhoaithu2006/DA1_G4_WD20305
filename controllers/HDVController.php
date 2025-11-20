@@ -147,7 +147,7 @@ class HDVController
 
         // Truyền biến vào view (các biến local sẽ có sẵn trong file require)
         $log = $existingLog; // Để view có thể sử dụng
-        require_once './views/hdv/Diary/diary_form.php';
+        require_once './views/hdv/diary_form.php';
     }
 
     // Lưu nhật ký tour
@@ -246,7 +246,7 @@ class HDVController
         }
 
         $checkinHistory = getCheckInOutHistory($tourId);
-        require_once './views/hdv/Diary/checkin_checkout.php';
+        require_once './views/hdv/checkin_checkout.php';
     }
 
     // Lưu check-in
@@ -359,7 +359,7 @@ class HDVController
         }
 
         $customers = getCustomersWithSpecialRequests($tourId);
-        require_once './views/hdv/Diary/special_requests.php';
+        require_once './views/hdv/special_requests.php';
     }
 
     // Lưu yêu cầu đặc biệt
