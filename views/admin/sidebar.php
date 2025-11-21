@@ -28,9 +28,7 @@
         <div class="list-group" style="margin-top: 20px;">
             <a href="<?= BASE_URL ?>?act=category" class="list-group-item list-group-item-action">Quản lý tour</a>
             <a href="#" class="list-group-item list-group-item-action">Quản lý booking</a>
-            <a href="#" class="list-group-item list-group-item-action">Quản lý khách hàng</a>
-            <a href="#" class="list-group-item list-group-item-action">Quản lý nhân sự</a>
-            <a href="#" class="list-group-item list-group-item-action">Quản lý đối tác và nhà cung cấp</a>
+            <a href="#" class="list-group-item list-group-item-action">Quản lý và điều hành tour</a>
             <a href="#" class="list-group-item list-group-item-action">Báo cáo vận hành tour</a>
         </div>
         <div>
