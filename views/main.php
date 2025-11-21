@@ -13,36 +13,36 @@
     <!-- Latest compiled JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        body {
-            background-color: #ecececff;
-        }
+    body {
+        background-color: #ecececff;
+    }
 
-        .text-dark-blue {
-            color: #343a40;
-        }
+    .text-dark-blue {
+        color: #343a40;
+    }
 
-        .text-dark-red {
-            color: #dc3545;
-        }
+    .text-dark-red {
+        color: #dc3545;
+    }
 
-        .bg-light-gray {
-            background-color: #f1f1f1;
-        }
+    .bg-light-gray {
+        background-color: #f1f1f1;
+    }
 
-        .btn-gray {
-            background-color: #6c757d;
-            color: white;
-        }
+    .btn-gray {
+        background-color: #6c757d;
+        color: white;
+    }
 
-        .btn-blue {
-            background-color: #007bff;
-            color: white;
-        }
+    .btn-blue {
+        background-color: #007bff;
+        color: white;
+    }
 
-        .btn-red {
-            background-color: #dc3545;
-            color: white;
-        }
+    .btn-red {
+        background-color: #dc3545;
+        color: white;
+    }
     </style>
 </head>
 
@@ -54,6 +54,7 @@
                     <a class="nav-link text-uppercase" href="<?= BASE_URL ?>"><b>Trang chủ</b></a>
                 </li>
             </ul>
+
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?action=client-products"><b>Admin</b></a>
@@ -62,6 +63,11 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?action=client-products"><b>HDV</b></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav me-3">
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?act=booking-create"><b>Tạo booking</b></a>
                 </li>
             </ul>
         </div>

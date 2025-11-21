@@ -7,16 +7,18 @@ require_once './commons/function.php'; // Hàm hỗ trợ
 
 // Require toàn bộ file Controllers
 require_once './controllers/ProductController.php';
+require_once './controllers/BookingController.php';
 require_once 'controllers/HDVController.php';
 
 // Require toàn bộ file Models
 require_once './models/ProductModel.php';
+require_once './models/Booking.php';
 require_once './models/HDVModel.php';
 
 // Route
 $act = $_GET['act'] ?? '/';
 $id = $_GET['id'] ?? '';
-
+$db = connectDB();
 
 // Để bảo bảo tính chất chỉ gọi 1 hàm controller để xử lý request thì mình sử dụng match
 
@@ -27,6 +29,13 @@ match ($act) {
     'admin' => (new ProductController())->adminHome(),
     'category' => (new ProductController())->adminDashboard(),
     'detail' => (new ProductController())->adminDetail($id),
+
+    //Trang booking
+    'booking-list' => (new BookingController($db))->index(),
+    'booking-detail' => (new BookingController($db))->detail($id),
+    'booking-create' => (new BookingController($db))->create(),
+    
+
 
     // Trang hdv
     'hdv-login' => (new HDVController())->login(),

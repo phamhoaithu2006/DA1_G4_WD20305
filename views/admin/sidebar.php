@@ -25,8 +25,18 @@
 
     <!-- Sidebar -->
     <div style="width: 240px; background: #f8f9fa; min-height: 100vh;" class="p-3 border-end">
+
         <div class="list-group" style="margin-top: 20px;">
+            <a href="<?= BASE_URL ?>?act=admin" class="list-group-item list-group-item-action">Tổng quát</a>
+            <hr>
             <a href="<?= BASE_URL ?>?act=category" class="list-group-item list-group-item-action">Quản lý tour</a>
+            <a href="<?= BASE_URL ?>?act=booking-list" class="list-group-item list-group-item-action">Quản lý
+                booking</a>
+            <a href="#" class="list-group-item list-group-item-action">Quản lý khách hàng</a>
+            <a href="#" class="list-group-item list-group-item-action">Quản lý nhân sự</a>
+            <a href="#" class="list-group-item list-group-item-action">Quản lý đối tác và nhà cung cấp</a>
+            <a href="#" class="list-group-item list-group-item-action">Báo cáo</a>
+
             <a href="#" class="list-group-item list-group-item-action">Quản lý booking</a>
             <a href="#" class="list-group-item list-group-item-action">Quản lý và điều hành tour</a>
             <a href="#" class="list-group-item list-group-item-action">Báo cáo vận hành tour</a>
