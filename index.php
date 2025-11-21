@@ -9,16 +9,23 @@ require_once './commons/function.php'; // Hàm hỗ trợ
 require_once './controllers/ProductController.php';
 require_once './controllers/BookingController.php';
 require_once 'controllers/HDVController.php';
+require_once 'controllers/EmployeeController.php';
+require_once 'controllers/TourAssignmentController.php';
+require_once 'controllers/TourCustomerController.php';
 
 // Require toàn bộ file Models
 require_once './models/ProductModel.php';
 require_once './models/Booking.php';
 require_once './models/HDVModel.php';
+require_once './models/EmployeeModel.php';
+require_once './models/TourAssignmentModel.php';
+require_once './models/TourCustomerModel.php';
 
 // Route
 $act = $_GET['act'] ?? '/';
 $id = $_GET['id'] ?? '';
 $db = connectDB();
+$tourID = isset($_GET['tourID']) ? intval($_GET['tourID']) : null;
 
 // Để bảo bảo tính chất chỉ gọi 1 hàm controller để xử lý request thì mình sử dụng match
 
@@ -35,7 +42,16 @@ match ($act) {
     'booking-detail' => (new BookingController($db))->detail($id),
     'booking-create' => (new BookingController($db))->create(),
     
-
+    //Điều hành
+    'employees' => (new EmployeeController())->index(),
+    'createEmployee' => (new EmployeeController())->create(),
+    'editEmployee' => (new EmployeeController())->edit($id),
+    'deleteEmployee' => (new EmployeeController())->delete($id),
+    'assignments' => (new TourAssignmentController())->index($tourID),
+    'createAssignment' => (new TourAssignmentController())->create($tourID),
+    'deleteAssignment' => (new TourAssignmentController())->delete($_GET['id'], $tourID),
+    'tourcustomers' => (new TourCustomerController())->index($tourID),
+    'createTourCustomer' => (new TourCustomerController())->create($tourID),
 
     // Trang hdv
     'hdv-login' => (new HDVController())->login(),

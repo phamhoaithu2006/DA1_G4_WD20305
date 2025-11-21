@@ -32,8 +32,7 @@
             <a href="<?= BASE_URL ?>?act=category" class="list-group-item list-group-item-action">Quản lý tour</a>
             <a href="<?= BASE_URL ?>?act=booking-list" class="list-group-item list-group-item-action">Quản lý
                 booking</a>
-            <a href="#" class="list-group-item list-group-item-action">Quản lý khách hàng</a>
-            <a href="#" class="list-group-item list-group-item-action">Quản lý nhân sự</a>
+            <a href="<?= BASE_URL ?>?act=employees" class="list-group-item list-group-item-action">Điều hành</a>
             <a href="#" class="list-group-item list-group-item-action">Quản lý đối tác và nhà cung cấp</a>
             <a href="#" class="list-group-item list-group-item-action">Báo cáo</a>
 
