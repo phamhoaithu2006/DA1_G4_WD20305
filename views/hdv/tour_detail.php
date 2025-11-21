@@ -57,7 +57,7 @@ $hdvName = $_SESSION['hdv_name'] ?? 'HDV';
             <div class="col-md-4">
                 <div class="card h-100 shadow-sm rounded-4 border-primary">
                     <div class="card-body text-center">
-                        <h6 class="text-primary fw-bold">Nhật ký Tour</h6>
+                        <h6 class="text-primary fw-bold">Nhật ký tour</h6>
                         <p class="small text-muted">Thêm/Cập nhật nhật ký, sự cố, hình ảnh</p>
                         <a href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>" class="btn btn-primary btn-sm">
                             <i class="bi bi-journal-plus"></i> Thêm nhật ký
