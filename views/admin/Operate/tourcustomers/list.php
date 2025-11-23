@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
@@ -119,37 +118,3 @@
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-=======
-<?php require_once __DIR__ . '/../../sidebar.php'; ?>
-<div class="container mt-4">
-    <h2 class="text-primary mb-3">Danh sách khách của tour</h2>
-    <a href="<?= BASE_URL ?>?act=createTourCustomer&tourID=<?= $tourID ?>" class="btn btn-success mb-3">
-        Thêm khách
-    </a>
-
-    <table class="table table-striped table-bordered align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>#</th>
-                <th>Họ tên</th>
-                <th>Điện thoại</th>
-                <th>Email</th>
-                <th>Phòng</th>
-                <th>Ghi chú đặc biệt</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach($customers as $index => $c): ?>
-            <tr>
-                <th><?= $index + 1 ?></th>
-                <td><?= htmlspecialchars($c['FullName']) ?></td>
-                <td><?= htmlspecialchars($c['Phone']) ?></td>
-                <td><?= htmlspecialchars($c['Email']) ?></td>
-                <td><?= htmlspecialchars($c['RoomNumber']) ?></td>
-                <td><?= htmlspecialchars($c['Note']) ?></td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-</div>
->>>>>>> 3ffeda95b17b161d1c7f83d77992cd563572f79d
