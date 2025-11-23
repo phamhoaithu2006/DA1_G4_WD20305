@@ -25,9 +25,9 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="?act=hdv-tour-detail&id=<?= $tourId ?>">HDV - <?= htmlspecialchars($hdvName) ?></a>
+    <nav class="navbar navbar-expand navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="?act=hdv-tour">Hướng dẫn viên: <?= htmlspecialchars($hdvName) ?></a>
             <div class="d-flex">
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-tour">Danh sách tour</a>
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-logout">Đăng xuất</a>
@@ -63,7 +63,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
                                     <thead class="table-light">
                                         <tr>
                                             <th>Họ tên</th>
-                                            <th>SĐT</th>
+                                            <th>Số điện thoại</th>
                                             <th>Phòng</th>
                                             <th>Yêu cầu đặc biệt</th>
                                             <th>Thao tác</th>

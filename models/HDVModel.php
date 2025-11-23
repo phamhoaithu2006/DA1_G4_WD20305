@@ -237,7 +237,7 @@ function saveTourLog($data)
     }
 }
 
-// Helper function: Kiểm tra bảng có tồn tại không
+// Helper function: kiểm tra bảng có tồn tại không
 function tableExists($tableName)
 {
     $conn = connectDB();
@@ -407,7 +407,7 @@ function saveSpecialRequest($data)
 
     // Kiểm tra bảng có tồn tại không
     if (!tableExists('TourCustomerSpecialRequest')) {
-        return false; // Bảng chưa tồn tại, không thể lưu
+        return false; // bảng chưa tồn tại, không thể lưu
     }
 
     // Kiểm tra xem đã có record chưa

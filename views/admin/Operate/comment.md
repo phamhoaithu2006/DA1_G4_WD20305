@@ -1,1 +1,1 @@
-Quản lý và điều hành
+Quản lý và điều hành tour

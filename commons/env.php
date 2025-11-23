@@ -9,6 +9,6 @@ define('DB_HOST', 'localhost');
 define('DB_PORT', 3306);
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
-define('DB_NAME', 'trang_du_lich');  // Tên database 
+define('DB_NAME', 'trang_du_lich');  // tên database 
 
 define('PATH_ROOT', __DIR__ . '/../');

@@ -67,7 +67,7 @@ class HDVController
         exit;
     }
 
-    // Dashboard HDV → Chuyển hướng đến danh sách tour
+    // Dashboard HDV: chuyển hướng đến danh sách tour
     public function dashboard()
     {
         header("Location: ?act=hdv-tour");
@@ -146,7 +146,7 @@ class HDVController
         }
 
         // Truyền biến vào view (các biến local sẽ có sẵn trong file require)
-        $log = $existingLog; // Để view có thể sử dụng
+        $log = $existingLog; // để view có thể sử dụng
         require_once './views/hdv/diary_form.php';
     }
 

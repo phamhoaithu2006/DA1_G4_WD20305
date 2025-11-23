@@ -1,1 +1,1 @@
-Bán tour và đặt chỗ
+Quản lý booking
