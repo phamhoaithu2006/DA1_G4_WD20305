@@ -2,6 +2,7 @@
 require_once 'models/TourAssignmentModel.php';
 require_once 'models/EmployeeModel.php';
 
+<<<<<<< HEAD
 class TourAssignmentController
 {
     private $model;
@@ -9,11 +10,24 @@ class TourAssignmentController
 
     public function __construct()
     {
+=======
+class TourAssignmentController {
+    private $model;
+    private $employeeModel;
+
+    public function __construct() {
+>>>>>>> 3ffeda95b17b161d1c7f83d77992cd563572f79d
         $this->model = new TourAssignmentModel();
         $this->employeeModel = new EmployeeModel();
     }
 
+<<<<<<< HEAD
     // Hiển thị danh sách phân công
+=======
+    // ==========================
+    // HIỂN THỊ DANH SÁCH PHÂN CÔNG
+    // ==========================
+>>>>>>> 3ffeda95b17b161d1c7f83d77992cd563572f79d
     public function index($tourID)
     {
         $tourID = intval($tourID);
@@ -28,7 +42,13 @@ class TourAssignmentController
         require 'views/admin/Operate/assignments/list.php';
     }
 
+<<<<<<< HEAD
     // Thêm phân công
+=======
+    // ==========================
+    // THÊM PHÂN CÔNG
+    // ==========================
+>>>>>>> 3ffeda95b17b161d1c7f83d77992cd563572f79d
     public function create($tourID)
     {
         $tourID = intval($tourID);
@@ -55,7 +75,13 @@ class TourAssignmentController
         require 'views/admin/Operate/assignments/create.php';
     }
 
+<<<<<<< HEAD
     // Xóa phân công
+=======
+    // ==========================
+    // XÓA PHÂN CÔNG
+    // ==========================
+>>>>>>> 3ffeda95b17b161d1c7f83d77992cd563572f79d
     public function delete($id, $tourID)
     {
         $id = intval($id);
@@ -68,4 +94,8 @@ class TourAssignmentController
         header("Location: " . BASE_URL . "?act=assignments&tourID=$tourID");
         exit;
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 3ffeda95b17b161d1c7f83d77992cd563572f79d

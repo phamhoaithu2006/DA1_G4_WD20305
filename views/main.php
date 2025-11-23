@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
+<<<<<<< HEAD
         body {
             background-color: #f3f4f6;
             font-family: 'Segoe UI', sans-serif;
@@ -64,11 +65,44 @@
                 font-size: 14px;
             }
         }
+=======
+    body {
+        background-color: #ecececff;
+    }
+
+    .text-dark-blue {
+        color: #343a40;
+    }
+
+    .text-dark-red {
+        color: #dc3545;
+    }
+
+    .bg-light-gray {
+        background-color: #f1f1f1;
+    }
+
+    .btn-gray {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .btn-blue {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .btn-red {
+        background-color: #dc3545;
+        color: white;
+    }
+>>>>>>> 3ffeda95b17b161d1c7f83d77992cd563572f79d
     </style>
 
 </head>
 
 <body>
+<<<<<<< HEAD
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
@@ -76,6 +110,32 @@
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+=======
+    <nav class="navbar navbar-expand-xxl navbar-dark bg-dark justify-content-between px-5">
+        <div class="d-flex item-center">
+            <ul class="navbar-nav me-3">
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="<?= BASE_URL ?>"><b>Trang chủ</b></a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?action=client-products"><b>Admin</b></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?action=client-products"><b>HDV</b></a>
+                </li>
+            </ul>
+            <ul class="navbar-nav me-3">
+                <li class="nav-item">
+                    <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?act=booking-create"><b>Tạo booking</b></a>
+                </li>
+            </ul>
+        </div>
+>>>>>>> 3ffeda95b17b161d1c7f83d77992cd563572f79d
 
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <ul class="navbar-nav">

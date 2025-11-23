@@ -37,12 +37,21 @@ match ($act) {
     'category' => (new ProductController())->adminDashboard(),
     'detail' => (new ProductController())->adminDetail($id),
 
+<<<<<<< HEAD
     // Trang booking
     'booking-list' => (new BookingController($db))->index(),
     'booking-detail' => (new BookingController($db))->detail($id),
     'booking-create' => (new BookingController($db))->create(),
 
     // Điều hành
+=======
+    //Trang booking
+    'booking-list' => (new BookingController($db))->index(),
+    'booking-detail' => (new BookingController($db))->detail($id),
+    'booking-create' => (new BookingController($db))->create(),
+    
+    //Điều hành
+>>>>>>> 3ffeda95b17b161d1c7f83d77992cd563572f79d
     'employees' => (new EmployeeController())->index(),
     'createEmployee' => (new EmployeeController())->create(),
     'editEmployee' => (new EmployeeController())->edit($id),
