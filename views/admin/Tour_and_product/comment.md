@@ -1,1 +1,1 @@
-Quản lý tour và sản phẩm du lịch
+Quản lý tour

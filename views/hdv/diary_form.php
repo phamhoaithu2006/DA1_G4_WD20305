@@ -30,9 +30,10 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?= $editMode ? 'Cập nhật' : 'Thêm mới' ?> nhật ký tour</title>
+    <title><?= $editMode ? 'Cập nhật' : 'Thêm mới' ?> Nhật ký tour</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
         .image-preview {
@@ -49,13 +50,9 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 <body class="bg-light">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand navbar-dark bg-primary">
-        <div class="container-fluid">
-
-            <a class="navbar-brand" href="?act=hdv-tour-detail&id=<?= $tourId ?>">
-                HDV - <?= htmlspecialchars($hdvName) ?>
-            </a>
-
+    <nav class="navbar navbar-expand navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="?act=hdv-tour">Hướng dẫn viên: <?= htmlspecialchars($hdvName) ?></a>
             <div class="d-flex">
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-tour">Danh sách tour</a>
                 <a class="btn btn-outline-light btn-sm" href="?act=hdv-logout">Đăng xuất</a>
@@ -71,7 +68,15 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
                 <div class="card shadow">
 
                     <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0"><?= $editMode ? 'Cập nhật nhật ký' : 'Thêm nhật ký mới' ?></h5>
+                        <h5 class="mb-0">
+                            <i class="bi bi-journal-plus"></i>
+                            <?= $editMode ? 'Cập nhật nhật ký' : 'Thêm nhật ký mới' ?>
+                        </h5>
+                        <?php if (isset($tour) && !empty($tour['TourName'])): ?>
+                            <small class="d-block mt-2 opacity-75">
+                                <i class="bi bi-map"></i> Tour: <?= htmlspecialchars($tour['TourName']) ?>
+                            </small>
+                        <?php endif; ?>
                     </div>
 
                     <div class="card-body">
@@ -122,7 +127,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 
                                 <?php if ($editMode && !empty($log['Images'])): ?>
                                     <div class="mt-3">
-                                        <small class="text-muted">Hình hiện tại:</small>
+                                        <small class="text-muted">Hình hiện tại</small>
                                         <div class="d-flex flex-wrap">
                                             <?php
                                             $imgs = json_decode($log['Images'], true) ?? [];

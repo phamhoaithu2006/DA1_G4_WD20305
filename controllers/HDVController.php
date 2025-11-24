@@ -67,7 +67,7 @@ class HDVController
         exit;
     }
 
-    // Dashboard HDV → Chuyển hướng đến danh sách tour
+    // Dashboard HDV: chuyển hướng đến danh sách tour
     public function dashboard()
     {
         header("Location: ?act=hdv-tour");
@@ -134,7 +134,7 @@ class HDVController
             header("Location: ?act=hdv-tour");
             exit;
         }
-
+        $tour = getTourDetailById($tourId);
         $existingLog = null;
         if ($logId) {
             $existingLog = getTourLogById($logId);
@@ -146,8 +146,8 @@ class HDVController
         }
 
         // Truyền biến vào view (các biến local sẽ có sẵn trong file require)
-        $log = $existingLog; // Để view có thể sử dụng
-        require_once './views/hdv/Diary/diary_form.php';
+        $log = $existingLog; // để view có thể sử dụng
+        require_once './views/hdv/diary_form.php';
     }
 
     // Lưu nhật ký tour
@@ -230,6 +230,42 @@ class HDVController
         exit;
     }
 
+    // Xóa nhật ký tour
+    public function diaryDelete()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        $logId = $_GET['log_id'] ?? null;
+
+        if (!$tourId || !$logId) {
+            $_SESSION['hdv_error'] = "Thông tin không hợp lệ.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        // Kiểm tra log có thuộc tour này không
+        $log = getTourLogById($logId);
+        if (!$log || $log['TourID'] != $tourId) {
+            $_SESSION['hdv_error'] = "Nhật ký không tồn tại hoặc không thuộc tour này.";
+            header("Location: ?act=hdv-tour-detail&id=" . $tourId);
+            exit;
+        }
+
+        if (deleteTourLog($logId)) {
+            $_SESSION['hdv_success'] = "Xóa nhật ký thành công!";
+        } else {
+            $_SESSION['hdv_error'] = "Có lỗi xảy ra khi xóa nhật ký.";
+        }
+
+        header("Location: ?act=hdv-tour-detail&id=" . $tourId);
+        exit;
+    }
+
     // Trang check-in/check-out
     public function checkInOut()
     {
@@ -245,8 +281,15 @@ class HDVController
             exit;
         }
 
+        $tour = getTourDetailById($tourId);
+        if (!$tour) {
+            $_SESSION['hdv_error'] = "Tour không tồn tại.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
         $checkinHistory = getCheckInOutHistory($tourId);
-        require_once './views/hdv/Diary/checkin_checkout.php';
+        require_once './views/hdv/checkin_checkout.php';
     }
 
     // Lưu check-in
@@ -358,8 +401,15 @@ class HDVController
             exit;
         }
 
+        $tour = getTourDetailById($tourId);
+        if (!$tour) {
+            $_SESSION['hdv_error'] = "Tour không tồn tại.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
         $customers = getCustomersWithSpecialRequests($tourId);
-        require_once './views/hdv/Diary/special_requests.php';
+        require_once './views/hdv/special_requests.php';
     }
 
     // Lưu yêu cầu đặc biệt

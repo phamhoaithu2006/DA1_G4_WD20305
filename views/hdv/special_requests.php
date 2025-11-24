@@ -25,9 +25,9 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 </head>
 
 <body class="bg-light">
-    <nav class="navbar navbar-expand navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="?act=hdv-tour-detail&id=<?= $tourId ?>">HDV - <?= htmlspecialchars($hdvName) ?></a>
+    <nav class="navbar navbar-expand navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="?act=hdv-tour">Hướng dẫn viên: <?= htmlspecialchars($hdvName) ?></a>
             <div class="d-flex">
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-tour">Danh sách tour</a>
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-logout">Đăng xuất</a>
@@ -41,6 +41,11 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
                 <div class="card shadow">
                     <div class="card-header bg-info text-white">
                         <h5 class="mb-0"><i class="bi bi-heart"></i> Cập nhật yêu cầu đặc biệt của khách</h5>
+                        <?php if (isset($tour) && !empty($tour['TourName'])): ?>
+                            <small class="d-block mt-2 opacity-75">
+                                <i class="bi bi-map"></i> Tour: <?= htmlspecialchars($tour['TourName']) ?>
+                            </small>
+                        <?php endif; ?>
                     </div>
                     <div class="card-body">
                         <?php if ($error): ?>
@@ -63,7 +68,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
                                     <thead class="table-light">
                                         <tr>
                                             <th>Họ tên</th>
-                                            <th>SĐT</th>
+                                            <th>Số điện thoại</th>
                                             <th>Phòng</th>
                                             <th>Yêu cầu đặc biệt</th>
                                             <th>Thao tác</th>
@@ -120,12 +125,12 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 
                                                                 <div class="mb-3">
                                                                     <label class="form-label">Bệnh lý/Sức khỏe</label>
-                                                                    <textarea class="form-control" name="medical_condition" rows="3" placeholder="Nhập thông tin bệnh lý, tình trạng sức khỏe..."><?= htmlspecialchars($customer['MedicalCondition'] ?? '') ?></textarea>
+                                                                    <textarea class="form-control" name="medical_condition" rows="3" placeholder="Nhập thông tin bệnh lý, tình trạng sức khỏe, ..."><?= htmlspecialchars($customer['MedicalCondition'] ?? '') ?></textarea>
                                                                 </div>
 
                                                                 <div class="mb-3">
                                                                     <label class="form-label">Yêu cầu khác</label>
-                                                                    <textarea class="form-control" name="other_requests" rows="3" placeholder="Các yêu cầu đặc biệt khác..."><?= htmlspecialchars($customer['OtherRequests'] ?? '') ?></textarea>
+                                                                    <textarea class="form-control" name="other_requests" rows="3" placeholder="Các yêu cầu đặc biệt khác"><?= htmlspecialchars($customer['OtherRequests'] ?? '') ?></textarea>
                                                                 </div>
 
                                                                 <div class="mb-3">

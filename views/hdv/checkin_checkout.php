@@ -22,21 +22,18 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']); // Xóa sau khi dùng
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Check-in / Check-out đoàn</title>
+    <title>Check-in/Check-out đoàn</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 
 <body class="bg-light">
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="?act=hdv-tour-detail&id=<?= $tourId ?>">
-                HDV - <?= htmlspecialchars($hdvName) ?>
-            </a>
+    <nav class="navbar navbar-expand navbar-dark bg-primary shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="?act=hdv-tour">Hướng dẫn viên: <?= htmlspecialchars($hdvName) ?></a>
             <div class="d-flex">
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-tour">Danh sách tour</a>
                 <a class="btn btn-outline-light btn-sm" href="?act=hdv-logout">Đăng xuất</a>
@@ -55,6 +52,11 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']); // Xóa sau khi dùng
                             <i class="bi bi-check-circle"></i>
                             Xác nhận check-in/check-out đoàn
                         </h5>
+                        <?php if (isset($tour) && !empty($tour['TourName'])): ?>
+                            <small class="d-block mt-2 opacity-75">
+                                <i class="bi bi-map"></i> Tour: <?= htmlspecialchars($tour['TourName']) ?>
+                            </small>
+                        <?php endif; ?>
                     </div>
 
                     <div class="card-body">
@@ -86,7 +88,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']); // Xóa sau khi dùng
                                     </div>
 
                                     <div class="card-body">
-                                        <p class="text-muted small">Xác nhận đoàn đã đến điểm đến</p>
+                                        <p class="text-muted small">Xác nhận đoàn đã đến điểm</p>
 
                                         <form method="post" action="?act=hdv-checkin-save&id=<?= $tourId ?>">
                                             <div class="mb-3">
@@ -117,7 +119,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']); // Xóa sau khi dùng
                                     </div>
 
                                     <div class="card-body">
-                                        <p class="text-muted small">Xác nhận đoàn đã rời điểm đến</p>
+                                        <p class="text-muted small">Xác nhận đoàn đã rời điểm</p>
 
                                         <form method="post" action="?act=hdv-checkout-save&id=<?= $tourId ?>">
                                             <div class="mb-3">

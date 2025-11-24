@@ -237,7 +237,40 @@ function saveTourLog($data)
     }
 }
 
-// Helper function: Kiểm tra bảng có tồn tại không
+// Xóa nhật ký tour
+function deleteTourLog($logId)
+{
+    $conn = connectDB();
+
+    // Lấy thông tin log trước khi xóa để xóa file ảnh
+    $log = getTourLogById($logId);
+    if (!$log) {
+        return false;
+    }
+
+    // Xóa file ảnh nếu có
+    if (!empty($log['Images'])) {
+        $images = json_decode($log['Images'], true);
+        if (is_array($images)) {
+            foreach ($images as $imgPath) {
+                // Chuyển URL thành đường dẫn file
+                if (strpos($imgPath, BASE_URL) === 0) {
+                    $filePath = str_replace(BASE_URL, './', $imgPath);
+                    if (file_exists($filePath)) {
+                        @unlink($filePath);
+                    }
+                }
+            }
+        }
+    }
+
+    // Xóa record trong database
+    $sql = "DELETE FROM TourLog WHERE LogID = :lid";
+    $stmt = $conn->prepare($sql);
+    return $stmt->execute(['lid' => $logId]);
+}
+
+// Helper function: kiểm tra bảng có tồn tại không
 function tableExists($tableName)
 {
     $conn = connectDB();
@@ -365,78 +398,69 @@ function getCheckInOutHistory($tourId)
     return $rows;
 }
 
-// Lấy danh sách khách với thông tin yêu cầu đặc biệt
+// Lấy danh sách khách với thông tin yêu cầu đặc biệt (đọc từ cột Note dạng JSON)
 function getCustomersWithSpecialRequests($tourId)
 {
     $conn = connectDB();
 
-    // Kiểm tra bảng TourCustomerSpecialRequest có tồn tại không
-    $hasSpecialRequestTable = tableExists('TourCustomerSpecialRequest');
-
-    if ($hasSpecialRequestTable) {
-        $sql = "SELECT c.CustomerID, c.FullName, c.Email, c.Phone, 
-                       tc.RoomNumber, tc.Note,
-                       COALESCE(sr.Vegetarian, 0) AS Vegetarian,
-                       sr.MedicalCondition, sr.OtherRequests, sr.SpecialRequests
-                FROM TourCustomer tc
-                JOIN Customer c ON tc.CustomerID = c.CustomerID
-                LEFT JOIN TourCustomerSpecialRequest sr ON tc.CustomerID = sr.CustomerID AND tc.TourID = sr.TourID
-                WHERE tc.TourID = :tid";
-    } else {
-        // Nếu bảng chưa tồn tại, chỉ lấy thông tin cơ bản
-        $sql = "SELECT c.CustomerID, c.FullName, c.Email, c.Phone, 
-                       tc.RoomNumber, tc.Note,
-                       0 AS Vegetarian,
-                       NULL AS MedicalCondition, 
-                       NULL AS OtherRequests, 
-                       NULL AS SpecialRequests
-                FROM TourCustomer tc
-                JOIN Customer c ON tc.CustomerID = c.CustomerID
-                WHERE tc.TourID = :tid";
-    }
+    $sql = "SELECT c.CustomerID, c.FullName, c.Email, c.Phone, 
+                   tc.RoomNumber, tc.Note
+            FROM TourCustomer tc
+            JOIN Customer c ON tc.CustomerID = c.CustomerID
+            WHERE tc.TourID = :tid";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute(['tid' => $tourId]);
-    return $stmt->fetchAll();
+    $results = $stmt->fetchAll();
+
+    // Parse JSON từ cột Note
+    foreach ($results as &$row) {
+        $noteJson = $row['Note'] ?? '';
+        $specialData = null;
+        
+        // Thử parse JSON
+        if (!empty($noteJson)) {
+            $decoded = json_decode($noteJson, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $specialData = $decoded;
+            }
+        }
+
+        // Gán giá trị mặc định nếu không có dữ liệu
+        $row['Vegetarian'] = $specialData['vegetarian'] ?? 0;
+        $row['MedicalCondition'] = $specialData['medical_condition'] ?? null;
+        $row['OtherRequests'] = $specialData['other_requests'] ?? null;
+        $row['SpecialRequests'] = $specialData['special_requests'] ?? null;
+    }
+
+    return $results;
 }
 
-// Lưu, cập nhật yêu cầu đặc biệt
+// Lưu & cập nhật yêu cầu đặc biệt (lưu vào cột Note của TourCustomer dạng JSON)
 function saveSpecialRequest($data)
 {
     $conn = connectDB();
 
-    // Kiểm tra bảng có tồn tại không
-    if (!tableExists('TourCustomerSpecialRequest')) {
-        return false; // Bảng chưa tồn tại, không thể lưu
-    }
+    // Tạo object chứa thông tin yêu cầu đặc biệt
+    $specialRequestData = [
+        'vegetarian' => $data['Vegetarian'] ?? 0,
+        'medical_condition' => $data['MedicalCondition'] ?? null,
+        'other_requests' => $data['OtherRequests'] ?? null,
+        'special_requests' => $data['SpecialRequests'] ?? null
+    ];
 
-    // Kiểm tra xem đã có record chưa
-    $checkSql = "SELECT * FROM TourCustomerSpecialRequest 
-                 WHERE TourID = :tid AND CustomerID = :cid LIMIT 1";
-    $checkStmt = $conn->prepare($checkSql);
-    $checkStmt->execute(['tid' => $data['TourID'], 'cid' => $data['CustomerID']]);
-    $existing = $checkStmt->fetch();
+    // Chuyển thành JSON
+    $noteJson = json_encode($specialRequestData, JSON_UNESCAPED_UNICODE);
 
-    if ($existing) {
-        // Cập nhật
-        $sql = "UPDATE TourCustomerSpecialRequest 
-                SET Vegetarian = :vegetarian, MedicalCondition = :medical, 
-                    OtherRequests = :other, SpecialRequests = :special, UpdatedAt = NOW()
-                WHERE TourID = :tid AND CustomerID = :cid";
-    } else {
-        // Thêm mới
-        $sql = "INSERT INTO TourCustomerSpecialRequest 
-                (TourID, CustomerID, Vegetarian, MedicalCondition, OtherRequests, SpecialRequests, CreatedAt, UpdatedAt)
-                VALUES (:tid, :cid, :vegetarian, :medical, :other, :special, NOW(), NOW())";
-    }
+    // Cập nhật vào cột Note của bảng TourCustomer
+    $sql = "UPDATE TourCustomer 
+            SET Note = :note
+            WHERE TourID = :tid AND CustomerID = :cid";
 
     $stmt = $conn->prepare($sql);
     return $stmt->execute([
+        'note' => $noteJson,
         'tid' => $data['TourID'],
-        'cid' => $data['CustomerID'],
-        'vegetarian' => $data['Vegetarian'] ?? 0,
-        'medical' => $data['MedicalCondition'] ?? null,
-        'other' => $data['OtherRequests'] ?? null,
-        'special' => $data['SpecialRequests'] ?? null
+        'cid' => $data['CustomerID']
     ]);
 }
