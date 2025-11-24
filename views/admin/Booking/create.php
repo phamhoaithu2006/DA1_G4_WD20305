@@ -1,76 +1,170 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-<?php require_once __DIR__ . '/../sidebar.php'; ?>
+<?php require_once __DIR__ . '/../navbar.php'; ?>
 
-<div class="container mt-4">
-    <h2 class="mb-4 text-primary">Tạo booking mới</h2>
+<div class="d-flex admin-layout">
 
-    <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-    <?php endif; ?>
+    <!-- Sidebar -->
+    <div class="sidebar-wrapper">
+        <?php require_once __DIR__ . '/../sidebar.php'; ?>
+    </div>
 
-    <form method="post" action="<?= BASE_URL ?>?act=booking-create">
-        <div class="mb-3">
-            <label for="customer_id" class="form-label">Khách hiện có (chọn nếu đã có)</label>
-            <select name="customer_id" id="customer_id" class="form-select">
-                <option value="">- Khách mới -</option>
-                <?php
-                // Lấy khách từ DB
-                $customers = connectDB()->query("SELECT CustomerID, FullName FROM Customer ORDER BY FullName")->fetchAll(PDO::FETCH_ASSOC);
-                foreach ($customers as $c): ?>
-                    <option value="<?= $c['CustomerID'] ?>"><?= htmlspecialchars($c['FullName']) ?></option>
-                <?php endforeach; ?>
-            </select>
+    <!-- Content -->
+    <div class="admin-content container mt-4">
+
+        <h2 class="page-title text-primary mb-4">
+            Tạo booking mới
+        </h2>
+
+        <?php if (!empty($error)): ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
+
+        <div class="card shadow-sm booking-card">
+            <div class="card-body p-4">
+
+                <form method="post" action="<?= BASE_URL ?>?act=booking-create">
+
+                    <!-- 2 cột -->
+                    <div class="row g-4">
+
+                        <!-- Cột trái -->
+                        <div class="col-lg-6">
+
+                            <h5 class="section-title"><i class="bi bi-person-check"></i> Khách hàng</h5>
+
+                            <div class="mb-3">
+                                <label for="customer_id" class="form-label fw-semibold">Khách hiện có</label>
+                                <select name="customer_id" id="customer_id" class="form-select form-control-lg-rounded">
+                                    <option value="">- Khách mới -</option>
+                                    <?php
+                                    // Lấy khách từ DB
+                                    $customers = connectDB()->query("SELECT CustomerID, FullName FROM Customer ORDER BY FullName")->fetchAll(PDO::FETCH_ASSOC);
+                                    foreach ($customers as $c): ?>
+                                        <option value="<?= $c['CustomerID'] ?>"><?= htmlspecialchars($c['FullName']) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <h6 class="mt-4 mb-3 text-secondary fw-bold">
+                                <i class="bi bi-person-plus"></i> Khách mới (nếu không chọn khách đã có)
+                            </h6>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Họ tên</label>
+                                <input type="text" name="fullname" class="form-control form-control-lg-rounded">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Email</label>
+                                <input type="email" name="email" class="form-control form-control-lg-rounded">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Số điện thoại</label>
+                                <input type="text" name="phone" class="form-control form-control-lg-rounded">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Địa chỉ</label>
+                                <input type="text" name="address" class="form-control form-control-lg-rounded">
+                            </div>
+
+                        </div>
+
+                        <!-- Cột phải -->
+                        <div class="col-lg-6">
+
+                            <h5 class="section-title"><i class="bi bi-geo-alt"></i> Thông tin tour</h5>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Chọn tour</label>
+                                <select name="tour_id" class="form-select form-control-lg-rounded" required>
+                                    <option value="">- Chọn tour -</option>
+                                    <?php foreach ($tours as $t): ?>
+                                        <option value="<?= $t['TourID'] ?>">
+                                            <?= htmlspecialchars($t['TourName']) ?>
+                                            (<?= number_format($t['Price'], 0, ',', '.') ?> VNĐ)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Số người</label>
+                                <input type="number" name="num_people" class="form-control form-control-lg-rounded"
+                                    value="1" min="1">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Ghi chú</label>
+                                <textarea name="note" class="form-control form-control-lg-rounded" rows="4"></textarea>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <input type="hidden" name="group_members" id="group_members">
+
+                    <div class="text-end mt-4">
+                        <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold">
+                            <i class="bi bi-check-circle"></i> Tạo booking
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
         </div>
 
-        <h5 class="mt-4">Thông tin khách mới (nếu không chọn khách hiện có)</h5>
-        <div class="mb-3">
-            <label for="fullname" class="form-label">Họ tên</label>
-            <input type="text" name="fullname" id="fullname" class="form-control" />
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" name="email" id="email" class="form-control" />
-        </div>
-        <div class="mb-3">
-            <label for="phone" class="form-label">Số điện thoại</label>
-            <input type="text" name="phone" id="phone" class="form-control" />
-        </div>
-        <div class="mb-3">
-            <label for="address" class="form-label">Địa chỉ</label>
-            <input type="text" name="address" id="address" class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <label for="tour_id" class="form-label">Chọn tour</label>
-            <select name="tour_id" id="tour_id" class="form-select" required>
-                <option value="">-- Chọn Tour --</option>
-                <?php foreach ($tours as $t): ?>
-                    <option value="<?= $t['TourID'] ?>" data-price="<?= $t['Price'] ?>">
-                        <?= htmlspecialchars($t['TourName']) ?> (<?= number_format($t['Price'], 0, ',', '.') ?> đ)
-                    </option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="num_people" class="form-label">Số người</label>
-            <input type="number" name="num_people" id="num_people" class="form-control" value="1" min="1" />
-        </div>
-
-        <div class="mb-3">
-            <label for="note" class="form-label">Ghi chú</label>
-            <textarea name="note" id="note" class="form-control" rows="3"></textarea>
-        </div>
-
-        <!-- Hidden input để gửi danh sách khách đoàn nếu dùng JS -->
-        <input type="hidden" name="group_members" id="group_members" />
-
-        <button type="submit" class="btn btn-primary">Tạo booking</button>
-    </form>
+    </div>
 </div>
 
-<script>
-    // (Tuỳ chọn) JS để tính tổng tiền tạm thời hoặc thêm khách đoàn
-</script>
+
+<style>
+    .admin-layout {
+        display: flex;
+        min-height: 100vh;
+        background: #f5f7fa;
+    }
+
+    .sidebar-wrapper {
+        width: 260px;
+    }
+
+    .admin-content {
+        flex-grow: 1;
+    }
+
+    .page-title {
+        font-weight: 700;
+    }
+
+    .booking-card {
+        border-radius: 14px;
+        background: #ffffff;
+        border: none;
+    }
+
+    .form-control-lg-rounded,
+    .form-select.form-control-lg-rounded {
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 15px;
+    }
+
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #0d6efd;
+        margin-bottom: 15px;
+    }
+
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: 0.25s ease;
+    }
+</style>

@@ -83,7 +83,7 @@
                         <a class="nav-link" href="<?= BASE_URL ?>"><b>Trang chủ</b></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>?action=client-products"><b>Admin</b></a>
+                        <a class="nav-link" href="<?= BASE_URL ?>?act=admin"><b>Admin</b></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL ?>?act=hdv-login"><b>HDV</b></a>

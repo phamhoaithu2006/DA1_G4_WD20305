@@ -13,7 +13,7 @@
         </ul>
         <ul class="navbar-nav me-3">
             <li class="nav-item">
-                <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?action=admin"><b>Admin</b></a>
+                <a class="nav-link text-uppercase" href="<?= BASE_URL ?>?act=admin"><b>Admin</b></a>
             </li>
         </ul>
         <ul class="navbar-nav">

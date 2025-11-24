@@ -11,9 +11,9 @@ $hdvName  = $_SESSION['hdv_name'] ?? 'HDV';
 $tourId   = $_GET['id'] ?? null;
 
 // Thông báo
-$error    = $_SESSION['hdv_error'] ?? null;
-$success  = $_SESSION['hdv_success'] ?? null;
-unset($_SESSION['hdv_error'], $_SESSION['hdv_success']); // Xóa sau khi dùng
+$error = $_SESSION['hdv_error'] ?? null;
+$success = $_SESSION['hdv_success'] ?? null;
+unset($_SESSION['hdv_error'], $_SESSION['hdv_success']); // xóa sau khi dùng
 ?>
 
 <!doctype html>

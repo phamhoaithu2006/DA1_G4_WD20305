@@ -2,8 +2,8 @@
 // Require toàn bộ các file khai báo môi trường, thực thi,...(không require view)
 
 // Require file Common
-require_once './commons/env.php'; // Khai báo biến môi trường
-require_once './commons/function.php'; // Hàm hỗ trợ
+require_once './commons/env.php'; // khai báo biến môi trường
+require_once './commons/function.php'; // hàm hỗ trợ
 
 // Require toàn bộ file Controllers
 require_once './controllers/ProductController.php';

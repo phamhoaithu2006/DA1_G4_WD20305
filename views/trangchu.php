@@ -10,7 +10,7 @@
         <div class="text-center text-white">
             <h1>Chào mừng đến với hệ thống quản lý tour</h1>
             <p class="lead">Nền tảng giúp quản lý tour du lịch dễ dàng, nhanh chóng và hiệu quả</p>
-            <a href="#" class="btn btn-primary btn-lg mt-3">Bắt đầu ngay</a>
+            <a href="?act=admin" class="btn btn-primary btn-lg mt-3">Bắt đầu ngay</a>
         </div>
     </div>
 
@@ -41,7 +41,7 @@
                     </div>
                     <h5 class="fw-bold mt-2">Quản lý tour</h5>
                     <p class="text-muted">Danh mục và thông tin chi tiết</p>
-                    <a href="#" class="btn btn-outline-primary mt-3">Xem thêm</a>
+                    <a href="?act=category" class="btn btn-outline-primary mt-3">Xem thêm</a>
                 </div>
             </div>
 
@@ -53,7 +53,7 @@
                     </div>
                     <h5 class="fw-bold mt-2">Quản lý nhân sự</h5>
                     <p class="text-muted">Lịch làm việc và thông tin khách hàng</p>
-                    <a href="#" class="btn btn-outline-success mt-3">Xem thêm</a>
+                    <a href="?act=employees" class="btn btn-outline-success mt-3">Xem thêm</a>
                 </div>
             </div>
 
@@ -178,32 +178,71 @@
 
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 <script>
     const ctx = document.getElementById('salesChart').getContext('2d');
+
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            labels: [
+                'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            ],
             datasets: [{
                 label: 'Số tour',
-                data: [30, 45, 35, 20, 80, 40, 90],
-                backgroundColor: 'rgba(54,162,235,0.2)',
-                borderColor: 'rgba(54,162,235,1)',
-                borderWidth: 2,
+                data: [30, 45, 35, 20, 80, 40, 90, 75, 60, 95, 120, 140],
+                backgroundColor: 'rgba(54, 162, 235, 0.25)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 3,
                 fill: true,
-                tension: 0.4
+                tension: 0.35,
+                pointBackgroundColor: 'white',
+                pointBorderColor: 'rgba(54,162,235,1)',
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                pointHoverBorderWidth: 2,
+                shadowColor: 'rgba(54,162,235,0.5)',
             }]
         },
+
         options: {
             responsive: true,
+
+            animation: {
+                duration: 1800,
+                easing: 'easeInOutQuart'
+            },
+
             plugins: {
                 legend: {
                     display: false
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    padding: 10,
+                    titleFont: {
+                        size: 14
+                    },
+                    bodyFont: {
+                        size: 13
+                    },
+                    cornerRadius: 8,
+                    displayColors: false
                 }
             },
+
             scales: {
                 y: {
-                    beginAtZero: true
+                    beginAtZero: true,
+                    ticks: {
+                        padding: 10
+                    }
+                },
+                x: {
+                    ticks: {
+                        padding: 8
+                    }
                 }
             }
         }

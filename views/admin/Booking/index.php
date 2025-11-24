@@ -48,7 +48,10 @@
                                 </td>
                                 <td>
                                     <a href="<?= BASE_URL ?>?act=booking-detail&id=<?= $b['BookingID'] ?>" class="btn btn-sm btn-primary">
-                                        <i class="bi bi-eye"></i> Chi tiết
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="<?= BASE_URL ?>?act=booking-create&id=<?= $b['BookingID'] ?>" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-plus-circle"></i>
                                     </a>
                                 </td>
                             </tr>
