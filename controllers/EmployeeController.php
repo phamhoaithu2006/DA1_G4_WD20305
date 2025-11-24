@@ -31,15 +31,17 @@ class EmployeeController {
     public function edit($id) {
         if($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->employeeModel->updateEmployee($id, $_POST['name'], $_POST['role'], $_POST['phone'], $_POST['email']);
-            header('Location: index.php?action=employees');
-        } else {
-            $employee = $this->employeeModel->getEmployeeByID($id);
-            require 'views/admin/Operate/employee/edit.php';
-        }
-    }
+            header('Location: '. BASE_URL . 'act=employees');
+} else {
+$employee = $this->employeeModel->getEmployeeByID($id);
+require 'views/admin/Operate/employee/edit.php';
+}
+}
 
-    public function delete($id) {
-        $this->employeeModel->deleteEmployee($id);
-        header('Location: index.php?action=employees');
-    }
+public function delete($id) {
+$this->employeeModel->deleteEmployee($id);
+header('Location: index.php?action=employees');
+}
+
+
 }

@@ -11,59 +11,59 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
-        body {
-            background-color: #f3f4f6;
-            font-family: 'Segoe UI', sans-serif;
-        }
+    body {
+        background-color: #f3f4f6;
+        font-family: 'Segoe UI', sans-serif;
+    }
 
+    .navbar-custom {
+        background-color: #1f2937;
+        padding: 0.7rem 2rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .navbar-custom .nav-link {
+        font-size: 15px;
+        font-weight: 600;
+        color: #e5e7eb !important;
+        text-transform: uppercase;
+        margin-right: 1.5rem;
+        transition: color 0.3s;
+    }
+
+    .navbar-custom .nav-link:hover {
+        color: #60a5fa !important;
+    }
+
+    .btn-login {
+        border-radius: 8px;
+        padding: 6px 18px;
+        font-weight: 600;
+        border: 2px solid #60a5fa;
+        transition: all 0.3s;
+    }
+
+    .btn-login:hover {
+        background-color: #60a5fa;
+        color: #fff;
+        border-color: #60a5fa;
+    }
+
+    @media (max-width: 768px) {
         .navbar-custom {
-            background-color: #1f2937;
-            padding: 0.7rem 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 0.5rem 1rem;
         }
 
         .navbar-custom .nav-link {
-            font-size: 15px;
-            font-weight: 600;
-            color: #e5e7eb !important;
-            text-transform: uppercase;
-            margin-right: 1.5rem;
-            transition: color 0.3s;
-        }
-
-        .navbar-custom .nav-link:hover {
-            color: #60a5fa !important;
+            margin-right: 1rem;
+            font-size: 14px;
         }
 
         .btn-login {
-            border-radius: 8px;
-            padding: 6px 18px;
-            font-weight: 600;
-            border: 2px solid #60a5fa;
-            transition: all 0.3s;
+            padding: 5px 14px;
+            font-size: 14px;
         }
-
-        .btn-login:hover {
-            background-color: #60a5fa;
-            color: #fff;
-            border-color: #60a5fa;
-        }
-
-        @media (max-width: 768px) {
-            .navbar-custom {
-                padding: 0.5rem 1rem;
-            }
-
-            .navbar-custom .nav-link {
-                margin-right: 1rem;
-                font-size: 14px;
-            }
-
-            .btn-login {
-                padding: 5px 14px;
-                font-size: 14px;
-            }
-        }
+    }
     </style>
 
 </head>
@@ -83,7 +83,7 @@
                         <a class="nav-link" href="<?= BASE_URL ?>"><b>Trang chủ</b></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>?act=admin"><b>Admin</b></a>
+                        <a class="nav-link" href="<?= BASE_URL ?>?act=dashboard"><b>Admin</b></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL ?>?act=hdv-login"><b>HDV</b></a>
@@ -91,7 +91,11 @@
                 </ul>
 
                 <div class="d-flex">
-                    <a class="btn btn-outline-primary btn-login" href="<?= BASE_URL ?>?act=admin">Đăng nhập</a>
+
+                    <!-- <a class="btn btn-outline-primary btn-login" href="<?= BASE_URL ?>?act=booking-create"><b>Đăng ký
+                            tour</b></a> -->
+
+                    <a class="btn btn-outline-primary btn-login" href="<?= BASE_URL ?>?act=hdv-login">Đăng nhập</a>
                 </div>
             </div>
         </div>

@@ -28,4 +28,14 @@ class TourCustomerModel {
             ':note'=>$note
         ]);
     }
+    public function getCustomersNotInTour($tourID) {
+    $sql = "SELECT * FROM Customer 
+            WHERE CustomerID NOT IN (
+                SELECT CustomerID FROM TourCustomer WHERE TourID = :tourID
+            )";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([':tourID' => $tourID]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

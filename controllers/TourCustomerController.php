@@ -13,12 +13,16 @@ class TourCustomerController {
         require 'views/admin/Operate/tourcustomers/list.php';
     }
 
-    public function create($tourID) {
-        if($_SERVER['REQUEST_METHOD']==='POST') {
-            $this->model->addTourCustomer($tourID, $_POST['customerID'], $_POST['roomNumber'], $_POST['note']);
-            header("Location: index.php?action=tourcustomers&tourID=$tourID");
-        } else {
-            require 'views/admin/Operate/tourcustomers/create.php';
-        }
+   public function create($tourID) {
+    if($_SERVER['REQUEST_METHOD']==='POST') {
+        $this->model->addTourCustomer($tourID, $_POST['customerID'], $_POST['roomNumber'], $_POST['note']);
+        header("Location: index.php?action=tourcustomers&tourID=$tourID");
+        exit;
+    } else {
+        // Lấy danh sách khách chưa tham gia tour
+        $allCustomers = $this->model->getCustomersNotInTour($tourID);
+        require 'views/admin/Operate/tourcustomers/create.php';
     }
+}
+
 }

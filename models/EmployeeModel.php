@@ -23,16 +23,23 @@ class EmployeeModel {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function addEmployee($name, $role, $phone, $email) {
-        $sql = "INSERT INTO Employee (FullName, Role, Phone, Email) VALUES (:name, :role, :phone, :email)";
-        $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            ':name'=>$name,
-            ':role'=>$role,
-            ':phone'=>$phone,
-            ':email'=>$email
-        ]);
-    }
+   public function addEmployee($name, $role, $phone, $email) {
+    // Password mặc định
+    $defaultPassword = password_hash("123456", PASSWORD_DEFAULT);
+
+    $sql = "INSERT INTO Employee (FullName, Role, Phone, Email, Password) 
+            VALUES (:name, :role, :phone, :email, :password)";
+    $stmt = $this->conn->prepare($sql);
+
+    return $stmt->execute([
+        ':name'     => $name,
+        ':role'     => $role,
+        ':phone'    => $phone,
+        ':email'    => $email,
+        ':password' => $defaultPassword
+    ]);
+}
+
 
     public function updateEmployee($id, $name, $role, $phone, $email) {
         $sql = "UPDATE Employee SET FullName=:name, Role=:role, Phone=:phone, Email=:email WHERE EmployeeID=:id";
@@ -51,4 +58,5 @@ class EmployeeModel {
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([':id'=>$id]);
     }
+    
 }

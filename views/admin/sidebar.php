@@ -46,11 +46,12 @@
         </div>
 
         <hr>
-        <a href="?page=logout">
+        <a href="?page=logout" onclick="return confirm('Bạn có chắc chắn muốn đăng xuất không?')">
             <button class="btn btn-danger w-100 mt-3">
                 <i class="bi bi-box-arrow-right"></i> Đăng xuất
             </button>
         </a>
+
     </div>
 
 

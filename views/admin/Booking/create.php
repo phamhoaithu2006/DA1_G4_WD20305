@@ -1,13 +1,13 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-<?php require_once __DIR__ . '/../navbar.php'; ?>
+<?php require_once __DIR__ . '/../../main.php'; ?>
 
 <div class="d-flex admin-layout">
 
     <!-- Sidebar -->
     <div class="sidebar-wrapper">
-        <?php require_once __DIR__ . '/../sidebar.php'; ?>
+
     </div>
 
     <!-- Content -->
@@ -16,7 +16,7 @@
         <h2 class="page-title text-primary mb-4">Tạo booking mới</h2>
 
         <?php if (!empty($error)): ?>
-            <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <div class="card shadow-sm booking-card">
@@ -32,18 +32,6 @@
 
                             <h5 class="section-title"><i class="bi bi-person-check"></i> Khách hàng</h5>
 
-                            <div class="mb-3">
-                                <label for="customer_id" class="form-label fw-semibold">Khách hiện có</label>
-                                <select name="customer_id" id="customer_id" class="form-select form-control-lg-rounded">
-                                    <option value="">- Khách mới -</option>
-                                    <?php
-                                    // Lấy khách từ DB
-                                    $customers = connectDB()->query("SELECT CustomerID, FullName FROM Customer ORDER BY FullName")->fetchAll(PDO::FETCH_ASSOC);
-                                    foreach ($customers as $c): ?>
-                                        <option value="<?= $c['CustomerID'] ?>"><?= htmlspecialchars($c['FullName']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
 
                             <h6 class="mt-4 mb-3 text-secondary fw-bold">
                                 <i class="bi bi-person-plus"></i> Khách mới (nếu không chọn khách đã có)
@@ -81,10 +69,10 @@
                                 <select name="tour_id" class="form-select form-control-lg-rounded" required>
                                     <option value="">- Chọn tour -</option>
                                     <?php foreach ($tours as $t): ?>
-                                        <option value="<?= $t['TourID'] ?>">
-                                            <?= htmlspecialchars($t['TourName']) ?>
-                                            (<?= number_format($t['Price'], 0, ',', '.') ?> VNĐ)
-                                        </option>
+                                    <option value="<?= $t['TourID'] ?>">
+                                        <?= htmlspecialchars($t['TourName']) ?>
+                                        (<?= number_format($t['Price'], 0, ',', '.') ?> VNĐ)
+                                    </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -122,47 +110,47 @@
 
 
 <style>
-    .admin-layout {
-        display: flex;
-        min-height: 100vh;
-        background: #f5f7fa;
-    }
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f5f7fa;
+}
 
-    .sidebar-wrapper {
-        width: 260px;
-    }
+.sidebar-wrapper {
+    width: 260px;
+}
 
-    .admin-content {
-        flex-grow: 1;
-    }
+.admin-content {
+    flex-grow: 1;
+}
 
-    .page-title {
-        font-weight: 700;
-    }
+.page-title {
+    font-weight: 700;
+}
 
-    .booking-card {
-        border-radius: 14px;
-        background: #ffffff;
-        border: none;
-    }
+.booking-card {
+    border-radius: 14px;
+    background: #ffffff;
+    border: none;
+}
 
-    .form-control-lg-rounded,
-    .form-select.form-control-lg-rounded {
-        border-radius: 10px;
-        padding: 10px 14px;
-        font-size: 15px;
-    }
+.form-control-lg-rounded,
+.form-select.form-control-lg-rounded {
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 15px;
+}
 
-    .section-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: #0d6efd;
-        margin-bottom: 15px;
-    }
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0d6efd;
+    margin-bottom: 15px;
+}
 
-    .card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        transition: 0.25s ease;
-    }
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transition: 0.25s ease;
+}
 </style>

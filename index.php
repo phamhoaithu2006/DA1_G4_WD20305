@@ -48,6 +48,7 @@ match ($act) {
     // Điều hành
     'employees' => (new EmployeeController())->index(),
     'createEmployee' => (new EmployeeController())->create(),
+    'detailEmployee' => (new EmployeeController())->detail($id),
     'editEmployee' => (new EmployeeController())->edit($id),
     'deleteEmployee' => (new EmployeeController())->delete($id),
     'assignments' => (new TourAssignmentController())->index($tourID),
