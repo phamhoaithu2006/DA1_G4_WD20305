@@ -13,9 +13,7 @@
     <!-- Content -->
     <div class="admin-content container mt-4">
 
-        <h2 class="page-title text-primary mb-4">
-            Tạo booking mới
-        </h2>
+        <h2 class="page-title text-primary mb-4">Tạo booking mới</h2>
 
         <?php if (!empty($error)): ?>
             <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
