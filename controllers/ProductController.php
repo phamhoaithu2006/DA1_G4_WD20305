@@ -34,4 +34,17 @@ class ProductController
         // var_dump($tour);
         require_once 'views/admin/Tour_and_product/detail.php';
     }
+    public function Dashboard()
+    {
+        $db = new DashboardModel();
+       $data = [
+        'totalCategories' => $db->getTotalCategories(),
+        'totalTours'      => $db->getTotalTours(),
+        'totalCustomers'  => $db->getTotalCustomers(),
+        'totalBookings'   => $db->getTotalBookings(),
+        'totalEmployees'  => $db->getTotalEmployees(),
+        'recentBookings'  => $db->getRecentBookings(5)
+    ];
+        require_once 'views/admin/dashboard/dashboard.php';
+    }
 }

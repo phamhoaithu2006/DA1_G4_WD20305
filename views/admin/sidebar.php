@@ -7,31 +7,36 @@
 
     <!-- Sidebar -->
     <div style="width: 260px; background: #f8f9fa; min-height: 100vh;" class="p-3 border-end shadow-sm">
-        <h5 class="text-secondary mb-3">Quản trị hệ thống</h5>
+        <h5 class="text-secondary mb-3">Hệ thống</h5>
 
         <div class="list-group">
+            <a href="?act=dashboard" class="list-group-item list-group-item-action d-flex align-items-center">
+                <span><i class="bi bi-bar-chart"> </i>Dashboard</span>
+            </a>
+
+
             <a href="?act=category" class="list-group-item list-group-item-action d-flex align-items-center">
-                <span><i class="bi bi-globe-americas"></i> Quản lý tour</span>
+                <span><i class="bi bi-globe-americas"></i> Tour</span>
             </a>
             <a href="?act=booking-list" class="list-group-item list-group-item-action">
-                <span><i class="bi bi-geo-alt"></i> Quản lý booking</span>
+                <span><i class="bi bi-geo-alt"></i> Booking</span>
             </a>
             <!-- Quản lý & điều hành tour -->
             <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                 data-bs-toggle="collapse" data-bs-target="#menuDieuHanhTour">
-                <span><i class="bi bi-people"></i> Quản lý và điều hành tour</span>
+                <span><i class="bi bi-people"></i> Điều hành tour</span>
                 <i class="bi bi-chevron-down"></i>
             </button>
             <div class="collapse" id="menuDieuHanhTour">
-                <a href="?act=employees" class="list-group-item ps-5">Quản lý nhân sự</a>
-                <a href="?act=assignments" class="list-group-item ps-5">Quản lý lịch trình</a>
-                <a href="<?= BASE_URL ?>?act=tourcustomers" class="list-group-item ps-5">Quản lý khách hàng</a>
+                <a href="?act=employees" class="list-group-item ps-5">Nhân sự</a>
+                <a href="?act=assignments" class="list-group-item ps-5">Lịch trình</a>
+                <a href="<?= BASE_URL ?>?act=tourcustomers" class="list-group-item ps-5">Khách hàng</a>
             </div>
 
             <!-- Báo cáo vận hành tour -->
             <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                 data-bs-toggle="collapse" data-bs-target="#menuBaoCao">
-                <span><i class="bi bi-bar-chart"></i> Báo cáo vận hành tour</span>
+                <span><i class="bi bi-bar-chart"></i> Báo cáo vận hành</span>
                 <i class="bi bi-chevron-down"></i>
             </button>
             <div class="collapse" id="menuBaoCao">

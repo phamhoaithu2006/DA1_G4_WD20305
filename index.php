@@ -20,6 +20,7 @@ require_once './models/HDVModel.php';
 require_once './models/EmployeeModel.php';
 require_once './models/TourAssignmentModel.php';
 require_once './models/TourCustomerModel.php';
+require_once './models/DashboardModel.php';
 
 // Route
 $act = $_GET['act'] ?? '/';
@@ -36,11 +37,13 @@ match ($act) {
     'admin' => (new ProductController())->adminHome(),
     'category' => (new ProductController())->adminDashboard(),
     'detail' => (new ProductController())->adminDetail($id),
+    'dashboard' => (new ProductController())->Dashboard(),
 
     // Trang booking
     'booking-list' => (new BookingController($db))->index(),
     'booking-detail' => (new BookingController($db))->detail($id),
     'booking-create' => (new BookingController($db))->create(),
+    'booking-update-status' => (new BookingController($db))->updateStatus(),
 
     // Điều hành
     'employees' => (new EmployeeController())->index(),

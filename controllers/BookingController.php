@@ -122,7 +122,8 @@ class BookingController
         $status = trim($_POST['status']);
         try {
             $this->bookingModel->updateStatus($id, $status);
-            header("Location: /Booking/detail.php?id=" . $id);
+            //Về trang booking detail sau khi cập nhật
+            header("Location:" . BASE_URL . "?act=booking-list");
             exit;
         } catch (Exception $e) {
             $error = $e->getMessage();
