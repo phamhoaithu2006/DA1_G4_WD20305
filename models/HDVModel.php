@@ -437,6 +437,7 @@ function getCustomersWithSpecialRequests($tourId)
 }
 
 // Lưu & cập nhật yêu cầu đặc biệt (lưu vào cột Note của TourCustomer dạng JSON)
+// Lưu & cập nhật yêu cầu đặc biệt
 function saveSpecialRequest($data)
 {
     $conn = connectDB();
@@ -448,6 +449,10 @@ function saveSpecialRequest($data)
         'other_requests' => $data['OtherRequests'] ?? null,
         'special_requests' => $data['SpecialRequests'] ?? null
     ];
+    // Kiểm tra bảng có tồn tại không
+    if (!tableExists('TourCustomerSpecialRequest')) {
+        return false; // bảng chưa tồn tại, không thể lưu
+    }
 
     // Chuyển thành JSON
     $noteJson = json_encode($specialRequestData, JSON_UNESCAPED_UNICODE);

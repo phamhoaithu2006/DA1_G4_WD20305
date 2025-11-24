@@ -239,59 +239,30 @@ $hdvName = $_SESSION['hdv_name'] ?? 'HDV';
 
             <!-- Right: Tour Log -->
             <div class="col-md-6">
-                <div class="card shadow-sm h-100">
-                    <div class="card-header bg-warning fw-bold d-flex justify-content-between">
-                        <span><i class="bi bi-journal-text"></i> Lịch trình/Nhật ký</span>
-                        <a href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>" class="btn btn-sm btn-light">
-                            <i class="bi bi-plus-circle"></i> Thêm
-                        </a>
-                    </div>
-
-                    <div class="card-body" style="max-height: 450px; overflow-y: auto;">
-                        <?php if (!empty($logs)): ?>
-                            <?php foreach ($logs as $l): ?>
-                                <div class="log-item">
-                                    <div class="d-flex justify-content-between">
-                                        <small class="text-muted"><?= $l['LogDate'] ?></small>
-                                        <div class="d-flex gap-1">
-                                            <a href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>&log_id=<?= $l['LogID'] ?>"
-                                                class="btn btn-sm btn-outline-secondary">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            <a href="?act=hdv-diary-delete&id=<?= $tour['TourID'] ?>&log_id=<?= $l['LogID'] ?>"
-                                                class="btn btn-sm btn-outline-danger"
-                                                onclick="return confirm('Bạn có chắc chắn muốn xóa nhật ký này?');">
-                                                <i class="bi bi-trash"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <p class="mt-2 mb-2"><?= nl2br(htmlspecialchars($l['Note'])) ?></p>
-
-                                    <?php if (!empty($l['Incident'])): ?>
-                                        <div class="alert alert-warning py-1 px-2 small">
-                                            <strong>Sự cố:</strong>
-                                            <?= nl2br(htmlspecialchars($l['Incident'])) ?>
-                                        </div>
-                                    <?php endif; ?>
-
-                                    <?php if (!empty($l['Images'])):
-                                        $images = json_decode($l['Images'], true);
-                                        if (!empty($images)): ?>
-                                            <div class="d-flex flex-wrap gap-2 mt-2">
-                                                <?php foreach ($images as $img): ?>
-                                                    <img src="<?= $img ?>" class="img-thumbnail"
-                                                        onclick="window.open('<?= $img ?>', '_blank')"
-                                                        style="width: 70px; height: 70px; object-fit: cover;">
-                                                <?php endforeach; ?>
-                                            </div>
-                                    <?php endif;
-                                    endif; ?>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <p class="text-center text-muted mt-4">Chưa có lịch trình/nhật ký</p>
-                        <?php endif; ?>
+                <div class="card">
+                    <div class="card-header bg-warning">Lịch trình/Nhật ký</div>
+                    <div class="card-body p-0">
+                        <table class="table mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Ngày/Giờ</th>
+                                    <th>Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($logs)): foreach ($logs as $l): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($l['LogDate']) ?></td>
+                                            <td><?= htmlspecialchars($l['Note']) ?></td>
+                                        </tr>
+                                    <?php endforeach;
+                                else: ?>
+                                    <tr>
+                                        <td colspan="2" class="text-center">Chưa có nhật ký</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
                     </div>
 
                 </div>
