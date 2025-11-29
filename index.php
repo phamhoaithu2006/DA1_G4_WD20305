@@ -54,6 +54,8 @@ match ($act) {
     //Lịch trình
     'schedule' =>(new TourAssignmentController())->index(),
     'hdv-tour-detail'=>(new TourAssignmentController())->detail($id),
+    'asm-detail-hdv' =>(new TourAssignmentController())->getAllHDV(),
+    'ct-tour'=>(new TourAssignmentController())->showCustomersByTour($tourID),
     //Thông tin theo tour
 
     // Trang hdv

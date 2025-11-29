@@ -10,7 +10,6 @@ class TourAssignmentController
     public function __construct()
     {
         $this->model = new TourAssignmentModel();
-        $this->employeeModel = new EmployeeModel();
     }
 //Hiển thị lịch trình tổng quát
 public function index(){
@@ -29,8 +28,25 @@ public function index(){
         require_once 'views\admin\Operate\assignments\detail.php';
     }
 //Thông tin đoàn theo HDV
+public function getAllHDV() {
+    $data = $this->model->getAllHDV(); // gọi model đã khởi tạo trong __construct()
+    var_dump($data);
+    require 'views\admin\Operate\assignments\HDV.php';
+}
+
 
 //Thông tin Tổng quát khách hàng 
+public function showCustomersByTour($tourId)
+{
+    // Lấy thông tin tour
+    $tour = $this->model->getOneDetail($tourId);
+
+  $customers = $this->model->getCustomersByTour($tourId); 
+
+var_dump($customers);
+    // Gọi view hiển thị
+    require 'views/admin/Operate/tourcustomers/list.php';
+}
 
 //Thông tin chi tiết khách 
 

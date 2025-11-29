@@ -72,6 +72,7 @@
                     <div class="card shadow-sm p-4 tour-desc-card">
                         <h4 class="card-title mb-3">
                             <i class="bi bi-journal-text"></i> Thông tin đoàn
+                            <a href="<?= BASE_URL ?>?act=asm-detail-hdv">Chi tiết</a>
                         </h4>
                         <p class="card-text desc-text">
                             <!--Thông tin đoàn theo tour, hiển thị hưỡng dẫn viên-->
