@@ -12,60 +12,27 @@ class TourAssignmentController
         $this->model = new TourAssignmentModel();
         $this->employeeModel = new EmployeeModel();
     }
+//Hiển thị lịch trình tổng quát
+public function index(){
+    $tour = new ProductModel();
+        $tours = $tour->getAllTour();
+    require 'views\admin\Operate\assignments\list.php';
+}
 
-    // Hiển thị danh sách phân công
-    public function index($tourID)
+//Thông tin chi tiết tour
+   public function detail($id)
     {
-        $tourID = intval($tourID);
-
-        if ($tourID <= 0) {
-            die("tourID không hợp lệ.");
-        }
-
-        $assignments = $this->model->getAssignmentsByTour($tourID);
-
-        // Truyền tourID sang view
-        require 'views/admin/Operate/assignments/list.php';
+        $tr = new ProductModel();
+        $tour = $tr->getOneDetail($id);
+        $title = "This is detail page";
+        // var_dump($tour);
+        require_once 'views\admin\Operate\assignments\detail.php';
     }
+//Thông tin đoàn theo HDV
 
-    // Thêm phân công
-    public function create($tourID)
-    {
-        $tourID = intval($tourID);
-        if ($tourID <= 0) {
-            die("tourID không hợp lệ.");
-        }
+//Thông tin Tổng quát khách hàng 
 
-        // Lấy toàn bộ nhân sự
-        $allEmployees = $this->employeeModel->getAllEmployees();
+//Thông tin chi tiết khách 
 
-        // Submit form
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $employeeID = $_POST['employeeID'] ?? null;
-            $role       = $_POST['role'] ?? null;
-
-            if ($employeeID && $role) {
-                $this->model->addAssignment($tourID, $employeeID, $role);
-            }
-
-            header("Location: " . BASE_URL . "?act=assignments&tourID=$tourID");
-            exit;
-        }
-
-        require 'views/admin/Operate/assignments/create.php';
-    }
-
-    // Xóa phân công
-    public function delete($id, $tourID)
-    {
-        $id = intval($id);
-        $tourID = intval($tourID);
-
-        if ($id > 0) {
-            $this->model->deleteAssignment($id);
-        }
-
-        header("Location: " . BASE_URL . "?act=assignments&tourID=$tourID");
-        exit;
-    }
+//Ghi chú theo khách lấy theo RoomID 
 }

@@ -2,6 +2,10 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
 <?php require_once __DIR__ . '/../../main.php'; ?>
+<?php 
+    $selectedTour = isset($_GET['tour_id']) ? $_GET['tour_id'] : '';
+?>
+
 
 <div class="d-flex admin-layout">
 
@@ -33,10 +37,6 @@
                             <h5 class="section-title"><i class="bi bi-person-check"></i> Khách hàng</h5>
 
 
-                            <h6 class="mt-4 mb-3 text-secondary fw-bold">
-                                <i class="bi bi-person-plus"></i> Khách mới (nếu không chọn khách đã có)
-                            </h6>
-
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Họ tên</label>
                                 <input type="text" name="fullname" class="form-control form-control-lg-rounded">
@@ -59,53 +59,51 @@
 
                         </div>
 
-                        <!-- Cột phải -->
-                        <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Chọn tour</label>
+                            <select name="tour_id" class="form-select form-control-lg-rounded" required>
+                                <option value="">- Chọn tour -</option>
 
-                            <h5 class="section-title"><i class="bi bi-geo-alt"></i> Thông tin tour</h5>
+                                <?php foreach ($tours as $t): ?>
+                                <option value="<?= $t['TourID'] ?>"
+                                    <?= ($t['TourID'] == $selectedTour ? 'selected' : '') ?>>
+                                    <?= htmlspecialchars($t['TourName']) ?>
+                                    (<?= number_format($t['Price'], 0, ',', '.') ?> VNĐ)
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Chọn tour</label>
-                                <select name="tour_id" class="form-select form-control-lg-rounded" required>
-                                    <option value="">- Chọn tour -</option>
-                                    <?php foreach ($tours as $t): ?>
-                                    <option value="<?= $t['TourID'] ?>">
-                                        <?= htmlspecialchars($t['TourName']) ?>
-                                        (<?= number_format($t['Price'], 0, ',', '.') ?> VNĐ)
-                                    </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Số người</label>
-                                <input type="number" name="num_people" class="form-control form-control-lg-rounded"
-                                    value="1" min="1">
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Số người</label>
+                            <input type="number" name="num_people" class="form-control form-control-lg-rounded"
+                                value="1" min="1">
+                        </div>
 
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold">Ghi chú</label>
-                                <textarea name="note" class="form-control form-control-lg-rounded" rows="4"></textarea>
-                            </div>
-
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Ghi chú</label>
+                            <textarea name="note" class="form-control form-control-lg-rounded" rows="4"></textarea>
                         </div>
 
                     </div>
 
-                    <input type="hidden" name="group_members" id="group_members">
-
-                    <div class="text-end mt-4">
-                        <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold">
-                            <i class="bi bi-check-circle"></i> Tạo booking
-                        </button>
-                    </div>
-
-                </form>
-
             </div>
-        </div>
 
+            <input type="hidden" name="group_members" id="group_members">
+
+            <div class="text-end mt-4">
+                <button type="submit" class="btn btn-primary px-4 py-2 rounded-pill fw-semibold">
+                    <i class="bi bi-check-circle"></i> Tạo booking
+                </button>
+            </div>
+
+            </form>
+
+        </div>
     </div>
+
+</div>
 </div>
 
 

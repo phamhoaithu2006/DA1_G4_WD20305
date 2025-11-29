@@ -47,4 +47,6 @@ class ProductController
     ];
         require_once 'views/admin/dashboard/dashboard.php';
     }
+
+    
 }
