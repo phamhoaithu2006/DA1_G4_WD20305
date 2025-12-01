@@ -29,8 +29,7 @@
             </button>
             <div class="collapse" id="menuDieuHanhTour">
                 <a href="?act=employees" class="list-group-item ps-5">Nhân sự</a>
-                <a href="?act=assignments" class="list-group-item ps-5">Lịch trình</a>
-                <a href="<?= BASE_URL ?>?act=tourcustomers" class="list-group-item ps-5">Khách hàng</a>
+                <a href="?act=schedule" class="list-group-item ps-5">Lịch trình</a>
             </div>
 
             <!-- Báo cáo vận hành tour -->

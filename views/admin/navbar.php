@@ -2,8 +2,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
 <nav class="navbar navbar-expand-xxl navbar-dark bg-dark px-4">
-    <img src="https://insacmau.com/wp-content/uploads/2023/02/logo-fpt-polytechnic.png"
-        alt="Logo FPT" width="150" class="me-4">
+    <img src="./uploads/tour_logs/logo-fpt-polytechnic.png" alt="Logo FPT" width="150" class="me-4">
 
     <div class="d-flex ms-auto">
         <ul class="navbar-nav me-3">

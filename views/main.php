@@ -92,8 +92,8 @@
 
                 <div class="d-flex">
 
-                    <!-- <a class="btn btn-outline-primary btn-login" href="<?= BASE_URL ?>?act=booking-create"><b>Đăng ký
-                            tour</b></a> -->
+                    <a class="btn btn-outline-primary btn-login" href="<?= BASE_URL ?>?act=booking-create"><b>Đăng ký
+                            tour</b></a>
 
                     <a class="btn btn-outline-primary btn-login" href="<?= BASE_URL ?>?act=hdv-login">Đăng nhập</a>
                 </div>
