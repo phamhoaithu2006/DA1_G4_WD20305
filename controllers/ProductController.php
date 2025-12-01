@@ -11,13 +11,14 @@ class ProductController
 
     public function Home()
     {
-        $title = "Home";
+        $title = "Trang chủ khách hàng";
         require_once './views/trangchu.php';
     }
+
     public function adminHome()
     {
-        $title = "This is admin home page";
-        require_once 'views/admin/sidebar.php';
+        $title = "Trang chủ quản lý";
+        require_once 'views/admin/home.php';
     }
     public function adminDashboard()
     {
@@ -37,16 +38,14 @@ class ProductController
     public function Dashboard()
     {
         $db = new DashboardModel();
-       $data = [
-        'totalCategories' => $db->getTotalCategories(),
-        'totalTours'      => $db->getTotalTours(),
-        'totalCustomers'  => $db->getTotalCustomers(),
-        'totalBookings'   => $db->getTotalBookings(),
-        'totalEmployees'  => $db->getTotalEmployees(),
-        'recentBookings'  => $db->getRecentBookings(5)
-    ];
+        $data = [
+            'totalCategories' => $db->getTotalCategories(),
+            'totalTours'      => $db->getTotalTours(),
+            'totalCustomers'  => $db->getTotalCustomers(),
+            'totalBookings'   => $db->getTotalBookings(),
+            'totalEmployees'  => $db->getTotalEmployees(),
+            'recentBookings'  => $db->getRecentBookings(5)
+        ];
         require_once 'views/admin/dashboard/dashboard.php';
     }
-
-    
 }

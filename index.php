@@ -15,7 +15,7 @@ require_once 'controllers/TourAssignmentController.php';
 
 // Require toàn bộ file Models
 require_once './models/ProductModel.php';
-require_once './models/Booking.php';
+require_once './models/BookingModel.php';
 require_once './models/HDVModel.php';
 require_once './models/EmployeeModel.php';
 require_once './models/TourAssignmentModel.php';
@@ -52,10 +52,10 @@ match ($act) {
     'editEmployee' => (new EmployeeController())->edit($id),
     'deleteEmployee' => (new EmployeeController())->delete($id),
     //Lịch trình
-    'schedule' =>(new TourAssignmentController())->index(),
-    'hdv-tour-detail'=>(new TourAssignmentController())->detail($id),
-    'asm-detail-hdv' =>(new TourAssignmentController())->getAllHDV(),
-    'ct-tour'=>(new TourAssignmentController())->showCustomersByTour($tourID),
+    'schedule' => (new TourAssignmentController())->index(),
+    'hdv-tour-detail' => (new TourAssignmentController())->detail($id),
+    'asm-detail-hdv' => (new TourAssignmentController())->getAllHDV(),
+    'ct-tour' => (new TourAssignmentController())->showCustomersByTour($tourID),
     //Thông tin theo tour
 
     // Trang hdv
