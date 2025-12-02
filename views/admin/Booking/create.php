@@ -1,9 +1,9 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
-<?php require_once __DIR__ . '/../../main.php'; ?>
-<?php 
-    $selectedTour = isset($_GET['tour_id']) ? $_GET['tour_id'] : '';
+<?php require_once __DIR__ . '/../main.php'; ?>
+<?php
+$selectedTour = isset($_GET['tour_id']) ? $_GET['tour_id'] : '';
 ?>
 
 
@@ -20,7 +20,7 @@
         <h2 class="page-title text-primary mb-4">Tạo booking mới</h2>
 
         <?php if (!empty($error)): ?>
-        <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+            <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
         <?php endif; ?>
 
         <div class="card shadow-sm booking-card">
@@ -65,11 +65,11 @@
                                 <option value="">- Chọn tour -</option>
 
                                 <?php foreach ($tours as $t): ?>
-                                <option value="<?= $t['TourID'] ?>"
-                                    <?= ($t['TourID'] == $selectedTour ? 'selected' : '') ?>>
-                                    <?= htmlspecialchars($t['TourName']) ?>
-                                    (<?= number_format($t['Price'], 0, ',', '.') ?> VNĐ)
-                                </option>
+                                    <option value="<?= $t['TourID'] ?>"
+                                        <?= ($t['TourID'] == $selectedTour ? 'selected' : '') ?>>
+                                        <?= htmlspecialchars($t['TourName']) ?>
+                                        (<?= number_format($t['Price'], 0, ',', '.') ?> VNĐ)
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -108,47 +108,47 @@
 
 
 <style>
-.admin-layout {
-    display: flex;
-    min-height: 100vh;
-    background: #f5f7fa;
-}
+    .admin-layout {
+        display: flex;
+        min-height: 100vh;
+        background: #f5f7fa;
+    }
 
-.sidebar-wrapper {
-    width: 260px;
-}
+    .sidebar-wrapper {
+        width: 260px;
+    }
 
-.admin-content {
-    flex-grow: 1;
-}
+    .admin-content {
+        flex-grow: 1;
+    }
 
-.page-title {
-    font-weight: 700;
-}
+    .page-title {
+        font-weight: 700;
+    }
 
-.booking-card {
-    border-radius: 14px;
-    background: #ffffff;
-    border: none;
-}
+    .booking-card {
+        border-radius: 14px;
+        background: #ffffff;
+        border: none;
+    }
 
-.form-control-lg-rounded,
-.form-select.form-control-lg-rounded {
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 15px;
-}
+    .form-control-lg-rounded,
+    .form-select.form-control-lg-rounded {
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 15px;
+    }
 
-.section-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #0d6efd;
-    margin-bottom: 15px;
-}
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #0d6efd;
+        margin-bottom: 15px;
+    }
 
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    transition: 0.25s ease;
-}
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        transition: 0.25s ease;
+    }
 </style>
