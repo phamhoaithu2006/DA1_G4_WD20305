@@ -93,7 +93,10 @@ $hdvName = $_SESSION['hdv_name'] ?? 'HDV';
                 Hướng dẫn viên: <?= htmlspecialchars($hdvName) ?>
             </a>
             <div class="ms-auto">
-                <a class="btn btn-light btn-sm" href="?act=hdv-logout">
+                <a class="btn btn-outline-light btn-sm me-2" href="?act=admin">
+                    Trang chủ
+                </a>
+                <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-logout">
                     Đăng xuất
                 </a>
             </div>

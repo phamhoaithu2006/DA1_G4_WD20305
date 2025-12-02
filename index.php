@@ -51,12 +51,12 @@ match ($act) {
     'detailEmployee' => (new EmployeeController())->detail($id),
     'editEmployee' => (new EmployeeController())->edit($id),
     'deleteEmployee' => (new EmployeeController())->delete($id),
-    //Lịch trình
+    // Lịch trình
     'schedule' => (new TourAssignmentController())->index(),
-    'hdv-tour-detail' => (new TourAssignmentController())->detail($id),
+    'hdv-detail' => (new TourAssignmentController())->detail($id),
     'asm-detail-hdv' => (new TourAssignmentController())->getAllHDV(),
     'ct-tour' => (new TourAssignmentController())->showCustomersByTour($tourID),
-    //Thông tin theo tour
+    // Thông tin theo tour
 
     // Trang hdv
     'hdv-login' => (new HDVController())->login(),
@@ -68,7 +68,6 @@ match ($act) {
     // Nhật ký & cập nhật tour của hdv
     'hdv-diary-form' => (new HDVController())->diaryForm(),
     'hdv-diary-save' => (new HDVController())->diarySave(),
-    'hdv-diary-delete' => (new HDVController())->diaryDelete(),
     'hdv-checkin-checkout' => (new HDVController())->checkInOut(),
     'hdv-checkin-save' => (new HDVController())->checkInSave(),
     'hdv-checkout-save' => (new HDVController())->checkOutSave(),

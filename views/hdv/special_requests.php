@@ -28,7 +28,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
     <nav class="navbar navbar-expand navbar-dark bg-primary shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="?act=hdv-tour">Hướng dẫn viên: <?= htmlspecialchars($hdvName) ?></a>
-            <div class="d-flex">
+            <div class="ms-auto">
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-tour">Danh sách tour</a>
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-logout">Đăng xuất</a>
             </div>
@@ -43,7 +43,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
                         <h5 class="mb-0"><i class="bi bi-heart"></i> Cập nhật yêu cầu đặc biệt của khách</h5>
                         <?php if (isset($tour) && !empty($tour['TourName'])): ?>
                             <small class="d-block mt-2 opacity-75">
-                                <i class="bi bi-map"></i> Tour: <?= htmlspecialchars($tour['TourName']) ?>
+                                <?= htmlspecialchars($tour['TourName']) ?>
                             </small>
                         <?php endif; ?>
                     </div>
@@ -70,7 +70,10 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
                                             <th>Họ tên</th>
                                             <th>Số điện thoại</th>
                                             <th>Phòng</th>
-                                            <th>Yêu cầu đặc biệt</th>
+                                            <th>Ăn chay</th>
+                                            <th>Bệnh lý/Sức khỏe</th>
+                                            <th>Yêu cầu khác</th>
+                                            <th>Ghi chú</th>
                                             <th>Thao tác</th>
                                         </tr>
                                     </thead>
@@ -80,15 +83,10 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
                                                 <td><?= htmlspecialchars($customer['FullName']) ?></td>
                                                 <td><?= htmlspecialchars($customer['Phone']) ?></td>
                                                 <td><?= htmlspecialchars($customer['RoomNumber'] ?? '-') ?></td>
-                                                <td>
-                                                    <small class="text-muted">
-                                                        <?php if (!empty($customer['SpecialRequests'])): ?>
-                                                            <?= nl2br(htmlspecialchars($customer['SpecialRequests'])) ?>
-                                                        <?php else: ?>
-                                                            <span class="text-muted">Chưa có</span>
-                                                        <?php endif; ?>
-                                                    </small>
-                                                </td>
+                                                <td><?= ($customer['Vegetarian'] ?? 0) == 1 ? 'Có' : 'Không' ?></td>
+                                                <td><?= !empty($customer['MedicalCondition']) ? nl2br(htmlspecialchars($customer['MedicalCondition'])) : '<span class="text-muted">-</span>' ?></td>
+                                                <td><?= !empty($customer['OtherRequests']) ? nl2br(htmlspecialchars($customer['OtherRequests'])) : '<span class="text-muted">-</span>' ?></td>
+                                                <td><?= !empty($customer['SpecialRequests']) ? nl2br(htmlspecialchars($customer['SpecialRequests'])) : '<span class="text-muted">-</span>' ?></td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-outline-primary"
                                                         data-bs-toggle="modal"
@@ -135,7 +133,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
 
                                                                 <div class="mb-3">
                                                                     <label class="form-label">Ghi chú</label>
-                                                                    <textarea class="form-control" name="note" rows="2"><?= htmlspecialchars($customer['Note'] ?? '') ?></textarea>
+                                                                    <textarea class="form-control" name="note" rows="2"><?= htmlspecialchars($customer['SpecialRequests'] ?? '') ?></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">

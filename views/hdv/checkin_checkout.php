@@ -34,7 +34,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']); // xóa sau khi dùng
     <nav class="navbar navbar-expand navbar-dark bg-primary shadow-sm">
         <div class="container">
             <a class="navbar-brand fw-bold" href="?act=hdv-tour">Hướng dẫn viên: <?= htmlspecialchars($hdvName) ?></a>
-            <div class="d-flex">
+            <div class="ms-auto">
                 <a class="btn btn-outline-light btn-sm me-2" href="?act=hdv-tour">Danh sách tour</a>
                 <a class="btn btn-outline-light btn-sm" href="?act=hdv-logout">Đăng xuất</a>
             </div>
@@ -54,7 +54,7 @@ unset($_SESSION['hdv_error'], $_SESSION['hdv_success']); // xóa sau khi dùng
                         </h5>
                         <?php if (isset($tour) && !empty($tour['TourName'])): ?>
                             <small class="d-block mt-2 opacity-75">
-                                <i class="bi bi-map"></i> Tour: <?= htmlspecialchars($tour['TourName']) ?>
+                                <?= htmlspecialchars($tour['TourName']) ?>
                             </small>
                         <?php endif; ?>
                     </div>
