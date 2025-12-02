@@ -11,37 +11,54 @@
 
         <div class="list-group">
             <a href="?act=dashboard" class="list-group-item list-group-item-action d-flex align-items-center">
-                <span><i class="bi bi-bar-chart"> </i>Dashboard</span>
+                <span><i class="bi bi-bar-chart"> </i> Dashboard</span>
             </a>
-
 
             <a href="?act=category" class="list-group-item list-group-item-action d-flex align-items-center">
                 <span><i class="bi bi-globe-americas"></i> Tour</span>
             </a>
+
             <a href="?act=booking-list" class="list-group-item list-group-item-action">
                 <span><i class="bi bi-geo-alt"></i> Booking</span>
             </a>
+
             <!-- Quản lý & điều hành tour -->
             <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                 data-bs-toggle="collapse" data-bs-target="#menuDieuHanhTour">
                 <span><i class="bi bi-people"></i> Điều hành tour</span>
                 <i class="bi bi-chevron-down"></i>
             </button>
+
             <div class="collapse" id="menuDieuHanhTour">
                 <a href="?act=employees" class="list-group-item ps-5">Nhân sự</a>
-                <a href="?act=assignments" class="list-group-item ps-5">Lịch trình</a>
-                <a href="<?= BASE_URL ?>?act=tourcustomers" class="list-group-item ps-5">Khách hàng</a>
+
+                <!-- Assignments cần tourID → thêm tourID giả lập (1) hoặc bạn thay bằng biến động) -->
+                <a href="?act=assignments&tourID=1" class="list-group-item ps-5">Lịch trình</a>
+
+                <a href="?act=tourcustomers&tourID=1" class="list-group-item ps-5">Khách hàng tour</a>
+
+                <!-- Nhật ký tour -->
+                <a href="?act=tourlog-list&tourID=1" class="list-group-item ps-5">
+                    Nhật ký tour
+                </a>
             </div>
 
-            <!-- Báo cáo vận hành tour -->
+            <!-- Báo cáo tài chính tour -->
             <button class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
                 data-bs-toggle="collapse" data-bs-target="#menuBaoCao">
                 <span><i class="bi bi-bar-chart"></i> Báo cáo vận hành</span>
                 <i class="bi bi-chevron-down"></i>
             </button>
+
             <div class="collapse" id="menuBaoCao">
-                <a href="#" class="list-group-item ps-5">Báo cáo tổng hợp</a>
-                <a href="#" class="list-group-item ps-5">Hiệu quả các tour</a>
+                <!-- Tổng hợp -->
+                <a href="?act=finance-list&tourID=1" class="list-group-item ps-5">
+                    Báo cáo tài chính tour
+                </a>
+
+                <a href="?act=finance-create&tourID=1" class="list-group-item ps-5">
+                    Thêm báo cáo tài chính
+                </a>
             </div>
         </div>
 
@@ -53,7 +70,6 @@
         </a>
 
     </div>
-
 
 </div>
 
