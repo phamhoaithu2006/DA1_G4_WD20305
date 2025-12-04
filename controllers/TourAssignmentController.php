@@ -32,7 +32,7 @@ class TourAssignmentController
     public function getAllHDV()
     {
         $data = $this->model->getAllHDV(); // gọi model đã khởi tạo trong __construct()
-        var_dump($data);
+        // var_dump($data);
         require 'views\admin\Operate\assignments\HDV.php';
     }
 
@@ -45,7 +45,7 @@ class TourAssignmentController
 
         $customers = $this->model->getCustomersByTour($tourId);
 
-        var_dump($customers);
+        // var_dump($customers);
         // Gọi view hiển thị
         require 'views/admin/Operate/tourcustomers/list.php';
     }

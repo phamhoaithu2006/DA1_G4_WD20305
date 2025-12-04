@@ -3,57 +3,80 @@
 
 <?php require_once __DIR__ . '/../navbar.php'; ?>
 
-<div class="d-flex admin-layout">
+<div class="admin-layout">
 
     <!-- Sidebar -->
-    <div class="sidebar-wrapper bg-light border-end">
+    <aside class="sidebar-wrapper">
         <?php require_once __DIR__ . '/../sidebar.php'; ?>
-    </div>
+    </aside>
 
-    <!-- Content -->
-    <div class="admin-content flex-grow-1 p-4">
+    <!-- Main Content -->
+    <main class="admin-content">
+
+        <!-- Page Title -->
+        <h2 class="page-title">Tổng quan hệ thống</h2>
+
         <!-- Dashboard Cards -->
-        <h2 class="page-title">Dashboard</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="tour-card p-4">
-                    <div class="card-title"><i class="bi bi-list-ul me-2"></i>Danh mục Tour</div>
-                    <div class="info-line">Tổng số danh mục: <strong><?= $data['totalCategories'] ?></strong></div>
+        <div class="row g-2 mb-2">
+
+            <div class="col-md-6">
+                <div class="tour-card p-4 d-flex align-items-center">
+                    <div class="icon-box bg-primary bg-opacity-10 text-primary">
+                        <i class="bi-map"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Danh mục tour</div>
+                        <div class="info-line">Tổng: <b><?= $data['totalCategories'] ?></b></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="tour-card p-4">
-                    <div class="card-title"><i class="bi bi-map me-2"></i>Tour</div>
-                    <div class="info-line">Tổng số tour: <strong><?= $data['totalTours'] ?></strong></div>
+
+            <div class="col-md-6">
+                <div class="tour-card p-4 d-flex align-items-center">
+                    <div class="icon-box bg-info bg-opacity-10 text-info">
+                        <i class="bi-card-list"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Đơn booking</div>
+                        <div class="info-line">Tổng: <b><?= $data['totalBookings'] ?></b></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="tour-card p-4">
-                    <div class="card-title"><i class="bi bi-people me-2"></i>Khách hàng</div>
-                    <div class="info-line">Tổng số khách hàng: <strong><?= $data['totalCustomers'] ?></strong></div>
+
+            <div class="col-md-6">
+                <div class="tour-card p-4 d-flex align-items-center">
+                    <div class="icon-box bg-warning bg-opacity-10 text-warning">
+                        <i class="bi-person-badge"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Khách hàng</div>
+                        <div class="info-line">Tổng: <b><?= $data['totalCustomers'] ?></b></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="tour-card p-4">
-                    <div class="card-title"><i class="bi bi-book me-2"></i>Đơn đặt tour</div>
-                    <div class="info-line">Tổng số booking: <strong><?= $data['totalBookings'] ?></strong></div>
+
+            <div class="col-md-6">
+                <div class="tour-card p-4 d-flex align-items-center">
+                    <div class="icon-box bg-danger bg-opacity-10 text-danger">
+                        <i class="bi-person-vcard"></i>
+                    </div>
+                    <div>
+                        <div class="card-title">Nhân viên</div>
+                        <div class="info-line">Tổng: <b><?= $data['totalEmployees'] ?></b></div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="tour-card p-4">
-                    <div class="card-title"><i class="bi bi-person-badge me-2"></i>Nhân viên</div>
-                    <div class="info-line">Tổng số nhân viên: <strong><?= $data['totalEmployees'] ?></strong></div>
-                </div>
-            </div>
+
         </div>
 
         <!-- Recent Bookings Table -->
-        <h3 class="mt-5 mb-3 text-primary">Lịch đặt gần đây</h3>
+        <h3 class="recent-title mt-5 mb-3 text-primary text-center fw-bold">Lịch đặt gần đây</h3>
+
         <div class="table-responsive shadow-sm rounded bg-white p-3">
             <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light text-dark">
                     <tr>
-                        <th>#</th>
+                        <th>STT</th>
                         <th>Khách</th>
                         <th>Tour</th>
                         <th>Ngày đặt</th>
@@ -62,6 +85,7 @@
                         <th>Hành động</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     <?php if (!empty($data['recentBookings'])): ?>
                         <?php foreach ($data['recentBookings'] as $index => $b): ?>
@@ -70,143 +94,157 @@
                                 <td><?= htmlspecialchars($b['CustomerName']) ?></td>
                                 <td><?= htmlspecialchars($b['TourName']) ?></td>
                                 <td><?= date('d/m/Y H:i', strtotime($b['BookingDate'])) ?></td>
-                                <td><?= $b['TotalAmount'] !== null ? number_format($b['TotalAmount'], 0, ',', '.') . ' đ' : '-' ?>
-                                </td>
+                                <td><?= $b['TotalAmount'] !== null ? number_format($b['TotalAmount'], 0, ',', '.') . ' đ' : '-' ?></td>
+
                                 <td>
                                     <span class="badge 
-                                    <?= $b['Status'] === 'Đang xử lý' ? 'bg-warning text-dark' : '' ?>
-                                    <?= $b['Status'] === 'Đã xác nhận' ? 'bg-info text-white' : '' ?>
-                                    <?= $b['Status'] === 'Đã hủy' ? 'bg-danger' : '' ?>
-                                    <?= $b['Status'] === 'Đã thanh toán' ? 'bg-success text-white' : '' ?>
-                                ">
+                                <?= $b['Status'] === 'Đang xử lý' ? 'bg-warning text-dark' : '' ?>
+                                <?= $b['Status'] === 'Đã xác nhận' ? 'bg-info text-white' : '' ?>
+                                <?= $b['Status'] === 'Đã hủy' ? 'bg-danger' : '' ?>
+                                <?= $b['Status'] === 'Đã thanh toán' ? 'bg-success text-white' : '' ?>">
                                         <?= htmlspecialchars($b['Status']) ?>
                                     </span>
                                 </td>
+
                                 <td>
-                                    <a href="<?= BASE_URL ?>?act=booking-detail&id=<?= $b['BookingID'] ?>"
-                                        class="btn btn-sm btn-primary">
+                                    <a href="<?= BASE_URL ?>?act=booking-detail&id=<?= $b['BookingID'] ?>" class="btn btn-sm btn-primary">
                                         <i class="bi bi-eye"></i> Chi tiết
                                     </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
+
                     <?php else: ?>
                         <tr>
                             <td colspan="7" class="text-center text-muted">Chưa có booking nào</td>
                         </tr>
                     <?php endif; ?>
-
                 </tbody>
+
             </table>
         </div>
-    </div>
+
+    </main>
 </div>
 
+<!-- CSS -->
 <style>
+    body {
+        background: #eef1f5;
+    }
+
     .admin-layout {
         display: flex;
         min-height: 100vh;
-        background-color: #f5f7fa;
     }
 
     .sidebar-wrapper {
         width: 260px;
-        background-color: #fff;
+        background: #ffffff;
+        border-right: 1px solid #e3e7ef;
+        box-shadow: 3px 0 12px rgba(0, 0, 0, 0.06);
+        position: sticky;
+        top: 0;
+        height: 100vh;
     }
 
     .admin-content {
         flex-grow: 1;
-        padding: 25px 30px;
+        padding: 40px;
     }
 
     .page-title {
-        font-size: 1.75rem;
-        font-weight: 650;
         text-align: center;
-        color: #0d6efd;
-        margin-bottom: 30px;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #0d47a1;
+        margin-bottom: 45px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
     }
 
     .tour-card {
-        border-radius: 16px;
-        border: 1px solid #e4e4e4;
-        background: #fff;
-        transition: all .25s ease-in-out;
+        border-radius: 20px;
+        background: #ffffff;
+        border: 1px solid #dde3ec;
+        display: flex;
+        padding: 25px;
+        gap: 18px;
+        align-items: center;
+        transition: 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
     }
 
     .tour-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        transform: translateY(-8px);
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .icon-box {
+        width: 60px;
+        height: 60px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
     }
 
     .card-title {
-        font-size: 1.15rem;
-        font-weight: 650;
-        color: #222;
-        margin-bottom: 12px;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1e293b;
     }
 
     .info-line {
-        font-size: 0.95rem;
-        margin-bottom: 6px;
-        color: #333;
+        font-size: 1rem;
+        color: #64748b;
+        margin-top: 4px;
     }
 
-    @media (max-width: 768px) {
-        .col-md-4 {
-            flex: 0 0 100%;
-        }
-    }
-
-    /* Recent Bookings Table */
     .table-responsive {
         border-radius: 14px;
         padding: 20px;
-        background: #fff;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        background: #ffffff;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    table.table-hover thead th {
+        background: #eaf0f7;
+        color: #1e293b;
+        font-weight: 700;
+        padding: 14px;
+        border-bottom: 2px solid #dbe3ee;
     }
 
     table.table-hover tbody tr {
-        background: #ffffff;
-        border-radius: 10px;
-        transition: all 0.3s ease;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-        margin-bottom: 10px;
-        display: table-row;
+        transition: 0.25s ease;
     }
 
     table.table-hover tbody tr:hover {
-        background: #e9f2ff;
+        background: #edf6ff;
         transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
     }
 
     table.table-hover tbody td {
         vertical-align: middle;
-        text-align: center;
-    }
-
-    table.table-hover thead th {
-        font-weight: 600;
-        text-align: center;
-        background: #f1f5f9;
-        border-bottom: none;
+        padding: 14px;
+        font-size: 0.95rem;
+        color: #334155;
     }
 
     .badge {
-        padding: 0.55em 0.8em;
+        padding: 0.55em 0.9em;
+        border-radius: 10px;
         font-size: 0.85rem;
-        border-radius: 8px;
+        font-weight: 600;
     }
 
     .btn-sm {
         font-size: 0.8rem;
-        padding: 0.35rem 0.6rem;
+        padding: 0.40rem 0.7rem;
         border-radius: 6px;
-    }
-
-    .btn-sm i {
-        margin-right: 4px;
     }
 </style>
 

@@ -51,9 +51,9 @@
                 <div class="col-md-4">
                     <select name="status" class="form-select shadow-sm" <?= $isPaid ? 'disabled' : '' ?>>
                         <?php
-            $statuses = ['Đang xử lý', 'Đã xác nhận', 'Đã thanh toán', 'Đã hủy'];
-            foreach ($statuses as $s): ?>
-                        <option value="<?= $s ?>" <?= $s == $booking['Status'] ? 'selected' : '' ?>><?= $s ?></option>
+                        $statuses = ['Đang xử lý', 'Đã xác nhận', 'Đã thanh toán', 'Đã hủy'];
+                        foreach ($statuses as $s): ?>
+                            <option value="<?= $s ?>" <?= $s == $booking['Status'] ? 'selected' : '' ?>><?= $s ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -66,41 +66,41 @@
             </form>
 
             <?php if ($isPaid): ?>
-            <div class="alert alert-success mt-3">
-                <i class="bi bi-info-circle"></i> Booking đã thanh toán — không thể cập nhật trạng thái.
-            </div>
+                <div class="alert alert-success mt-3">
+                    <i class="bi bi-info-circle"></i> Booking đã thanh toán — Không thể cập nhật trạng thái
+                </div>
             <?php endif; ?>
 
 
             <!-- Danh sách khách -->
             <div class="card shadow-sm rounded-4 p-4">
-                <h4 class="fw-bold mb-3"><i class="bi bi-people"></i> Danh sách khách trong tour</h4>
+                <h4 class="fw-bold mb-3">Danh sách khách trong tour</h4>
 
                 <?php if (!empty($tourCustomers)): ?>
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered align-middle">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>STT</th>
-                                <th>Họ và tên</th>
-                                <th>Phòng</th>
-                                <th>Ghi chú</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($tourCustomers as $index => $tc): ?>
-                            <tr>
-                                <td><?= $index + 1 ?></td>
-                                <td><?= htmlspecialchars($tc['FullName']) ?></td>
-                                <td><?= htmlspecialchars($tc['RoomNumber'] ?? '-') ?></td>
-                                <td><?= htmlspecialchars($tc['Note'] ?? '-') ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered align-middle">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Họ và tên</th>
+                                    <th>Phòng</th>
+                                    <th>Ghi chú</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($tourCustomers as $index => $tc): ?>
+                                    <tr>
+                                        <td><?= $index + 1 ?></td>
+                                        <td><?= htmlspecialchars($tc['FullName']) ?></td>
+                                        <td><?= htmlspecialchars($tc['RoomNumber'] ?? '-') ?></td>
+                                        <td><?= htmlspecialchars($tc['Note'] ?? '-') ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 <?php else: ?>
-                <p class="text-muted">Không có dữ liệu khách đoàn</p>
+                    <p class="text-muted">Không có dữ liệu khách đoàn</p>
                 <?php endif; ?>
 
             </div>
@@ -110,32 +110,32 @@
 </div>
 
 <style>
-.admin-layout {
-    min-height: 100vh;
-    background-color: #f8f9fa;
-}
+    .admin-layout {
+        min-height: 100vh;
+        background-color: #f8f9fa;
+    }
 
-.sidebar-wrapper {
-    width: 260px;
-    min-height: 100vh;
-    background: #fff;
-    border-right: 1px solid #ddd;
-}
+    .sidebar-wrapper {
+        width: 260px;
+        min-height: 100vh;
+        background: #fff;
+        border-right: 1px solid #ddd;
+    }
 
-.admin-content {
-    background-color: #f8f9fa;
-}
+    .admin-content {
+        background-color: #f8f9fa;
+    }
 
-.card {
-    border: none;
-}
+    .card {
+        border: none;
+    }
 
-.card-body p {
-    font-size: 1rem;
-    margin-bottom: 8px;
-}
+    .card-body p {
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
 
-table thead {
-    font-weight: bold;
-}
+    table thead {
+        font-weight: bold;
+    }
 </style>

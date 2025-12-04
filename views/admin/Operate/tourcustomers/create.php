@@ -4,7 +4,7 @@
 ?>
 
 <div class="container mt-4">
-    <h3>Thêm khách vào Tour #<?= $tourID ?></h3>
+    <h3>Thêm khách vào tour số: <?= $tourID ?></h3>
 
     <form action="?act=tourcustomer-add" method="post" class="row g-3">
         <input type="hidden" name="tourID" value="<?= $tourID ?>">
@@ -13,8 +13,8 @@
             <label>Chọn khách:</label>
             <select name="customerID" class="form-select" required>
                 <option value="">-- Chọn khách --</option>
-                <?php foreach($allCustomers as $c): ?>
-                <option value="<?= $c['CustomerID'] ?>"><?= $c['FullName'] ?> (<?= $c['Phone'] ?>)</option>
+                <?php foreach ($allCustomers as $c): ?>
+                    <option value="<?= $c['CustomerID'] ?>"><?= $c['FullName'] ?> (<?= $c['Phone'] ?>)</option>
                 <?php endforeach; ?>
             </select>
         </div>
