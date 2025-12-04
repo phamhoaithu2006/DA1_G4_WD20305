@@ -21,36 +21,35 @@ class TourFinanceController
     }
 
 
-    public function store()
-    {
-        // Lấy dữ liệu từ POST
-        $tourId = (int) ($_POST['TourID'] ?? 0);
-        $revenue = (float) ($_POST['Revenue'] ?? 0);
-        $expense = (float) ($_POST['Expense'] ?? 0);
+    // controllers/TourFinanceController.php
 
+public function store()
+{
+    // Lấy dữ liệu từ POST
+    $tourId = (int) ($_POST['TourID'] ?? 0);
+    $revenue = (float) ($_POST['Revenue'] ?? 0);
+    $expense = (float) ($_POST['Expense'] ?? 0);
 
-        // Tính Profit (Lợi nhuận)
-        $profit = $revenue - $expense;
+    // XÓA: KHÔNG CẦN tính toán $profit = $revenue - $expense;
 
+    // Chuẩn bị dữ liệu cho Model (Chỉ cần 3 cột chèn)
+    $data = [
+        'TourID' => $tourId,
+        'Revenue' => $revenue,
+        'Expense' => $expense,
+        // XÓA: 'Profit'
+    ];
 
-        // Chuẩn bị dữ liệu cho Model
-        $data = [
-            'TourID' => $tourId,
-            'Revenue' => $revenue,
-            'Expense' => $expense,
-            'Profit' => $profit,
-        ];
-
-
-        if ($tourId > 0) {
-            $this->model->create($data);
-            header('Location: index.php?act=finance-list&tourId=' . $tourId);
-            exit;
-        } else {
-            header('Location: index.php?act=finance-list&tourId=0');
-            exit;
-        }
+    if ($tourId > 0) {
+        $this->model->create($data);
+        header('Location: index.php?act=finance-list&tourId=' . $tourId);
+        exit;
+    } else {
+        // ... (xử lý lỗi TourID)
+        header('Location: index.php?act=finance-list&tourId=0');
+        exit;
     }
+}
     public function editForm($id)
     {
         $row = $this->model->find($id);
@@ -58,27 +57,26 @@ class TourFinanceController
     }
 
 
-    public function update($id)
-    {
-        $revenue = (float) ($_POST['Revenue'] ?? 0);
-        $expense = (float) ($_POST['Expense'] ?? 0);
-        $profit = $revenue - $expense;
+    // controllers/TourFinanceController.php
 
+public function update($id)
+{
+    $revenue = (float) ($_POST['Revenue'] ?? 0);
+    $expense = (float) ($_POST['Expense'] ?? 0);
+    // XÓA: $profit = $revenue - $expense;
 
-        $data = [
-            'Revenue' => $revenue,
-            'Expense' => $expense,
-            'Profit' => $profit
-        ];
+    $data = [
+        'Revenue' => $revenue,
+        'Expense' => $expense,
+        // XÓA: 'Profit'
+    ];
 
+    $this->model->update($id, $data);
 
-        $this->model->update($id, $data);
-
-
-        $tourId = $_POST['TourID'] ?? 0;
-        header('Location: index.php?act=finance-list&tourId=' . urlencode($tourId));
-        exit;
-    }
+    $tourId = $_POST['TourID'] ?? 0;
+    header('Location: index.php?act=finance-list&tourId=' . urlencode($tourId));
+    exit;
+}
 
 
     public function delete($id, $tourId)

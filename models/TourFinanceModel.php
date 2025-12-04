@@ -1,12 +1,26 @@
 <?php
+// models/TourFinanceModel.php
+
+// BẮT BUỘC: Thêm REQUIRE_ONCE để Model nhìn thấy lớp Database
+require_once __DIR__ . '/../commons/Database.php'; 
+
 class TourFinanceModel
 {
     private $db;
+    
     public function __construct()
     {
-        // Kết nối DB thông qua hàm helper connectDB()
-        $this->db = connectDB();
-    }
+        // Lấy kết nối bằng Singleton
+        $db_instance = Database::getInstance();
+        $this->db = $db_instance->getConnection();
+
+        // Kiểm tra kết nối (Nên giữ lại để debug)
+        if ($this->db === null) {
+            die("Lỗi: Model không thể lấy kết nối CSDL.");
+        }
+    } // <-- Dấu ngoặc nhọn đóng hàm __construct() đã được đặt đúng chỗ
+    
+    // =======================================================
 
     public function getByTour($tourId)
     {
@@ -22,21 +36,29 @@ class TourFinanceModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // ============= CREATE (KHÔNG CHO PHÉP SET Profit) =============
+    // ============= CREATE =============
 
     public function create($data)
     {
-        // Xóa Profit nếu có trong data
-        unset($data['Profit']);
+        // Chỉ giữ lại 3 cột có thể chèn
+        $valid_data = array_intersect_key($data, array_flip(['TourID', 'Revenue', 'Expense']));
 
-        $sql = "INSERT INTO TourFinance (FinanceID, TourID, Revenue, Expense, Profit)
-                VALUES (:FinanceID, :TourID, :Revenue, :, :Profit)";
+        // Cú pháp SQL ĐÚNG
+        $sql = "INSERT INTO TourFinance (TourID, Revenue, Expense)
+                VALUES (:TourID, :Revenue, :Expense)";
 
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute($data);
+
+        // Bắt lỗi execute và trả về kết quả
+        try {
+            return $stmt->execute($valid_data);
+        } catch (PDOException $e) {
+            // Nên ghi log lỗi để debug chi tiết
+            return false;
+        }
     }
 
-    // ============= UPDATE (KHÔNG CHO PHÉP SET Profit) =============
+    // ============= UPDATE =============
 
     public function update($id, $data)
     {
