@@ -14,150 +14,146 @@ if (!empty($tours) && is_array($tours)) {
 <?php require_once __DIR__ . '/../../navbar.php'; ?>
 
 <div class="d-flex admin-layout">
-
-    <!-- Sidebar -->
-    <div class="sidebar-wrapper bg-light border-end">
+    <div class="sidebar-wrapper bg-white shadow-sm border-end">
         <?php require_once __DIR__ . '/../../sidebar.php'; ?>
     </div>
 
-    <!-- Content -->
     <div class="admin-content flex-grow-1 p-4">
-        <h2 class="page-title">Danh sách lịch trình tour du lịch tour du lịch</h2>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">Lịch trình & Điều hành</h2>
+                <p class="text-muted mb-0">Quản lý lịch khởi hành và phân công nhân sự.</p>
+            </div>
+        </div>
 
         <?php if (!empty($grouped)): ?>
         <?php foreach ($grouped as $categoryName => $tourList): ?>
 
-        <h4 class="category-title">
-            <i class="bi bi-folder2-open"></i>
-            <?= htmlspecialchars($categoryName) ?>
-        </h4>
+        <div class="category-section mb-5">
+            <h5 class="category-title text-primary d-flex align-items-center mb-3">
+                <span class="bg-primary-subtle text-primary rounded p-2 me-2">
+                    <i class="bi bi-folder2-open"></i>
+                </span>
+                <?= htmlspecialchars($categoryName) ?>
+            </h5>
 
-        <div class="row g-4">
-            <?php foreach ($tourList as $tour): ?>
-            <div class="col-lg-6 col-md-6">
-                <div class="card tour-card h-100 shadow-sm">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title"><?= htmlspecialchars($tour['TourName']) ?></h5>
+            <div class="row g-4">
+                <?php foreach ($tourList as $tour): ?>
+                <div class="col-xl-4 col-lg-6 col-md-6">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden tour-schedule-card">
+                        <div class="card-body p-4 d-flex flex-column">
 
-                        <p class="info-line">
-                            <i class="bi bi-building text-primary"></i>
-                            Nhà cung cấp: <?= htmlspecialchars($tour['SupplierName'] ?? 'Không có') ?>
-                        </p>
+                            <h5 class="card-title fw-bold text-dark mb-3">
+                                <?= htmlspecialchars($tour['TourName']) ?>
+                            </h5>
 
-                        <p class="info-line">
-                            <i class="bi bi-cash-stack text-success"></i>
-                            Giá: <?= number_format($tour['Price'], 0, ',', '.') ?> VNĐ
-                        </p>
+                            <div class="mb-4">
+                                <div class="d-flex align-items-center mb-2 text-secondary small">
+                                    <i class="bi bi-building me-2 text-primary"></i>
+                                    <span>NCC: <span
+                                            class="fw-medium text-dark"><?= htmlspecialchars($tour['SupplierName'] ?? 'Không có') ?></span></span>
+                                </div>
+                                <div class="d-flex align-items-center mb-2 text-secondary small">
+                                    <i class="bi bi-cash-stack me-2 text-success"></i>
+                                    <span>Giá: <span
+                                            class="fw-bold text-success"><?= number_format($tour['Price'], 0, ',', '.') ?>
+                                            đ</span></span>
+                                </div>
+                            </div>
 
-                        <p class="info-line">
-                            <i class="bi bi-calendar-event text-warning"></i>
-                            Khởi hành: <?= $tour['StartDate'] ?>
-                        </p>
+                            <div class="bg-light rounded-3 p-3 mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="text-muted text-uppercase fw-bold">Khởi hành</small>
+                                    <span class="badge bg-white text-primary border shadow-sm">
+                                        <?= date('d/m/Y', strtotime($tour['StartDate'])) ?>
+                                    </span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted text-uppercase fw-bold">Kết thúc</small>
+                                    <span class="badge bg-white text-danger border shadow-sm">
+                                        <?= date('d/m/Y', strtotime($tour['EndDate'])) ?>
+                                    </span>
+                                </div>
+                            </div>
 
-                        <p class="info-line">
-                            <i class="bi bi-calendar2-check text-info"></i>
-                            Kết thúc: <?= $tour['EndDate'] ?>
-                        </p>
+                            <div class="mt-auto d-grid gap-2 d-md-flex">
+                                <a href="<?= BASE_URL ?>?act=hdv-detail&id=<?= $tour['CategoryID'] ?>"
+                                    class="btn btn-light border text-primary fw-medium flex-grow-1">
+                                    <i class="bi bi-people me-1"></i> Chi tiết đoàn
+                                </a>
+                                <a href="?act=operate-tour&id=<?= $tour['TourID'] ?>"
+                                    class="btn btn-warning fw-bold text-dark flex-grow-1 shadow-sm">
+                                    <i class="bi bi-gear-fill me-1"></i> Điều hành
+                                </a>
+                            </div>
 
-                        <a href="<?= BASE_URL ?>?act=hdv-tour-detail&id=<?= $tour['CategoryID'] ?>"
-                            class="btn btn-view mt-auto">
-                            <i class="bi bi-eye"></i> Chi tiết đoàn
-                        </a>
-
+                        </div>
+                        <div class="card-border-left bg-primary position-absolute start-0 top-0 bottom-0"
+                            style="width: 4px;"></div>
                     </div>
                 </div>
+                <?php endforeach; ?>
             </div>
-            <?php endforeach; ?>
         </div>
 
         <?php endforeach; ?>
         <?php else: ?>
-        <p class="text-center text-muted">Chưa có tour nào</p>
+        <div class="text-center py-5">
+            <div class="mb-3 text-muted"><i class="bi bi-calendar-x fs-1"></i></div>
+            <h5 class="text-muted">Chưa có lịch trình tour nào</h5>
+        </div>
         <?php endif; ?>
     </div>
 </div>
 
 <style>
-.admin-layout {
-    display: flex;
-    min-height: 100vh;
+/* Layout */
+:root {
+    --header-height: 70px;
+    --sidebar-width: 260px;
+}
+
+body {
     background-color: #f5f7fa;
+    font-family: 'Segoe UI', sans-serif;
+    padding-top: var(--header-height);
 }
 
 .sidebar-wrapper {
-    width: 260px;
-    background-color: #fff;
+    width: var(--sidebar-width);
+    position: fixed;
+    top: var(--header-height);
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    overflow-y: auto;
 }
 
 .admin-content {
-    flex-grow: 1;
-    padding: 25px 30px;
+    margin-left: var(--sidebar-width);
+    min-height: calc(100vh - var(--header-height));
 }
 
-/* TITLE TRANG */
-.page-title {
-    font-size: 1.75rem;
-    font-weight: 650;
-    text-align: center;
-    color: #0d6efd;
-    margin-bottom: 30px;
+/* Card Style */
+.tour-schedule-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
 }
 
-/* Category */
-.category-title {
-    font-size: 1.25rem;
-    font-weight: 650;
-    margin-top: 25px;
-    margin-bottom: 12px;
-    padding-left: 12px;
-    border-left: 5px solid #0d6efd;
-    color: #0d6efd;
+.tour-schedule-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
 }
 
-/* Card */
-.tour-card {
-    border-radius: 16px;
-    border: 1px solid #e4e4e4;
-    background: #fff;
-    transition: all .25s ease-in-out;
-}
+/* Responsive */
+@media (max-width: 992px) {
+    .sidebar-wrapper {
+        margin-left: calc(var(--sidebar-width) * -1);
+    }
 
-.tour-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-}
-
-.card-title {
-    font-size: 1.15rem;
-    font-weight: 650;
-    color: #222;
-    margin-bottom: 12px;
-}
-
-.info-line {
-    font-size: 0.95rem;
-    margin-bottom: 6px;
-    color: #333;
-}
-
-/* Button xem chi tiết */
-.btn-view {
-    background-color: #0d6efd;
-    color: white;
-    border-radius: 8px;
-    padding: 8px 14px;
-    transition: 0.2s;
-}
-
-.btn-view:hover {
-    background-color: #0b5ed7;
-    color: #fff;
-    transform: scale(1.03);
-}
-
-@media (max-width: 768px) {
-    .col-md-6 {
-        flex: 0 0 100%;
+    .admin-content {
+        margin-left: 0;
     }
 }
 </style>

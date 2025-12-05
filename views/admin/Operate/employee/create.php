@@ -4,136 +4,104 @@
 <?php require_once __DIR__ . '/../../navbar.php'; ?>
 
 <div class="d-flex admin-layout">
-
-    <!-- Sidebar -->
-    <div class="sidebar-wrapper">
+    <div class="sidebar-wrapper bg-white shadow-sm border-end">
         <?php require_once __DIR__ . '/../../sidebar.php'; ?>
     </div>
 
-    <!-- Content -->
     <div class="admin-content flex-grow-1 p-4">
-        <div class="container mt-4">
-            <h2 class="text-primary mb-3"><?= isset($employee) ? 'Sửa' : 'Thêm' ?> nhân sự</h2>
-            <form method="post">
-                <div class="mb-3">
-                    <label class="form-label">Họ tên</label>
-                    <input type="text" name="name" class="form-control" value="<?= $employee['FullName'] ?? '' ?>"
-                        required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Chức vụ</label>
-                    <input type="text" name="role" class="form-control" value="<?= $employee['Role'] ?? '' ?>">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Số điện thoại</label>
-                    <input type="text" name="phone" class="form-control" value="<?= $employee['Phone'] ?? '' ?>">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" value="<?= $employee['Email'] ?? '' ?>">
-                </div>
-                <button type="submit" class="btn btn-success"><?= isset($employee) ? 'Cập nhật' : 'Thêm' ?></button>
-                <a href="index.php?action=employees" class="btn btn-secondary">Quay lại</a>
-            </form>
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">
+                    <?= isset($employee) ? 'Cập nhật thông tin' : 'Thêm nhân sự mới' ?>
+                </h2>
+                <p class="text-muted mb-0">Vui lòng điền đầy đủ thông tin bên dưới.</p>
+            </div>
+            <a href="index.php?act=employees" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+            </a>
         </div>
 
-        <style>
-        /* STT column */
-        .stt-col {
-            text-align: center;
-            font-weight: 600;
-            width: 60px;
-        }
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0">
+                        <h5 class="fw-bold text-primary"><i class="bi bi-person-vcard me-2"></i>Thông tin cá nhân</h5>
+                    </div>
 
-        /* Bảng tổng thể */
-        .table-responsive {
-            border-radius: 12px;
-            padding: 25px;
-            background: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
+                    <div class="card-body p-4">
+                        <form method="post">
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium text-secondary small text-uppercase">Họ và tên
+                                        <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text bg-light border-end-0"><i
+                                                class="bi bi-person"></i></span>
+                                        <input type="text" name="name" class="form-control border-start-0 fs-6"
+                                            value="<?= $employee['FullName'] ?? '' ?>" placeholder="Nhập họ tên đầy đủ"
+                                            required>
+                                    </div>
+                                </div>
 
-        table.table-hover {
-            border-collapse: separate;
-            border-spacing: 0 10px;
-        }
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium text-secondary small text-uppercase">Chức
+                                        vụ</label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text bg-light border-end-0"><i
+                                                class="bi bi-briefcase"></i></span>
+                                        <select name="role" class="form-select border-start-0 fs-6">
+                                            <?php $curRole = $employee['Role'] ?? ''; ?>
+                                            <option value="Hướng dẫn viên"
+                                                <?= $curRole == 'Hướng dẫn viên' ? 'selected' : '' ?>>Hướng dẫn viên
+                                            </option>
+                                            <option value="Tài xế" <?= $curRole == 'Tài xế' ? 'selected' : '' ?>>Tài xế
+                                            </option>
+                                            <option value="Nhân viên điều hành"
+                                                <?= $curRole == 'Nhân viên điều hành' ? 'selected' : '' ?>>Nhân viên
+                                                điều hành</option>
+                                            <option value="Quản lý" <?= $curRole == 'Quản lý' ? 'selected' : '' ?>>Quản
+                                                lý</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-        table.table-hover thead tr {
-            border-radius: 12px;
-        }
+                                <div class="col-md-6">
+                                    <label class="form-label fw-medium text-secondary small text-uppercase">Số điện
+                                        thoại <span class="text-danger">*</span></label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text bg-light border-end-0"><i
+                                                class="bi bi-telephone"></i></span>
+                                        <input type="text" name="phone" class="form-control border-start-0 fs-6"
+                                            value="<?= $employee['Phone'] ?? '' ?>" placeholder="09xxxxxxxx" required>
+                                    </div>
+                                </div>
 
-        table.table-hover thead th {
-            background-color: #f1f5f9;
-            color: #212529;
-            font-weight: 600;
-            border-bottom: none;
-            text-align: center;
-        }
+                                <div class="col-md-6">
+                                    <label
+                                        class="form-label fw-medium text-secondary small text-uppercase">Email</label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-text bg-light border-end-0"><i
+                                                class="bi bi-envelope"></i></span>
+                                        <input type="email" name="email" class="form-control border-start-0 fs-6"
+                                            value="<?= $employee['Email'] ?? '' ?>" placeholder="example@email.com">
+                                    </div>
+                                </div>
+                            </div>
 
-        table.table-hover tbody tr {
-            background: #ffffff;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-        }
+                            <hr class="my-4 text-muted opacity-25">
 
-        table.table-hover tbody tr:hover {
-            background: #e1f0ff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        table.table-hover tbody td {
-            vertical-align: middle;
-            text-align: center;
-        }
-
-        table.table-hover tbody td:first-child,
-        table.table-hover thead th:first-child {
-            text-align: center;
-        }
-
-        /* Buttons style */
-        .btn-sm {
-            font-size: 0.8rem;
-            padding: 0.35rem 0.6rem;
-            border-radius: 6px;
-        }
-
-        .btn-warning i {
-            margin-right: 2px;
-        }
-
-        .btn-info i {
-            margin-right: 2px;
-        }
-
-        .btn-danger i {
-            margin-right: 2px;
-        }
-
-        /* Heading */
-        h2 {
-            font-weight: 700;
-            color: #0d6efd;
-            display: flex;
-            align-items: center;
-        }
-
-        h2 i {
-            margin-right: 8px;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .table-responsive {
-                padding: 15px;
-            }
-
-            .stt-col {
-                width: 40px;
-            }
-        }
-        </style>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+                            <div class="d-flex justify-content-end gap-2">
+                                <a href="index.php?act=employees" class="btn btn-light fw-medium px-4">Hủy bỏ</a>
+                                <button type="submit" class="btn btn-primary fw-bold px-4 py-2 shadow-sm">
+                                    <i class="bi bi-check-lg me-1"></i>
+                                    <?= isset($employee) ? 'Lưu thông tin' : 'Thêm mới' ?>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

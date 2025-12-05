@@ -4,138 +4,140 @@
 <?php require_once __DIR__ . '/../navbar.php'; ?>
 
 <div class="d-flex admin-layout">
-
-    <!-- Sidebar -->
-    <div class="sidebar-wrapper">
+    <div class="sidebar-wrapper bg-white shadow-sm border-end">
         <?php require_once __DIR__ . '/../sidebar.php'; ?>
     </div>
 
-    <!-- Content -->
     <div class="admin-content flex-grow-1 p-4">
 
-        <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="?act=booking-list" class="text-decoration-none">Booking</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Chi tiết #<?= $booking['BookingID'] ?></li>
+                </ol>
+            </nav>
+            <a href="?act=booking-list" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-left"></i> Quay lại
+            </a>
+        </div>
 
-            <h2 class="mb-4 text-primary fw-bold">
-                Chi tiết booking số: <?= htmlspecialchars($booking['BookingID']) ?>
-            </h2>
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                        <h5 class="fw-bold text-dark"><i class="bi bi-ticket-perforated text-primary me-2"></i>Thông tin
+                            đơn hàng</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="text-muted small text-uppercase fw-bold">Khách hàng</label>
+                                <div class="fs-5 fw-bold text-dark"><?= htmlspecialchars($booking['CustomerName']) ?>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="text-muted small text-uppercase fw-bold">Ngày đặt</label>
+                                <div class="fs-5 text-dark"><?= date('d/m/Y H:i', strtotime($booking['BookingDate'])) ?>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label class="text-muted small text-uppercase fw-bold">Tour đăng ký</label>
+                                <div class="fs-5 text-primary fw-medium"><?= htmlspecialchars($booking['TourName']) ?>
+                                </div>
+                            </div>
+                        </div>
 
-            <!-- Card thông tin booking -->
-            <div class="card shadow-sm rounded-4 mb-4">
-                <div class="card-body">
-                    <p><strong>Khách đặt:</strong> <?= htmlspecialchars($booking['CustomerName']) ?></p>
-                    <p><strong>Tour:</strong> <?= htmlspecialchars($booking['TourName']) ?></p>
-                    <p><strong>Ngày đặt:</strong> <?= date('d/m/Y H:i', strtotime($booking['BookingDate'])) ?></p>
-                    <p>
-                        <strong>Tổng tiền:</strong>
-                        <?= $booking['TotalAmount'] !== null ? number_format($booking['TotalAmount'], 0, ',', '.') . ' VNĐ' : '-' ?>
-                    </p>
-                    <p>
-                        <strong>Trạng thái:</strong>
-                        <span class="badge 
-                            <?= $booking['Status'] === 'Đang xử lý' ? 'bg-warning text-dark' : '' ?>
-                            <?= $booking['Status'] === 'Đã xác nhận' ? 'bg-info text-white' : '' ?>
-                            <?= $booking['Status'] === 'Đã thanh toán' ? 'bg-success' : '' ?>
-                            <?= $booking['Status'] === 'Đã hủy' ? 'bg-danger' : '' ?>
-                        ">
-                            <?= htmlspecialchars($booking['Status']) ?>
-                        </span>
-                    </p>
+                        <hr class="my-4 text-muted opacity-25">
+
+                        <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3">
+                            <span class="fw-bold text-secondary">Tổng thanh toán:</span>
+                            <span class="fs-4 fw-bold text-success">
+                                <?= $booking['TotalAmount'] !== null ? number_format($booking['TotalAmount'], 0, ',', '.') . ' VNĐ' : '-' ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                        <h5 class="fw-bold text-dark"><i class="bi bi-people text-info me-2"></i>Danh sách đoàn khách
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <?php if (!empty($tourCustomers)): ?>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th class="ps-4">STT</th>
+                                        <th>Họ và tên</th>
+                                        <th>Phòng</th>
+                                        <th class="pe-4">Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($tourCustomers as $index => $tc): ?>
+                                    <tr>
+                                        <td class="ps-4 text-muted"><?= $index + 1 ?></td>
+                                        <td class="fw-medium"><?= htmlspecialchars($tc['FullName']) ?></td>
+                                        <td><span
+                                                class="badge bg-light text-dark border"><?= htmlspecialchars($tc['RoomNumber'] ?? 'Chưa xếp') ?></span>
+                                        </td>
+                                        <td class="pe-4 text-muted small"><?= htmlspecialchars($tc['Note'] ?? '-') ?>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <?php else: ?>
+                        <div class="text-center py-4 text-muted">Chưa có thông tin thành viên đoàn</div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
 
-            <!-- Cập nhật trạng thái -->
-            <?php $isPaid = $booking['Status'] === 'Đã thanh toán'; ?> <form method="post"
-                action="index.php?act=booking-update-status" class="row g-3 align-items-center">
-                <input type="hidden" name="booking_id" value="<?= $booking['BookingID'] ?>" />
+            <div class="col-lg-4">
+                <?php $isPaid = $booking['Status'] === 'Đã thanh toán'; ?>
 
-                <div class="col-md-4">
-                    <select name="status" class="form-select shadow-sm" <?= $isPaid ? 'disabled' : '' ?>>
-                        <?php
-            $statuses = ['Đang xử lý', 'Đã xác nhận', 'Đã thanh toán', 'Đã hủy'];
-            foreach ($statuses as $s): ?>
-                        <option value="<?= $s ?>" <?= $s == $booking['Status'] ? 'selected' : '' ?>><?= $s ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-header bg-white border-bottom-0 pt-4 px-4">
+                        <h5 class="fw-bold text-dark">Xử lý đơn hàng</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="post" action="index.php?act=booking-update-status">
+                            <input type="hidden" name="booking_id" value="<?= $booking['BookingID'] ?>" />
+
+                            <div class="mb-3">
+                                <label class="form-label fw-medium">Trạng thái hiện tại</label>
+                                <select name="status" class="form-select form-select-lg shadow-sm"
+                                    <?= $isPaid ? 'disabled' : '' ?>>
+                                    <?php
+                                    $statuses = ['Đang xử lý', 'Đã xác nhận', 'Đã thanh toán', 'Đã hủy'];
+                                    foreach ($statuses as $s): ?>
+                                    <option value="<?= $s ?>" <?= $s == $booking['Status'] ? 'selected' : '' ?>>
+                                        <?= $s ?>
+                                    </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <?php if ($isPaid): ?>
+                            <div class="alert alert-success d-flex align-items-center small" role="alert">
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                                <div>Đơn hàng đã hoàn tất thanh toán.</div>
+                            </div>
+                            <?php else: ?>
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold shadow-sm">
+                                <i class="bi bi-arrow-repeat me-1"></i> Cập nhật trạng thái
+                            </button>
+                            <?php endif; ?>
+                        </form>
+                    </div>
                 </div>
-
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-success px-4" <?= $isPaid ? 'disabled' : '' ?>>
-                        <i class="bi bi-check-circle"></i> Cập nhật
-                    </button>
-                </div>
-            </form>
-
-            <?php if ($isPaid): ?>
-            <div class="alert alert-success mt-3">
-                <i class="bi bi-info-circle"></i> Booking đã thanh toán — không thể cập nhật trạng thái.
             </div>
-            <?php endif; ?>
-
-
-            <!-- Danh sách khách -->
-            <div class="card shadow-sm rounded-4 p-4">
-                <h4 class="fw-bold mb-3"><i class="bi bi-people"></i> Danh sách khách trong tour</h4>
-
-                <?php if (!empty($tourCustomers)): ?>
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered align-middle">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>STT</th>
-                                <th>Họ và tên</th>
-                                <th>Phòng</th>
-                                <th>Ghi chú</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($tourCustomers as $index => $tc): ?>
-                            <tr>
-                                <td><?= $index + 1 ?></td>
-                                <td><?= htmlspecialchars($tc['FullName']) ?></td>
-                                <td><?= htmlspecialchars($tc['RoomNumber'] ?? '-') ?></td>
-                                <td><?= htmlspecialchars($tc['Note'] ?? '-') ?></td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-                <?php else: ?>
-                <p class="text-muted">Không có dữ liệu khách đoàn</p>
-                <?php endif; ?>
-
-            </div>
-
         </div>
     </div>
 </div>
-
-<style>
-.admin-layout {
-    min-height: 100vh;
-    background-color: #f8f9fa;
-}
-
-.sidebar-wrapper {
-    width: 260px;
-    min-height: 100vh;
-    background: #fff;
-    border-right: 1px solid #ddd;
-}
-
-.admin-content {
-    background-color: #f8f9fa;
-}
-
-.card {
-    border: none;
-}
-
-.card-body p {
-    font-size: 1rem;
-    margin-bottom: 8px;
-}
-
-table thead {
-    font-weight: bold;
-}
-</style>

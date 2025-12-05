@@ -72,6 +72,8 @@ function getTourLogs($tourId)
 {
     $conn = connectDB();
 
+    ensureTourLogOptionalColumns();
+
     // Kiểm tra xem các cột Images và Incident có tồn tại không
     try {
         $checkSql = "SHOW COLUMNS FROM TourLog LIKE 'Images'";
@@ -125,6 +127,8 @@ function getTourLogById($logId)
 {
     $conn = connectDB();
 
+    ensureTourLogOptionalColumns();
+
     // Kiểm tra xem các cột Images và Incident có tồn tại không
     try {
         $checkSql = "SHOW COLUMNS FROM TourLog LIKE 'Images'";
@@ -171,6 +175,8 @@ function saveTourLog($data)
 {
     $conn = connectDB();
 
+    ensureTourLogOptionalColumns();
+
     // Kiểm tra xem các cột Images và Incident có tồn tại không
     try {
         $checkSql = "SHOW COLUMNS FROM TourLog LIKE 'Images'";
@@ -186,54 +192,59 @@ function saveTourLog($data)
     }
 
     if (!empty($data['LogID'])) {
-        // Cập nhật
-        if ($hasImages && $hasIncident) {
-            $sql = "UPDATE TourLog SET Note = :note, Images = :images, Incident = :incident, 
-                                       LogDate = NOW(), EmployeeID = :eid
-                    WHERE LogID = :lid";
-            $stmt = $conn->prepare($sql);
-            return $stmt->execute([
-                'note' => $data['Note'],
-                'images' => $data['Images'] ?? null,
-                'incident' => $data['Incident'] ?? null,
-                'eid' => $data['EmployeeID'],
-                'lid' => $data['LogID']
-            ]);
-        } else {
-            // Chỉ cập nhật các cột cơ bản
-            $sql = "UPDATE TourLog SET Note = :note, LogDate = NOW(), EmployeeID = :eid
-                    WHERE LogID = :lid";
-            $stmt = $conn->prepare($sql);
-            return $stmt->execute([
-                'note' => $data['Note'],
-                'eid' => $data['EmployeeID'],
-                'lid' => $data['LogID']
-            ]);
+        // Cập nhật bản ghi hiện có
+        $setParts = ["Note = :note"];
+        $params = [
+            'note' => $data['Note'],
+            'eid' => $data['EmployeeID'],
+            'lid' => $data['LogID']
+        ];
+
+        if ($hasImages) {
+            $setParts[] = "Images = :images";
+            $params['images'] = $data['Images'] ?? null;
         }
+
+        if ($hasIncident) {
+            $setParts[] = "Incident = :incident";
+            $params['incident'] = $data['Incident'] ?? null;
+        }
+
+        $setParts[] = "LogDate = NOW()";
+        $setParts[] = "EmployeeID = :eid";
+
+        $sql = "UPDATE TourLog SET " . implode(', ', $setParts) . " WHERE LogID = :lid";
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute($params);
     } else {
-        // Thêm mới
-        if ($hasImages && $hasIncident) {
-            $sql = "INSERT INTO TourLog (TourID, EmployeeID, Note, Images, Incident, LogDate)
-                    VALUES (:tid, :eid, :note, :images, :incident, NOW())";
-            $stmt = $conn->prepare($sql);
-            return $stmt->execute([
-                'tid' => $data['TourID'],
-                'eid' => $data['EmployeeID'],
-                'note' => $data['Note'],
-                'images' => $data['Images'] ?? null,
-                'incident' => $data['Incident'] ?? null
-            ]);
-        } else {
-            // Chỉ thêm các cột cơ bản
-            $sql = "INSERT INTO TourLog (TourID, EmployeeID, Note, LogDate)
-                    VALUES (:tid, :eid, :note, NOW())";
-            $stmt = $conn->prepare($sql);
-            return $stmt->execute([
-                'tid' => $data['TourID'],
-                'eid' => $data['EmployeeID'],
-                'note' => $data['Note']
-            ]);
+        // Thêm nhật ký mới
+        $columns = ['TourID', 'EmployeeID', 'Note'];
+        $placeholders = [':tid', ':eid', ':note'];
+        $params = [
+            'tid' => $data['TourID'],
+            'eid' => $data['EmployeeID'],
+            'note' => $data['Note']
+        ];
+
+        if ($hasImages) {
+            $columns[] = 'Images';
+            $placeholders[] = ':images';
+            $params['images'] = $data['Images'] ?? null;
         }
+
+        if ($hasIncident) {
+            $columns[] = 'Incident';
+            $placeholders[] = ':incident';
+            $params['incident'] = $data['Incident'] ?? null;
+        }
+
+        $columns[] = 'LogDate';
+        $placeholders[] = 'NOW()';
+
+        $sql = "INSERT INTO TourLog (" . implode(', ', $columns) . ")
+                VALUES (" . implode(', ', $placeholders) . ")";
+        $stmt = $conn->prepare($sql);
+        return $stmt->execute($params);
     }
 }
 
@@ -281,6 +292,32 @@ function tableExists($tableName)
         return $stmt->rowCount() > 0;
     } catch (Exception $e) {
         return false;
+    }
+}
+
+// Tự động bổ sung các cột tuỳ chọn cho bảng TourLog nếu thiếu
+function ensureTourLogOptionalColumns()
+{
+    $conn = connectDB();
+
+    if (!tableExists('TourLog')) {
+        return;
+    }
+
+    $columns = [
+        'Images' => "ALTER TABLE TourLog ADD COLUMN Images TEXT NULL",
+        'Incident' => "ALTER TABLE TourLog ADD COLUMN Incident TEXT NULL"
+    ];
+
+    foreach ($columns as $name => $alterSql) {
+        try {
+            $check = $conn->query("SHOW COLUMNS FROM TourLog LIKE '{$name}'");
+            if ($check->rowCount() === 0) {
+                $conn->exec($alterSql);
+            }
+        } catch (Exception $e) {
+            // Bỏ qua nếu không thể thêm, hàm gọi sẽ hoạt động với các cột sẵn có
+        }
     }
 }
 
@@ -417,7 +454,7 @@ function getCustomersWithSpecialRequests($tourId)
     foreach ($results as &$row) {
         $noteJson = $row['Note'] ?? '';
         $specialData = null;
-        
+
         // Thử parse JSON
         if (!empty($noteJson)) {
             $decoded = json_decode($noteJson, true);
@@ -437,7 +474,6 @@ function getCustomersWithSpecialRequests($tourId)
 }
 
 // Lưu & cập nhật yêu cầu đặc biệt (lưu vào cột Note của TourCustomer dạng JSON)
-// Lưu & cập nhật yêu cầu đặc biệt
 function saveSpecialRequest($data)
 {
     $conn = connectDB();
@@ -449,10 +485,6 @@ function saveSpecialRequest($data)
         'other_requests' => $data['OtherRequests'] ?? null,
         'special_requests' => $data['SpecialRequests'] ?? null
     ];
-    // Kiểm tra bảng có tồn tại không
-    if (!tableExists('TourCustomerSpecialRequest')) {
-        return false; // bảng chưa tồn tại, không thể lưu
-    }
 
     // Chuyển thành JSON
     $noteJson = json_encode($specialRequestData, JSON_UNESCAPED_UNICODE);

@@ -4,158 +4,213 @@
 <?php require_once __DIR__ . '/../../navbar.php'; ?>
 
 <div class="d-flex admin-layout">
-
-    <!-- Sidebar -->
-    <div class="sidebar-wrapper">
+    <div class="sidebar-wrapper bg-white shadow-sm border-end">
         <?php require_once __DIR__ . '/../../sidebar.php'; ?>
     </div>
 
-    <!-- Content -->
     <div class="admin-content flex-grow-1 p-4">
 
-        <h2 class="mb-4 text-primary">
-            Danh sách nhân sự
-        </h2>
-
-        <div class="table-responsive shadow-sm rounded bg-white p-3">
-            <a href="<?= BASE_URL?>?act=createEmployee" class="btn btn-outline-primary btn-login">Thêm nhân sự</a>
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light text-dark">
-                    <tr>
-                        <th scope="col" class="stt-col">STT</th>
-                        <th scope="col">Họ tên</th>
-                        <th scope="col">Chức vụ</th>
-                        <th scope="col">Số điện thoại</th>
-                        <th scope="col">Email</th>
-                        <th scope="col" style="width:150px;">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($employees as $index => $emp): ?>
-                    <tr>
-                        <th class="stt-col"><?= $index + 1 ?></th>
-                        <td><?= htmlspecialchars($emp['FullName'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($emp['Role'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($emp['Phone'] ?? '') ?></td>
-                        <td><?= htmlspecialchars($emp["Email"] ?? "Không có dữ liệu") ?></td>
-                        <td>
-                            <a href="<?= BASE_URL ?>?act=editEmployee&id=<?= $emp['EmployeeID'] ?>"
-                                class="btn btn-sm btn-warning">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                            <a href="<?= BASE_URL ?>?act=detailEmployee&id=<?= $emp['EmployeeID'] ?>"
-                                class="btn btn-sm btn-info text-white">
-                                <i class="bi bi-plus-circle"></i>
-                            </a>
-                            <a href="<?= BASE_URL ?>?act=deleteEmployee&id=<?= $emp['EmployeeID'] ?>"
-                                class="btn btn-sm btn-danger"
-                                onclick="return confirm('Bạn có chắc muốn xóa nhân sự này?')">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">Quản lý Nhân sự</h2>
+                <p class="text-muted mb-0">Danh sách hướng dẫn viên, tài xế và nhân viên điều hành.</p>
+            </div>
+            <a href="<?= BASE_URL?>?act=createEmployee" class="btn btn-primary shadow-sm fw-bold">
+                <i class="bi bi-person-plus-fill me-1"></i> Thêm nhân sự
+            </a>
         </div>
 
-        <style>
-        /* STT column */
-        .stt-col {
-            text-align: center;
-            font-weight: 600;
-            width: 60px;
-        }
+        <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4 py-3 text-secondary small text-uppercase fw-bold">Nhân viên</th>
+                                <th class="py-3 text-secondary small text-uppercase fw-bold">Vai trò</th>
+                                <th class="py-3 text-secondary small text-uppercase fw-bold">Trạng thái công việc</th>
+                                <th class="py-3 text-secondary small text-uppercase fw-bold">Liên hệ</th>
+                                <th class="pe-4 py-3 text-secondary small text-uppercase fw-bold text-end">Hành động
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($employees)): ?>
+                            <?php foreach ($employees as $emp): ?>
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center me-3"
+                                            style="width: 45px; height: 45px; font-size: 1.1rem;">
+                                            <?= strtoupper(substr($emp['FullName'] ?? 'U', 0, 1)) ?>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark"><?= htmlspecialchars($emp['FullName']) ?>
+                                            </div>
+                                            <div class="text-muted small">ID: #<?= $emp['EmployeeID'] ?></div>
+                                        </div>
+                                    </div>
+                                </td>
 
-        /* Bảng tổng thể */
-        .table-responsive {
-            border-radius: 12px;
-            padding: 25px;
-            background: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
+                                <td><?= htmlspecialchars($emp['Role'] ?? 'Nhân viên') ?></td>
 
-        table.table-hover {
-            border-collapse: separate;
-            border-spacing: 0 10px;
-        }
+                                <td>
+                                    <?php if (!empty($emp['TourName'])): ?>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div>
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="badge bg-danger-subtle text-danger me-2"
+                                                    style="font-size: 0.7rem;">
+                                                    <i class="bi bi-flag-fill"></i> Bận
+                                                </span>
+                                                <div class="fw-bold text-dark text-truncate" style="max-width: 150px;"
+                                                    title="<?= htmlspecialchars($emp['TourName']) ?>">
+                                                    <?= htmlspecialchars($emp['TourName']) ?>
+                                                </div>
+                                            </div>
+                                            <div class="text-muted small ps-1">
+                                                <?= date('d/m', strtotime($emp['StartDate'])) ?> -
+                                                <?= date('d/m', strtotime($emp['EndDate'])) ?>
+                                            </div>
+                                        </div>
 
-        table.table-hover thead tr {
-            border-radius: 12px;
-        }
+                                        <button class="btn btn-sm btn-light text-primary border ms-2"
+                                            data-bs-toggle="modal" data-bs-target="#assignTourModal"
+                                            title="Đổi tour khác"
+                                            onclick="setEmployeeForAssign('<?= $emp['EmployeeID'] ?>', '<?= htmlspecialchars($emp['FullName']) ?>')">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                    </div>
 
-        table.table-hover thead th {
-            background-color: #f1f5f9;
-            color: #212529;
-            font-weight: 600;
-            border-bottom: none;
-            text-align: center;
-        }
+                                    <?php else: ?>
+                                    <button class="btn btn-sm btn-outline-success rounded-pill px-3 shadow-sm"
+                                        data-bs-toggle="modal" data-bs-target="#assignTourModal"
+                                        onclick="setEmployeeForAssign('<?= $emp['EmployeeID'] ?>', '<?= htmlspecialchars($emp['FullName']) ?>')">
+                                        <i class="bi bi-plus-circle me-1"></i> Phân công
+                                    </button>
+                                    <?php endif; ?>
+                                </td>
 
-        table.table-hover tbody tr {
-            background: #ffffff;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-        }
+                                <td>
+                                    <div class="d-flex flex-column small">
+                                        <span class="mb-1"><i
+                                                class="bi bi-telephone me-2 text-primary"></i><?= htmlspecialchars($emp['Phone']) ?></span>
+                                        <span><i
+                                                class="bi bi-envelope me-2 text-primary"></i><?= htmlspecialchars($emp['Email'] ?? '-') ?></span>
+                                    </div>
+                                </td>
 
-        table.table-hover tbody tr:hover {
-            background: #e1f0ff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-        }
+                                <td class="text-end pe-4">
+                                    <div class="btn-group">
+                                        <a href="<?= BASE_URL ?>?act=detailEmployee&id=<?= $emp['EmployeeID'] ?>"
+                                            class="btn btn-sm btn-light border text-primary"><i
+                                                class="bi bi-eye"></i></a>
+                                        <a href="<?= BASE_URL ?>?act=editEmployee&id=<?= $emp['EmployeeID'] ?>"
+                                            class="btn btn-sm btn-light border text-warning"><i
+                                                class="bi bi-pencil-square"></i></a>
+                                        <a href="<?= BASE_URL ?>?act=deleteEmployee&id=<?= $emp['EmployeeID'] ?>"
+                                            class="btn btn-sm btn-light border text-danger"
+                                            onclick="return confirm('Xóa?')"><i class="bi bi-trash"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">Chưa có dữ liệu nhân sự.</td>
+                            </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-        table.table-hover tbody td {
-            vertical-align: middle;
-            text-align: center;
-        }
+<div class="modal fade" id="assignTourModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Phân công Tour</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="?act=assign-employee" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="employee_id" id="modal_employee_id">
 
-        table.table-hover tbody td:first-child,
-        table.table-hover thead th:first-child {
-            text-align: center;
-        }
+                    <div class="mb-3">
+                        <label class="form-label">Nhân viên được chọn:</label>
+                        <input type="text" class="form-control" id="modal_employee_name" readonly disabled>
+                    </div>
 
-        /* Buttons style */
-        .btn-sm {
-            font-size: 0.8rem;
-            padding: 0.35rem 0.6rem;
-            border-radius: 6px;
-        }
+                    <div class="mb-3">
+                        <label class="form-label">Chọn Tour cần gán:</label>
+                        <select name="tour_id" class="form-select" required>
+                            <option value="">-- Chọn Tour --</option>
+                            <?php if(!empty($tours)): ?>
+                            <?php foreach($tours as $t): ?>
+                            <option value="<?= $t['TourID'] ?>">
+                                <?= htmlspecialchars($t['TourName']) ?> (<?= date('d/m', strtotime($t['StartDate'])) ?>)
+                            </option>
+                            <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu phân công</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-        .btn-warning i {
-            margin-right: 2px;
-        }
+<style>
+/* CSS Chung cho Layout Admin */
+:root {
+    --header-height: 70px;
+    --sidebar-width: 260px;
+}
 
-        .btn-info i {
-            margin-right: 2px;
-        }
+body {
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', sans-serif;
+    padding-top: var(--header-height);
+}
 
-        .btn-danger i {
-            margin-right: 2px;
-        }
+.sidebar-wrapper {
+    width: var(--sidebar-width);
+    position: fixed;
+    top: var(--header-height);
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    overflow-y: auto;
+}
 
-        /* Heading */
-        h2 {
-            font-weight: 700;
-            color: #0d6efd;
-            display: flex;
-            align-items: center;
-        }
+.admin-content {
+    margin-left: var(--sidebar-width);
+    min-height: calc(100vh - var(--header-height));
+}
 
-        h2 i {
-            margin-right: 8px;
-        }
+@media (max-width: 992px) {
+    .sidebar-wrapper {
+        margin-left: calc(var(--sidebar-width) * -1);
+    }
 
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .table-responsive {
-                padding: 15px;
-            }
+    .admin-content {
+        margin-left: 0;
+    }
+}
+</style>
 
-            .stt-col {
-                width: 40px;
-            }
-        }
-        </style>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Hàm JS để truyền ID nhân viên vào Modal
+function setEmployeeForAssign(id, name) {
+    document.getElementById('modal_employee_id').value = id;
+    document.getElementById('modal_employee_name').value = name;
+}
+</script>

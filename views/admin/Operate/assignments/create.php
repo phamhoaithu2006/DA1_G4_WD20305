@@ -13,15 +13,15 @@
             <label>Chọn nhân viên:</label>
             <select name="employeeID" class="form-select" required>
                 <option value="">-- Chọn nhân viên --</option>
-                <?php foreach($allEmployees as $e): ?>
-                <option value="<?= $e['EmployeeID'] ?>"><?= $e['FullName'] ?> (<?= $e['Role'] ?>)</option>
+                <?php foreach ($allEmployees as $e): ?>
+                    <option value="<?= $e['EmployeeID'] ?>"><?= $e['FullName'] ?> (<?= $e['Role'] ?>)</option>
                 <?php endforeach; ?>
             </select>
         </div>
 
         <div class="col-md-6">
             <label>Vai trò trong tour:</label>
-            <input type="text" name="role" class="form-control" placeholder="HDV, Tài xế,...">
+            <input type="text" name="role" class="form-control" placeholder="HDV, Tài xế, ...">
         </div>
 
         <div class="col-12">
