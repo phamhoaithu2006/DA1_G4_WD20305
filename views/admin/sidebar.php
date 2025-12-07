@@ -1,124 +1,216 @@
-<div class="sidebar-content p-3 bg-white h-100 d-flex flex-column">
+<div class="sidebar-wrapper d-flex flex-column flex-shrink-0 bg-white border-end">
 
-    <div class="sidebar-section mb-2">
-        <small class="text-uppercase text-secondary fw-bold ms-3" style="font-size: 0.75rem;">Main Menu</small>
+    <div class="sidebar-header px-4 py-3 border-bottom">
+        <a href="?act=dashboard" class="d-flex align-items-center text-decoration-none">
+            <div class="brand-icon me-3">
+                <i class="bi bi-compass-fill"></i>
+            </div>
+            <span class="fs-5 fw-bold text-dark tracking-tight">TravelAdmin</span>
+        </a>
     </div>
 
-    <div class="nav flex-column nav-pills custom-sidebar" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+    <div class="sidebar-menu flex-grow-1 overflow-auto custom-scrollbar px-3 py-3">
+        <ul class="nav nav-pills flex-column gap-1">
 
-        <a href="?act=dashboard"
-            class="nav-link mb-2 text-dark d-flex align-items-center <?= ($_GET['act'] ?? '') == 'dashboard' ? 'active shadow-sm' : '' ?>">
-            <span class="icon-wrapper"><i class="bi bi-grid-1x2-fill"></i></span>
-            Dashboard
-        </a>
-
-        <a href="?act=category"
-            class="nav-link mb-2 text-dark d-flex align-items-center <?= ($_GET['act'] ?? '') == 'category' ? 'active shadow-sm' : '' ?>">
-            <span class="icon-wrapper"><i class="bi bi-globe-americas"></i></span>
-            Quản lý Tour
-        </a>
-
-        <a href="?act=booking-list"
-            class="nav-link mb-2 text-dark d-flex align-items-center <?= ($_GET['act'] ?? '') == 'booking-list' ? 'active shadow-sm' : '' ?>">
-            <span class="icon-wrapper"><i class="bi bi-calendar-check-fill"></i></span>
-            Booking
-            <span class="badge bg-danger rounded-pill ms-auto">New</span>
-        </a>
-
-        <hr class="my-3 text-secondary opacity-25">
-        <div class="sidebar-section mb-2">
-            <small class="text-uppercase text-secondary fw-bold ms-3" style="font-size: 0.75rem;">Điều hành</small>
-        </div>
-
-        <a class="nav-link text-dark d-flex align-items-center justify-content-between" data-bs-toggle="collapse"
-            href="#menuDieuHanhTour" role="button">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper"><i class="bi bi-briefcase-fill"></i></span>
-                Điều hành Tour
-            </div>
-            <i class="bi bi-chevron-down small text-muted"></i>
-        </a>
-
-        <div class="collapse show mt-1" id="menuDieuHanhTour">
-            <div class="bg-light rounded p-2 mb-2">
-                <a href="?act=employees" class="nav-link small text-secondary py-1 ps-4 hover-link">
-                    <i class="bi bi-dot"></i> Nhân sự
+            <li class="nav-item">
+                <a href="?act=dashboard" class="nav-link <?= ($_GET['act'] ?? '') == 'dashboard' ? 'active' : '' ?>">
+                    <i class="bi bi-grid"></i>
+                    <span>Tổng quan</span>
                 </a>
-                <a href="?act=schedule" class="nav-link small text-secondary py-1 ps-4 hover-link">
-                    <i class="bi bi-dot"></i> Lịch trình & Dịch vụ
-                </a>
-            </div>
-        </div>
+            </li>
 
-        <a class="nav-link text-dark d-flex align-items-center justify-content-between mt-1" data-bs-toggle="collapse"
-            href="#menuBaoCao" role="button">
-            <div class="d-flex align-items-center">
-                <span class="icon-wrapper"><i class="bi bi-pie-chart-fill"></i></span>
-                Báo cáo
-            </div>
-            <i class="bi bi-chevron-down small text-muted"></i>
-        </a>
-        <div class="collapse mt-1" id="menuBaoCao">
-            <div class="bg-light rounded p-2 mb-2">
-                <a href="#" class="nav-link small text-secondary py-1 ps-4 hover-link"><i class="bi bi-dot"></i> Tổng
-                    hợp</a>
-                <a href="#" class="nav-link small text-secondary py-1 ps-4 hover-link"><i class="bi bi-dot"></i> Hiệu
-                    quả Tour</a>
-            </div>
-        </div>
+            <li class="nav-header mt-3 mb-1 text-uppercase">Kinh doanh</li>
+            <li>
+                <a href="?act=category" class="nav-link <?= ($_GET['act'] ?? '') == 'category' ? 'active' : '' ?>">
+                    <i class="bi bi-map"></i>
+                    <span>Quản lý Tour</span>
+                </a>
+            </li>
+            <li>
+                <a href="?act=booking-list"
+                    class="nav-link d-flex justify-content-between align-items-center <?= ($_GET['act'] ?? '') == 'booking-list' ? 'active' : '' ?>">
+                    <span><i class="bi bi-receipt"></i> Booking</span>
+                    <span class="badge bg-danger-subtle text-danger rounded-pill fw-normal"
+                        style="font-size: 0.65rem;">Mới</span>
+                </a>
+            </li>
+
+            <li class="nav-header mt-3 mb-1 text-uppercase">Vận hành</li>
+            <li>
+                <a href="?act=schedule" class="nav-link <?= ($_GET['act'] ?? '') == 'schedule' ? 'active' : '' ?>">
+                    <i class="bi bi-calendar4-week"></i>
+                    <span>Lịch trình tổng</span>
+                </a>
+            </li>
+            <li>
+                <a href="?act=employees" class="nav-link <?= ($_GET['act'] ?? '') == 'employees' ? 'active' : '' ?>">
+                    <i class="bi bi-people"></i>
+                    <span>Nhân sự (HR)</span>
+                </a>
+            </li>
+
+            <li class="nav-header mt-3 mb-1 text-uppercase">Chất lượng</li>
+            <li>
+                <a href="?act=report-list"
+                    class="nav-link <?= ($_GET['act'] ?? '') == 'report-list' ? 'active' : '' ?>">
+                    <i class="bi bi-star"></i>
+                    <span>Phản hồi & Đánh giá</span>
+                </a>
+            </li>
+        </ul>
     </div>
 
-    <div class="mt-auto pt-3 border-top">
-        <a href="?page=logout" onclick="return confirm('Bạn có chắc chắn muốn đăng xuất không?')"
-            class="btn btn-outline-danger w-100 d-flex align-items-center justify-content-center">
-            <i class="bi bi-box-arrow-left me-2"></i> Đăng xuất
-        </a>
+    <div class="sidebar-footer p-3 border-top bg-light">
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle user-dropdown"
+                id="dropdownUser" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="https://ui-avatars.com/api/?name=Admin&background=f8f9fa&color=333" width="36" height="36"
+                    class="rounded-circle border me-2 shadow-sm">
+                <div class="d-flex flex-column" style="line-height: 1.2;">
+                    <strong class="small">Administrator</strong>
+                    <small class="text-muted" style="font-size: 0.7rem;">Quản lý</small>
+                </div>
+            </a>
+            <ul class="dropdown-menu shadow border-0 small" aria-labelledby="dropdownUser">
+                <li><a class="dropdown-item" href="#">Hồ sơ cá nhân</a></li>
+                <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item text-danger" href="?page=logout" onclick="return confirm('Đăng xuất?')">Đăng
+                        xuất</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 
 <style>
-/* Icon wrapper để căn chỉnh icon đẹp */
-.icon-wrapper {
-    width: 30px;
-    display: inline-flex;
-    justify-content: center;
-    margin-right: 10px;
-    font-size: 1.1rem;
-    color: #6c757d;
-    /* Màu mặc định */
+/* 1. CỐ ĐỊNH SIDEBAR (FIXED LAYOUT) */
+.sidebar-wrapper {
+    width: 260px;
+    /* Chiều rộng cố định */
+    height: 100vh;
+    /* Chiều cao bằng 100% màn hình */
+    position: fixed;
+    /* Ghim chặt vào vị trí */
+    top: 0;
+    /* Sát mép trên */
+    left: 0;
+    /* Sát mép trái */
+    z-index: 1000;
+    /* Nổi lên trên các thành phần khác */
+    overflow: hidden;
+    /* Ẩn thanh cuộn ngoài */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
-/* Hiệu ứng Hover cho link */
-.custom-sidebar .nav-link {
+/* 2. STYLE CHO CÁC THÀNH PHẦN */
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    background: #212529;
+    color: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tracking-tight {
+    letter-spacing: -0.5px;
+}
+
+/* Menu Link */
+.nav-link {
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.7rem 1rem;
     border-radius: 8px;
     transition: all 0.2s ease;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
 }
 
-.custom-sidebar .nav-link:hover {
-    background-color: #f1f3f5;
-    color: #0d6efd !important;
+.nav-link i {
+    font-size: 1.1rem;
+    width: 24px;
+    margin-right: 10px;
+    text-align: center;
+    transition: color 0.2s;
 }
 
-.custom-sidebar .nav-link:hover .icon-wrapper {
+/* Hover */
+.nav-link:hover {
+    background-color: #f8f9fa;
+    color: #0f172a;
+}
+
+.nav-link:hover i {
     color: #0d6efd;
 }
 
-/* Trạng thái Active */
-.custom-sidebar .nav-link.active {
-    background-color: #0d6efd !important;
-    /* Màu xanh chủ đạo */
-    color: white !important;
-}
-
-.custom-sidebar .nav-link.active .icon-wrapper {
-    color: white;
-}
-
-/* Link con trong collapse */
-.hover-link:hover {
+/* Active */
+.nav-link.active {
+    background-color: #f1f5f9 !important;
+    /* Xanh rất nhạt */
     color: #0d6efd !important;
-    background-color: transparent;
+    /* Xanh dương đậm */
     font-weight: 600;
+}
+
+.admin-content {
+    margin-left: 260px !important;
+    /* Bằng width của Sidebar */
+    width: calc(100% - 260px) !important;
+    min-height: 100vh;
+    transition: all 0.3s;
+    /* Hiệu ứng mượt nếu sau này làm nút ẩn hiện menu */
+}
+
+/* Responsive: Trên Mobile thì ẩn Sidebar hoặc đẩy lại về 0 */
+@media (max-width: 992px) {
+    .sidebar-wrapper {
+        margin-left: -260px;
+        /* Ẩn sidebar sang trái */
+    }
+
+    .admin-content {
+        margin-left: 0 !important;
+        /* Trả nội dung về full màn hình */
+        width: 100% !important;
+    }
+
+    /* Khi bật menu trên mobile (cần thêm JS toggle class .active) */
+    .sidebar-wrapper.active {
+        margin-left: 0;
+    }
+}
+
+.nav-link.active i {
+    color: #0d6efd !important;
+}
+
+/* Header nhỏ */
+.nav-header {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #94a3b8;
+    padding-left: 1rem;
+    letter-spacing: 0.5px;
+}
+
+/* 3. SCROLLBAR TÙY CHỈNH (Chỉ cuộn phần menu giữa) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
 }
 </style>

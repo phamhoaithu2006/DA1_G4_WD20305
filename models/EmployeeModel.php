@@ -1,99 +1,122 @@
 <?php
-
 class EmployeeModel {
     public $conn;
-    public function __construct()
-    {
+    public function __construct() {
         $this->conn = connectDB();
     }
 
-    // --- SỬA LẠI HÀM NÀY ---
+    // 1. Lấy danh sách tất cả nhân viên
     public function getAllEmployees() {
-        // Logic: 
-        // 1. LEFT JOIN để lấy thông tin Tour (nếu có).
-        // 2. ORDER BY:
-        //    - (t.TourID IS NOT NULL) DESC: Đưa người có tour (TRUE=1) lên đầu, người rảnh (FALSE=0) xuống dưới.
-        //    - t.StartDate ASC: Ai đi tour sớm hơn xếp trước.
-        //    - e.FullName ASC: Nếu cùng trạng thái thì xếp theo tên A-Z.
-        
-        $sql = "SELECT e.*, t.TourName, t.StartDate, t.EndDate
+        $sql = "SELECT e.*, 
+                (SELECT COUNT(*) FROM TourAssignment WHERE EmployeeID = e.EmployeeID) as TourCount
                 FROM Employee e
-                LEFT JOIN TourAssignment ta ON e.EmployeeID = ta.EmployeeID
-                LEFT JOIN Tour t ON ta.TourID = t.TourID
-                ORDER BY (t.TourID IS NOT NULL) DESC, t.StartDate ASC, e.FullName ASC";
-
+                ORDER BY e.Role ASC, e.FullName ASC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Các hàm Lấy 1, Thêm, Sửa, Xóa giữ nguyên
+    // 2. Lấy thông tin chi tiết 1 nhân viên
     public function getEmployeeByID($id) {
         $sql = "SELECT * FROM Employee WHERE EmployeeID = :id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
+        $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function addEmployee($name, $role, $phone, $email) {
-        $defaultPassword = password_hash("123456", PASSWORD_DEFAULT);
-        $sql = "INSERT INTO Employee (FullName, Role, Phone, Email, Password) 
-                VALUES (:name, :role, :phone, :email, :password)";
+    // 3. Thêm mới nhân viên (Cập nhật đầy đủ trường)
+    public function addEmployee($data) {
+        $defaultPassword = password_hash("123456", PASSWORD_DEFAULT); // Mật khẩu mặc định
+        
+        $sql = "INSERT INTO Employee (FullName, Role, Phone, Email, Password, Avatar, DateOfBirth, Certificates, Languages, ExperienceYears, Type, HealthStatus) 
+                VALUES (:name, :role, :phone, :email, :password, :avatar, :dob, :certs, :langs, :exp, :type, :health)";
+        
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
-            ':name'     => $name,
-            ':role'     => $role,
-            ':phone'    => $phone,
-            ':email'    => $email,
-            ':password' => $defaultPassword
+            ':name'     => $data['name'],
+            ':role'     => $data['role'],
+            ':phone'    => $data['phone'],
+            ':email'    => $data['email'],
+            ':password' => $defaultPassword,
+            ':avatar'   => $data['avatar'] ?? null,
+            ':dob'      => $data['dob'] ?? null,
+            ':certs'    => $data['certs'] ?? null,
+            ':langs'    => $data['langs'] ?? null,
+            ':exp'      => $data['exp'] ?? 0,
+            ':type'     => $data['type'] ?? 'Nội địa',
+            ':health'   => $data['health'] ?? null
         ]);
     }
 
-    public function updateEmployee($id, $name, $role, $phone, $email) {
-        $sql = "UPDATE Employee SET FullName=:name, Role=:role, Phone=:phone, Email=:email WHERE EmployeeID=:id";
+    // 4. Cập nhật nhân viên (Cập nhật đầy đủ trường)
+    public function updateEmployee($id, $data) {
+        // Xây dựng câu query động: Chỉ cập nhật Avatar nếu có file mới
+        $sql = "UPDATE Employee SET 
+                FullName=:name, Role=:role, Phone=:phone, Email=:email, 
+                DateOfBirth=:dob, Certificates=:certs, Languages=:langs, 
+                ExperienceYears=:exp, Type=:type, HealthStatus=:health";
+        
+        // Nếu có avatar mới thì thêm vào câu lệnh SQL
+        if (!empty($data['avatar'])) {
+            $sql .= ", Avatar=:avatar";
+        }
+        
+        $sql .= " WHERE EmployeeID=:id";
+
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([
-            ':id'=>$id,
-            ':name'=>$name,
-            ':role'=>$role,
-            ':phone'=>$phone,
-            ':email'=>$email
-        ]);
+        
+        $params = [
+            ':id'       => $id,
+            ':name'     => $data['name'],
+            ':role'     => $data['role'],
+            ':phone'    => $data['phone'],
+            ':email'    => $data['email'],
+            ':dob'      => $data['dob'],
+            ':certs'    => $data['certs'],
+            ':langs'    => $data['langs'],
+            ':exp'      => $data['exp'],
+            ':type'     => $data['type'],
+            ':health'   => $data['health']
+        ];
+
+        // Nếu có avatar thì bind param
+        if (!empty($data['avatar'])) {
+            $params[':avatar'] = $data['avatar'];
+        }
+
+        return $stmt->execute($params);
     }
 
+    // 5. Xóa nhân viên
     public function deleteEmployee($id) {
         $sql = "DELETE FROM Employee WHERE EmployeeID=:id";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([':id'=>$id]);
     }
+
+    // 6. Phân công tour
     public function assignTourToEmployee($empId, $tourId) {
-        // Kiểm tra xem nhân viên đã được gán vào tour này chưa để tránh trùng lặp
         $checkSql = "SELECT * FROM TourAssignment WHERE EmployeeID = :eid AND TourID = :tid";
         $checkStmt = $this->conn->prepare($checkSql);
         $checkStmt->execute([':eid' => $empId, ':tid' => $tourId]);
         
-        if ($checkStmt->rowCount() > 0) {
-            return false; // Đã phân công rồi
-        }
+        if ($checkStmt->rowCount() > 0) return false; 
 
-        // Nếu chưa, thực hiện thêm mới
         $sql = "INSERT INTO TourAssignment (EmployeeID, TourID) VALUES (:eid, :tid)";
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([':eid' => $empId, ':tid' => $tourId]);
     }
-    // Lấy danh sách các tour đã được phân công cho nhân viên
-    // Lấy danh sách các tour đã được phân công cho nhân viên
+
+    // 7. Lấy danh sách tour đã dẫn
     public function getToursByEmployee($empId) {
-        // ĐÃ SỬA: Xóa "ta.AssignedDate" để tránh lỗi
-        $sql = "SELECT t.TourName, t.StartDate, t.EndDate, t.Price 
+        $sql = "SELECT t.TourName, t.StartDate, t.EndDate, t.Price, ta.Role as AssignedRole
                 FROM TourAssignment ta
                 JOIN Tour t ON ta.TourID = t.TourID
                 WHERE ta.EmployeeID = :eid
                 ORDER BY t.StartDate DESC";
-        
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':eid' => $empId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
+?>

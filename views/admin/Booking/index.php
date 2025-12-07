@@ -9,7 +9,6 @@
     </div>
 
     <div class="admin-content flex-grow-1 p-4">
-
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold text-dark mb-1">Quản lý Booking</h2>
@@ -28,7 +27,8 @@
                             <tr>
                                 <th class="ps-4 py-3 text-secondary text-uppercase small fw-bold">Mã đơn</th>
                                 <th class="py-3 text-secondary text-uppercase small fw-bold">Khách hàng</th>
-                                <th class="py-3 text-secondary text-uppercase small fw-bold">Tour đăng ký</th>
+                                <th class="py-3 text-secondary text-uppercase small fw-bold" style="width: 25%;">Tour
+                                    đăng ký</th>
                                 <th class="py-3 text-secondary text-uppercase small fw-bold">Ngày đặt</th>
                                 <th class="py-3 text-secondary text-uppercase small fw-bold text-end">Tổng tiền</th>
                                 <th class="py-3 text-secondary text-uppercase small fw-bold text-center">Trạng thái</th>
@@ -38,15 +38,30 @@
                         </thead>
                         <tbody>
                             <?php if (!empty($bookings)): ?>
-                            <?php foreach ($bookings as $b): ?>
+                            <?php foreach ($bookings as $b): 
+                                    // 1. LOGIC TRẠNG THÁI (STATUS MAPPING) - Cấu hình màu sắc tại đây cho gọn
+                                    $statusMap = [
+                                        'Đang xử lý'    => ['class' => 'bg-warning-subtle text-warning-emphasis', 'icon' => 'bi-hourglass-split'],
+                                        'Đã xác nhận'   => ['class' => 'bg-info-subtle text-info-emphasis', 'icon' => 'bi-check-circle'],
+                                        'Đã thanh toán' => ['class' => 'bg-success-subtle text-success-emphasis', 'icon' => 'bi-cash-coin'],
+                                        'Đã hủy'        => ['class' => 'bg-danger-subtle text-danger-emphasis', 'icon' => 'bi-x-circle'],
+                                        'Hoàn tất'      => ['class' => 'bg-primary-subtle text-primary-emphasis', 'icon' => 'bi-flag-fill']
+                                    ];
+
+                                    // Lấy config trạng thái, nếu không có trong danh sách thì dùng default
+                                    $currentStatus = $statusMap[$b['Status']] ?? ['class' => 'bg-secondary-subtle text-secondary', 'icon' => 'bi-circle'];
+                                    
+                                    // Xử lý avatar chữ cái đầu
+                                    $firstLetter = strtoupper(substr($b['CustomerName'] ?? 'K', 0, 1));
+                                ?>
                             <tr>
                                 <td class="ps-4 fw-bold text-primary">#<?= $b['BookingID'] ?></td>
 
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center me-3"
+                                        <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center me-3 shadow-sm"
                                             style="width: 40px; height: 40px; font-size: 0.9rem;">
-                                            <?= strtoupper(substr($b['CustomerName'] ?? 'K', 0, 1)) ?>
+                                            <?= $firstLetter ?>
                                         </div>
                                         <div>
                                             <div class="fw-bold text-dark"><?= htmlspecialchars($b['CustomerName']) ?>
@@ -55,7 +70,12 @@
                                     </div>
                                 </td>
 
-                                <td class="text-dark fw-medium"><?= htmlspecialchars($b['TourName']) ?></td>
+                                <td>
+                                    <div class="text-dark fw-medium text-truncate" style="max-width: 250px;"
+                                        title="<?= htmlspecialchars($b['TourName']) ?>">
+                                        <?= htmlspecialchars($b['TourName']) ?>
+                                    </div>
+                                </td>
 
                                 <td class="text-muted small">
                                     <i
@@ -67,34 +87,17 @@
                                 </td>
 
                                 <td class="text-center">
-                                    <?php 
-                                            // Logic màu sắc trạng thái
-                                            $statusClass = 'bg-secondary-subtle text-secondary';
-                                            $icon = 'bi-circle';
-                                            if ($b['Status'] === 'Đang xử lý') {
-                                                $statusClass = 'bg-warning-subtle text-warning-emphasis';
-                                                $icon = 'bi-hourglass-split';
-                                            } elseif ($b['Status'] === 'Đã xác nhận') {
-                                                $statusClass = 'bg-info-subtle text-info-emphasis';
-                                                $icon = 'bi-check-circle';
-                                            } elseif ($b['Status'] === 'Đã thanh toán') {
-                                                $statusClass = 'bg-success-subtle text-success-emphasis';
-                                                $icon = 'bi-cash-coin';
-                                            } elseif ($b['Status'] === 'Đã hủy') {
-                                                $statusClass = 'bg-danger-subtle text-danger-emphasis';
-                                                $icon = 'bi-x-circle';
-                                            }
-                                        ?>
                                     <span
-                                        class="badge rounded-pill <?= $statusClass ?> px-3 py-2 border border-opacity-10">
-                                        <i class="bi <?= $icon ?> me-1"></i> <?= htmlspecialchars($b['Status']) ?>
+                                        class="badge rounded-pill <?= $currentStatus['class'] ?> px-3 py-2 border border-opacity-10">
+                                        <i class="bi <?= $currentStatus['icon'] ?> me-1"></i>
+                                        <?= htmlspecialchars($b['Status']) ?>
                                     </span>
                                 </td>
 
                                 <td class="text-center pe-4">
                                     <a href="<?= BASE_URL ?>?act=booking-detail&id=<?= $b['BookingID'] ?>"
-                                        class="btn btn-sm btn-light border text-primary shadow-sm"
-                                        data-bs-toggle="tooltip" title="Xem chi tiết">
+                                        class="btn btn-sm btn-light border text-primary shadow-sm hover-elevate"
+                                        data-bs-toggle="tooltip" title="Xem chi tiết đơn hàng">
                                         Xem chi tiết <i class="bi bi-arrow-right ms-1"></i>
                                     </a>
                                 </td>
@@ -103,8 +106,9 @@
                             <?php else: ?>
                             <tr>
                                 <td colspan="7" class="text-center py-5 text-muted">
-                                    <div class="fs-1 text-light-emphasis mb-2"><i class="bi bi-inbox"></i></div>
-                                    Chưa có booking nào
+                                    <div class="fs-1 text-light-emphasis mb-3"><i class="bi bi-inbox-fill"></i></div>
+                                    <p class="mb-0 fs-5">Chưa có booking nào</p>
+                                    <p class="small">Các đơn đặt tour mới sẽ xuất hiện tại đây.</p>
                                 </td>
                             </tr>
                             <?php endif; ?>
@@ -112,6 +116,15 @@
                     </table>
                 </div>
             </div>
+            <div class="card-footer bg-white border-top-0 py-3"></div>
         </div>
     </div>
 </div>
+
+<style>
+.hover-elevate:hover {
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+}
+</style>

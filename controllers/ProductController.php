@@ -30,9 +30,18 @@ class ProductController
     public function adminDetail($id)
     {
         $tr = new ProductModel();
+        
+        // ... Các phần cũ giữ nguyên ...
         $tour = $tr->getOneDetail($id);
-        $title = "This is detail page";
-        // var_dump($tour);
+        $itinerary = $tr->getTourItinerary($id);
+        $gallery = $tr->getTourGallery($id);
+        $pricing = $tr->getTourPricing($id);
+        $services = $tr->getTourServices($id);
+
+        // [MỚI] Lấy danh sách khách hàng
+        $customers = $tr->getTourCustomersList($id);
+
+        $title = "Chi tiết Tour trọn gói";
         require_once 'views/admin/Tour_and_product/detail.php';
     }
     public function Dashboard()
@@ -118,6 +127,55 @@ class ProductController
             echo "<script>alert('Xóa thành công!'); window.location.href='?act=category';</script>";
         } else {
             echo "<script>alert('Xóa thất bại. Có thể tour đang có đơn hàng liên quan!'); window.location.href='?act=category';</script>";
+        }
+    }
+    // 1. Hiển thị Form thêm lịch trình
+    public function itineraryForm($tourId) {
+        $tr = new ProductModel();
+        // Lấy thông tin Tour để hiện tên
+        $tour = $tr->getOneDetail($tourId);
+        
+        // Nếu không tìm thấy tour, quay về danh sách
+        if (!$tour) {
+            header("Location: ?act=category");
+            exit;
+        }
+
+        // Gọi View (Tạo file views/admin/Tour_and_product/itinerary_form.php sau bước này)
+        require_once 'views/admin/Tour_and_product/itinerary_form.php';
+    }
+
+    // 2. Xử lý Lưu lịch trình (POST)
+    public function itineraryStore() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = [
+                'TourID' => $_POST['tour_id'],
+                'DayNumber' => $_POST['day_number'],
+                'Title' => $_POST['title'],
+                'Description' => $_POST['description'],
+                'Accommodation' => $_POST['accommodation'],
+                'Meals' => isset($_POST['meals']) ? implode(', ', $_POST['meals']) : '' // Nối mảng checkbox thành chuỗi
+            ];
+
+            if ($this->modelProduct->insertItinerary($data)) {
+                // Thành công thì quay lại trang chi tiết Tour
+                header("Location: ?act=detail&id=" . $data['TourID']);
+                exit;
+            } else {
+                echo "<script>alert('Lỗi thêm lịch trình!'); window.history.back();</script>";
+            }
+        }
+    }
+
+    // 3. Xử lý Xóa lịch trình
+    public function itineraryDelete($itineraryId) {
+        // Cần lấy TourID trước khi xóa để redirect về đúng trang
+        // Giả sử Model có hàm getItineraryById, nếu chưa có thì redirect về category tạm
+        
+        if ($this->modelProduct->deleteItinerary($itineraryId)) {
+            echo "<script>alert('Đã xóa lịch trình!'); window.history.back();</script>";
+        } else {
+            echo "<script>alert('Lỗi xóa!'); window.history.back();</script>";
         }
     }
     
