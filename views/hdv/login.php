@@ -167,7 +167,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '';
                                     </div>
                                     <div class="text-center mt-2">
                                         <small class="text-muted" style="font-size: 0.75rem;">
-                                            &copy; 2024 Hệ thống Quản lý Tour Du lịch
+                                            &copy; 2025 Hệ thống Quản lý Tour Du lịch
                                         </small>
                                     </div>
                                 </div>
