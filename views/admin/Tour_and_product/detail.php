@@ -157,9 +157,11 @@
                                         <p><?= nl2br(htmlspecialchars($item['Description'])) ?></p>
                                         <div class="d-flex gap-4 mt-3 pt-3 border-top">
                                             <div class="small"><i class="bi bi-house-door-fill text-warning"></i>
-                                                <strong>Lưu trú:</strong> <?= $item['Accommodation'] ?? 'N/A' ?></div>
+                                                <strong>Lưu trú:</strong> <?= $item['Accommodation'] ?? 'N/A' ?>
+                                            </div>
                                             <div class="small"><i class="bi bi-cup-hot-fill text-success"></i>
-                                                <strong>Ăn uống:</strong> <?= $item['Meals'] ?? 'N/A' ?></div>
+                                                <strong>Ăn uống:</strong> <?= $item['Meals'] ?? 'N/A' ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -173,27 +175,53 @@
                 </div>
 
                 <div id="section-gallery" class="card border-0 shadow-sm mb-4 scroll-mt">
-                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <div class="card-header bg-white py-3">
                         <h6 class="m-0 fw-bold text-dark section-title">Thư viện ảnh</h6>
-                        <button class="btn btn-sm btn-outline-primary"><i class="bi bi-upload"></i> Tải ảnh</button>
                     </div>
                     <div class="card-body">
+
+                        <form action="?act=gallery-upload" method="POST" enctype="multipart/form-data" class="mb-4">
+                            <input type="hidden" name="tour_id" value="<?= $tour['TourID'] ?>">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label fw-bold small text-secondary">Tải ảnh mới lên</label>
+                                    <div class="input-group">
+                                        <input type="file" name="gallery_images[]" class="form-control"
+                                            id="galleryInput" multiple accept="image/*" required>
+                                        <button type="submit" class="btn btn-primary fw-bold">
+                                            <i class="bi bi-cloud-upload me-1"></i> Lưu ảnh
+                                        </button>
+                                    </div>
+                                    <div class="form-text small">Giữ phím Ctrl để chọn nhiều ảnh cùng lúc.</div>
+                                </div>
+                            </div>
+                        </form>
+                        <hr class="text-muted opacity-25">
+
                         <div class="row g-3">
                             <?php if (!empty($gallery)): ?>
                             <?php foreach ($gallery as $img): ?>
                             <div class="col-6 col-md-3">
-                                <div class="position-relative">
-                                    <img src="<?= htmlspecialchars($img['ImageURL']) ?>"
-                                        class="img-fluid rounded shadow-sm w-100"
-                                        style="height: 120px; object-fit: cover;">
-                                    <button
-                                        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 opacity-75 py-0 px-1"><i
-                                            class="bi bi-x"></i></button>
+                                <div class="position-relative group-image-hover">
+                                    <img src="<?= BASE_URL . htmlspecialchars($img['ImageURL']) ?>"
+                                        class="img-fluid rounded shadow-sm w-100 border"
+                                        style="height: 120px; object-fit: cover;"
+                                        onerror="this.src='https://placehold.co/400x300?text=No+Image'"> <a
+                                        href='?act=delete-gallery-image&id=<?= $img['ImageID'] ?>&tour_id=<?= $tour['TourID'] ?>'
+                                        class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1 shadow-sm"
+                                        style="--bs-btn-padding-y: .15rem; --bs-btn-padding-x: .4rem;"
+                                        onclick='return confirm("Xóa ảnh này?")'>
+                                        <i class="bi bi-x-lg"></i>
+                                    </a>
+
                                 </div>
                             </div>
                             <?php endforeach; ?>
                             <?php else: ?>
-                            <div class="col-12 text-center text-muted py-4">Chưa có hình ảnh bổ sung.</div>
+                            <div class="col-12 text-center text-muted py-4 bg-light rounded border border-dashed">
+                                <i class="bi bi-images display-6 mb-2 d-block text-secondary opacity-50"></i>
+                                Chưa có hình ảnh bổ sung.
+                            </div>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -240,7 +268,6 @@
                                             <?= date('d/m/Y', strtotime($cus['BookingDate'])) ?></td>
                                         <td>
                                             <?php 
-                                                // Logic màu trạng thái
                                                 $badgeClass = 'bg-secondary';
                                                 if($cus['Status'] == 'Đã xác nhận') $badgeClass = 'bg-info';
                                                 elseif($cus['Status'] == 'Đã thanh toán') $badgeClass = 'bg-success';
@@ -326,8 +353,10 @@
                 <div id="section-supplier" class="card border-0 shadow-sm mb-4 scroll-mt">
                     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                         <h6 class="m-0 fw-bold text-dark section-title">Đối tác cung ứng</h6>
-                        <a href="?act=service-add" class="btn btn-sm btn-outline-secondary"><i class="bi bi-link"></i>
-                            Liên kết</a>
+                        <a href="?act=service-add&tour_id=<?= $tour['TourID'] ?>"
+                            class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-link"></i> Liên kết
+                        </a>
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">

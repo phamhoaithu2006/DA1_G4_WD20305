@@ -1,14 +1,4 @@
 <div class="sidebar-wrapper d-flex flex-column flex-shrink-0 bg-white border-end">
-
-    <div class="sidebar-header px-4 py-3 border-bottom">
-        <a href="?act=dashboard" class="d-flex align-items-center text-decoration-none">
-            <div class="brand-icon me-3">
-                <i class="bi bi-compass-fill"></i>
-            </div>
-            <span class="fs-5 fw-bold text-dark tracking-tight">TravelAdmin</span>
-        </a>
-    </div>
-
     <div class="sidebar-menu flex-grow-1 overflow-auto custom-scrollbar px-3 py-3">
         <ul class="nav nav-pills flex-column gap-1">
 

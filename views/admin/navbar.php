@@ -11,18 +11,6 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link text-uppercase fw-semibold" href="<?= BASE_URL ?>?act=admin">
-                        <i class="bi bi-house-door"></i> Trang chủ
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-uppercase fw-semibold active" href="<?= BASE_URL ?>?act=dashboard">
-                        <i class="bi bi-speedometer2"></i> Quản trị
-                    </a>
-                </li>
-            </ul>
 
             <ul class="navbar-nav ms-auto align-items-center">
 

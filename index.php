@@ -34,7 +34,8 @@ match ($act) {
     'dashboard' => (new ProductController())->Dashboard(),
     'tour-create' => (new ProductController())->create(),
     'tour-delete' => (new ProductController())->delete($id),
-
+'service-add' => (new ProductController())->serviceCreate(), // Hiển thị form
+    'service-store' => (new ProductController())->serviceStore(),
     // --- QUẢN LÝ LỊCH TRÌNH TOUR (ADMIN) ---
     'tour-itinerary-form' => (new ProductController())->itineraryForm($id),
     'tour-itinerary-store' => (new ProductController())->itineraryStore(),
@@ -55,7 +56,14 @@ match ($act) {
     'assign-staff' => (new EmployeeController())->assignTour(), // Xử lý phân công
     'add-special-request' => (new TourAssignmentController())->addSpecialRequest(),
     'update-request-status' => (new TourAssignmentController())->updateRequestStatus(),
+'tour-create' => (new ProductController())->create(),
+    'tour-delete' => (new ProductController())->delete($id),
 
+    // --- [BỔ SUNG] ROUTE XỬ LÝ ẢNH GALLERY ---
+    'gallery-upload' => (new ProductController())->galleryUpload(),
+    'delete-gallery-image' => (new ProductController())->deleteGalleryImage($id, $_GET['tour_id'] ?? 0),
+
+    // ... Các dòng tiếp theo ...
     // --- BÁO CÁO & CHẤT LƯỢNG ---
     'tour-report' => (new ReportController())->tourReport($id),
     'evaluate-staff' => (new ReportController())->evaluateStaff(),

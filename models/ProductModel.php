@@ -187,4 +187,43 @@ class ProductModel
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+    // Thêm ảnh vào gallery
+    public function insertGalleryImage($tourId, $imageUrl) {
+        $sql = "INSERT INTO tour_gallery (TourID, ImageURL) VALUES (?, ?)";
+        // Giả sử bạn dùng PDO, code sẽ tựa như sau (tùy vào class Connect của bạn):
+        // $stmt = $this->conn->prepare($sql);
+        // return $stmt->execute([$tourId, $imageUrl]);
+        
+        // Hoặc nếu dùng hàm pdo_execute có sẵn:
+        return pdo_execute($sql, $tourId, $imageUrl); 
+    }
+
+    // Lấy thông tin 1 ảnh gallery (để xóa file)
+    public function getGalleryImageById($imageId) {
+        $sql = "SELECT * FROM tour_gallery WHERE ImageID = ?";
+        return pdo_query_one($sql, $imageId);
+    }
+
+    // Xóa ảnh khỏi DB
+    public function deleteGalleryImage($imageId) {
+        $sql = "DELETE FROM tour_gallery WHERE ImageID = ?";
+        return pdo_execute($sql, $imageId);
+    }
+    // ... Dán vào trong class ProductModel ...
+
+    // 9. Thêm dịch vụ liên kết (TourService)
+    public function insertService($data) {
+        $sql = "INSERT INTO TourService (TourID, SupplierID, ServiceType, Quantity, Price, Note) 
+                VALUES (:tourId, :supId, :type, :qty, :price, :note)";
+        
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':tourId' => $data['tour_id'],
+            ':supId'  => $data['supplier_id'],
+            ':type'   => $data['service_type'],
+            ':qty'    => $data['quantity'],
+            ':price'  => $data['price'],
+            ':note'   => $data['note']
+        ]);
+    }
 }

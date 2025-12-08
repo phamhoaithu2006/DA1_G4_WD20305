@@ -3,22 +3,50 @@
 class ProductController
 {
     public $modelProduct;
+    
 
     public function __construct()
     {
         $this->modelProduct = new ProductModel();
+
+        // --- BẮT ĐẦU: KIỂM TRA QUYỀN ADMIN ---
+        // Nếu act nằm trong danh sách cần bảo vệ thì phải check login
+        $act = $_GET['act'] ?? '/';
+        
+        // Danh sách các trang chỉ Admin được vào
+        $adminRoutes = [
+            'category', 'detail', 'dashboard', 
+            'tour-create', 'tour-delete', 
+            'employees', 'service-add', 
+            'gallery-upload', 'tour-itinerary-form'
+        ];
+
+        // Nếu đang vào trang Admin
+        if (in_array($act, $adminRoutes)) {
+            // Khởi động session nếu chưa có
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            
+            // Kiểm tra: Nếu chưa đăng nhập HOẶC không phải là 'admin'
+            if (empty($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+                // Đá về trang login của HDV (nơi dùng chung login)
+                header("Location: ?act=hdv-login"); 
+                exit;
+            }
+        }
     }
 
     public function Home()
     {
         $title = "Trang chủ khách hàng";
-        require_once './views/trangchu.php';
+        require_once 'views\hdv\login.php';
     }
 
     public function adminHome()
     {
         $title = "Trang chủ quản lý";
-        require_once 'views/admin/home.php';
+        require_once 'views\hdv\login.php';
     }
     public function adminDashboard()
     {
@@ -178,5 +206,100 @@ class ProductController
             echo "<script>alert('Lỗi xóa!'); window.history.back();</script>";
         }
     }
-    
+    // --- [BỔ SUNG] Xử lý Upload ảnh thư viện ---
+    public function galleryUpload() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $tour_id = $_POST['tour_id'] ?? null;
+            
+            if ($tour_id && !empty($_FILES['gallery_images']['name'][0])) {
+                
+                $files = $_FILES['gallery_images'];
+                $count = count($files['name']);
+                
+                // Đường dẫn lưu ảnh (tương đối so với file index.php)
+                $targetDir = "uploads/tours/gallery/";
+                
+                // Tạo thư mục nếu chưa có
+                if (!file_exists($targetDir)) {
+                    mkdir($targetDir, 0777, true);
+                }
+
+                // Duyệt qua từng file được gửi lên
+                for ($i = 0; $i < $count; $i++) {
+                    if ($files['error'][$i] === 0) {
+                        // Tạo tên file ngẫu nhiên để tránh trùng
+                        $extension = pathinfo($files['name'][$i], PATHINFO_EXTENSION);
+                        $newFileName = time() . '_' . rand(100, 999) . '.' . $extension;
+                        $targetFilePath = $targetDir . $newFileName;
+
+                        // Di chuyển file và lưu vào DB
+                        if (move_uploaded_file($files['tmp_name'][$i], $targetFilePath)) {
+                            // Gọi Model để insert đường dẫn ảnh
+                            $this->modelProduct->insertGalleryImage($tour_id, $targetFilePath);
+                        }
+                    }
+                }
+                
+                // Upload xong thì quay lại trang chi tiết
+                header("Location: ?act=detail&id=" . $tour_id);
+                exit;
+            } else {
+                echo "<script>alert('Vui lòng chọn ảnh!'); window.history.back();</script>";
+            }
+        }
+    }
+
+    // --- [BỔ SUNG] Xóa ảnh thư viện ---
+    public function deleteGalleryImage($imageId, $tourId) {
+        // 1. Lấy thông tin ảnh để xóa file vật lý
+        $image = $this->modelProduct->getGalleryImageById($imageId); // Cần viết hàm này trong Model
+        
+        if ($image) {
+            // Xóa file trong thư mục uploads
+            if (file_exists($image['ImageURL'])) {
+                unlink($image['ImageURL']);
+            }
+            
+            // 2. Xóa dữ liệu trong DB
+            $this->modelProduct->deleteGalleryImage($imageId); // Cần viết hàm này trong Model
+        }
+
+        // Quay lại trang chi tiết
+        header("Location: ?act=detail&id=" . $tourId);
+        exit;
+    }
+    // ... Dán vào trong class ProductController ...
+
+    // 1. Hiển thị Form thêm dịch vụ
+    public function serviceCreate() {
+        // Lấy danh sách Tour và NCC để chọn trong dropdown
+        $tours = $this->modelProduct->getAllTour();
+        $suppliers = $this->modelProduct->getAllSuppliers();
+        
+        // Lấy ID tour từ URL (nếu người dùng bấm từ trang chi tiết)
+        $preSelectedTourId = $_GET['tour_id'] ?? null;
+
+        require_once 'views/admin/Tour_and_product/service_create.php';
+    }
+
+    // 2. Xử lý lưu dịch vụ
+    public function serviceStore() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = [
+                'tour_id'      => $_POST['tour_id'],
+                'supplier_id'  => $_POST['supplier_id'],
+                'service_type' => $_POST['service_type'],
+                'quantity'     => $_POST['quantity'] ?? 1,
+                'price'        => $_POST['price'] ?? 0,
+                'note'         => $_POST['note'] ?? ''
+            ];
+
+            if ($this->modelProduct->insertService($data)) {
+                // Thành công -> Quay lại trang chi tiết Tour đó
+                echo "<script>alert('Thêm dịch vụ thành công!'); window.location.href='?act=detail&id=" . $data['tour_id'] . "';</script>";
+            } else {
+                echo "<script>alert('Lỗi hệ thống!'); window.history.back();</script>";
+            }
+        }
+    }
 }

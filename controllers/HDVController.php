@@ -4,16 +4,18 @@ require_once './models/HDVModel.php';
 
 class HDVController
 {
-    // Hiển thị trang login
-    public function login()
+
+    // Xử lý login
+   public function login()
     {
         require_once './views/hdv/login.php';
     }
 
-    // Xử lý login
+    // --- [SỬA ĐỔI] Xử lý Login chung cho Admin và HDV ---
     public function checkLogin()
     {
         session_start();
+        
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             header("Location: ?act=hdv-login");
             exit;
@@ -23,46 +25,56 @@ class HDVController
         $password = trim($_POST['password'] ?? '');
 
         if ($email === '' || $password === '') {
-            $_SESSION['hdv_error'] = "Vui lòng nhập email và mật khẩu.";
+            $_SESSION['error'] = "Vui lòng nhập email và mật khẩu.";
             header("Location: ?act=hdv-login");
             exit;
         }
 
+        // 1. KIỂM TRA TÀI KHOẢN ADMIN (Cố định)
+        if ($email === 'admin@admin.com' && $password === '123') {
+            // Thiết lập Session cho Admin
+            $_SESSION['user_role'] = 'admin';
+            $_SESSION['user_id']   = 0; // ID giả định cho admin
+            $_SESSION['user_name'] = 'Administrator';
+            
+            // Chuyển hướng vào trang quản trị (Dashboard hoặc Category)
+            header("Location: ?act=dashboard"); 
+            exit;
+        }
+
+        // 2. KIỂM TRA TÀI KHOẢN NHÂN VIÊN/HDV (Từ Database)
         $emp = getEmployeeByEmail($email);
 
-        if (!$emp) {
-            $_SESSION['hdv_error'] = "Tài khoản không tồn tại.";
-            header("Location: ?act=hdv-login");
-            exit;
+        if ($emp) {
+            // Kiểm tra mật khẩu (Plain text hoặc Hash)
+            // Lưu ý: Nên dùng password_verify nếu DB đã mã hóa
+            $isPasswordCorrect = ($emp['Password'] === $password); 
+            // Hoặc: $isPasswordCorrect = password_verify($password, $emp['Password']);
+
+            if ($isPasswordCorrect) {
+                // Thiết lập Session cho HDV
+                $_SESSION['user_role'] = 'hdv'; // Hoặc 'employee'
+                $_SESSION['hdv_id']    = $emp['EmployeeID']; // Giữ cái này để code cũ của bạn chạy được
+                $_SESSION['hdv_name']  = $emp['FullName'];
+                
+                // Chuyển hướng vào trang HDV
+                header("Location: ?act=hdv-dashboard");
+                exit;
+            }
         }
 
-        // Kiểm tra mật khẩu plain text
-        if ($emp['Password'] === $password) {
-            $_SESSION['hdv_id'] = $emp['EmployeeID'];
-            $_SESSION['hdv_name'] = $emp['FullName'];
-            header("Location: ?act=hdv-dashboard");
-            exit;
-        }
-
-        // Nếu dùng mật khẩu hash (bcrypt)
-        if (password_verify($password, $emp['Password'])) {
-            $_SESSION['hdv_id'] = $emp['EmployeeID'];
-            $_SESSION['hdv_name'] = $emp['FullName'];
-            header("Location: ?act=hdv-dashboard");
-            exit;
-        }
-
-        $_SESSION['hdv_error'] = "Sai mật khẩu.";
+        // 3. ĐĂNG NHẬP THẤT BẠI
+        $_SESSION['error'] = "Email hoặc mật khẩu không chính xác.";
         header("Location: ?act=hdv-login");
         exit;
     }
 
-    // Logout
+    // --- [SỬA ĐỔI] Logout chung ---
     public function logout()
     {
         session_start();
-        session_unset();
-        session_destroy();
+        session_unset();   // Xóa hết biến session
+        session_destroy(); // Hủy session
         header("Location: ?act=hdv-login");
         exit;
     }

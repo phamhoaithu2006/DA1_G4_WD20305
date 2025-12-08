@@ -1,14 +1,42 @@
 <?php
-// === GIỮ NGUYÊN LOGIC CŨ ===
-// Nhóm tour theo Category
+// === LOGIC MỚI: ƯU TIÊN TOUR SẮP TỚI ===
+
 $grouped = [];
 if (!empty($tours) && is_array($tours)) {
+    
+    // 1. Tách tour thành 2 nhóm: Active (Sắp chạy/Đang chạy) và Past (Đã xong)
+    $activeTours = [];
+    $pastTours = [];
+    $today = date('Y-m-d');
+
     foreach ($tours as $tour) {
+        // Nếu ngày kết thúc >= hôm nay => Vẫn còn hiệu lực (Sắp chạy hoặc Đang chạy)
+        if ($tour['EndDate'] >= $today) {
+            $activeTours[] = $tour;
+        } else {
+            $pastTours[] = $tour;
+        }
+    }
+
+    // 2. Sắp xếp nhóm Active: Ngày bắt đầu gần nhất lên trước (ASC)
+    usort($activeTours, function($a, $b) {
+        return strtotime($a['StartDate']) - strtotime($b['StartDate']);
+    });
+
+    // 3. Sắp xếp nhóm Past: Tour vừa mới xong lên trước (DESC - theo StartDate hoặc EndDate)
+    usort($pastTours, function($a, $b) {
+        return strtotime($b['EndDate']) - strtotime($a['EndDate']);
+    });
+
+    // 4. Gộp lại: Active lên đầu, Past xuống dưới
+    $sortedTours = array_merge($activeTours, $pastTours);
+
+    // 5. Nhóm theo Category (Dữ liệu đã được sắp xếp sẵn)
+    foreach ($sortedTours as $tour) {
         $grouped[$tour['CategoryName']][] = $tour;
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="vi">
 

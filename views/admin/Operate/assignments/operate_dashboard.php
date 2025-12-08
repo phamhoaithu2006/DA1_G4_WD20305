@@ -220,10 +220,16 @@
                                     ?>
                                     <tr>
                                         <td class="ps-4">
+                                            <?php
+        // Kiểm tra xem key ServiceDate có tồn tại và có dữ liệu không
+        $hasDate = isset($sv['ServiceDate']) && !empty($sv['ServiceDate']);
+    ?>
                                             <div class="fw-bold text-dark">
-                                                <?= date('d/m', strtotime($sv['ServiceDate'])) ?></div>
+                                                <?= $hasDate ? date('d/m', strtotime($sv['ServiceDate'])) : '--/--' ?>
+                                            </div>
                                             <small class="text-muted" style="font-size: 0.7rem;">Năm
-                                                <?= date('Y', strtotime($sv['ServiceDate'])) ?></small>
+                                                <?= $hasDate ? date('Y', strtotime($sv['ServiceDate'])) : '----' ?>
+                                            </small>
                                         </td>
                                         <td class="fw-bold text-primary"><?= htmlspecialchars($sv['ServiceType']) ?>
                                         </td>
