@@ -56,7 +56,7 @@ function getTourDetailById($tourId)
 function getCustomersInTour($tourId)
 {
     $conn = connectDB();
-    $sql = "SELECT c.FullName, c.Email, c.Phone, tc.RoomNumber, tc.Note
+    $sql = "SELECT c.CustomerID, c.FullName, c.Email, c.Phone, tc.RoomNumber, tc.Note
             FROM TourCustomer tc
             JOIN Customer c ON tc.CustomerID = c.CustomerID
             WHERE tc.TourID = :tid";
@@ -500,4 +500,72 @@ function saveSpecialRequest($data)
         'tid' => $data['TourID'],
         'cid' => $data['CustomerID']
     ]);
+}
+
+// Gán phòng cho một khách (dùng khi HDV nhập tay)
+function assignRoom($tourId, $customerId, $roomNumber)
+{
+    $conn = connectDB();
+    $sql = "UPDATE TourCustomer SET RoomNumber = :room WHERE TourID = :tid AND CustomerID = :cid";
+    $stmt = $conn->prepare($sql);
+    return $stmt->execute([
+        'room' => $roomNumber,
+        'tid' => $tourId,
+        'cid' => $customerId
+    ]);
+}
+
+// Lấy danh sách phòng đã phân trong tour (mảng room => [customerIds])
+function getRoomsOfTour($tourId)
+{
+    $conn = connectDB();
+    $sql = "SELECT CustomerID, RoomNumber FROM TourCustomer WHERE TourID = :tid AND RoomNumber IS NOT NULL AND TRIM(RoomNumber) <> ''";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['tid' => $tourId]);
+    $rows = $stmt->fetchAll();
+
+    $rooms = [];
+    foreach ($rows as $r) {
+        $room = $r['RoomNumber'];
+        if (!isset($rooms[$room])) $rooms[$room] = [];
+        $rooms[$room][] = $r['CustomerID'];
+    }
+    return $rooms;
+}
+
+// Tự động gán phòng cho các khách chưa có phòng trong tour
+function autoAssignRooms($tourId, $employeeId)
+{
+    $conn = connectDB();
+    try {
+        $conn->beginTransaction();
+
+        // Lấy số phòng lớn nhất hiện có (chỉ số số nếu có)
+        $sqlMax = "SELECT MAX(CAST(RoomNumber AS UNSIGNED)) AS max_room FROM TourCustomer WHERE TourID = :tid AND RoomNumber REGEXP '^[0-9]+'";
+        $stmt = $conn->prepare($sqlMax);
+        $stmt->execute(['tid' => $tourId]);
+        $row = $stmt->fetch();
+        $maxRoom = $row && $row['max_room'] !== null ? (int)$row['max_room'] : 0;
+
+        // Lấy danh sách khách chưa có phòng
+        $sql = "SELECT CustomerID FROM TourCustomer WHERE TourID = :tid AND (RoomNumber IS NULL OR TRIM(RoomNumber) = '') ORDER BY CustomerID ASC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(['tid' => $tourId]);
+        $rows = $stmt->fetchAll();
+
+        $assigned = 0;
+        foreach ($rows as $r) {
+            $maxRoom++;
+            $roomStr = (string)$maxRoom;
+            $upd = $conn->prepare("UPDATE TourCustomer SET RoomNumber = :room WHERE TourID = :tid AND CustomerID = :cid");
+            $ok = $upd->execute(['room' => $roomStr, 'tid' => $tourId, 'cid' => $r['CustomerID']]);
+            if ($ok) $assigned++;
+        }
+
+        $conn->commit();
+        return $assigned;
+    } catch (Exception $e) {
+        if ($conn->inTransaction()) $conn->rollBack();
+        return 0;
+    }
 }

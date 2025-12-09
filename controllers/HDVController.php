@@ -452,4 +452,92 @@ class HDVController
         header("Location: ?act=hdv-special-requests&id=" . $tourId);
         exit;
     }
+
+    // Hiển thị trang phân phòng
+    public function roomAssign()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        if (!$tourId) {
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        // Lấy dữ liệu tour + khách
+        $tour = getTourDetailById($tourId);
+        $customers = getCustomersInTour($tourId);
+
+        // Lấy phòng đã phân
+        $assignedRooms = getRoomsOfTour($tourId);
+
+        require_once './views/hdv/tour_detail.php';
+    }
+
+    // Tự động giao phòng (POST)
+    public function assignRooms()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        if (!$tourId) {
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $assigned = 0;
+        if (function_exists('autoAssignRooms')) {
+            $assigned = autoAssignRooms($tourId, $_SESSION['hdv_id']);
+        }
+
+        if ($assigned > 0) {
+            $_SESSION['hdv_success'] = "Giao phòng tự động thành công: {$assigned} khách.";
+        } else {
+            $_SESSION['hdv_error'] = "Không có khách nào cần phân phòng hoặc có lỗi khi giao phòng.";
+        }
+
+        header("Location: ?act=hdv-tour-detail&id=" . $tourId);
+        exit;
+    }
+
+    // Lưu phân phòng (POST)
+    public function roomAssignSave()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+
+        if ($_SERVER['REQUEST_METHOD'] != 'POST' || !$tourId) {
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        // Duyệt từng khách HDV nhập phòng
+        foreach ($_POST['room'] as $customerId => $roomNumber) {
+            if ($roomNumber !== "") {
+                assignRoom($tourId, $customerId, $roomNumber);
+            }
+        }
+
+        $_SESSION['hdv_success'] = "Phân phòng thành công!";
+        header("Location: ?act=hdv-room&id=" . $tourId);
+        exit;
+    }
 }
