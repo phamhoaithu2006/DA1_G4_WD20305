@@ -386,6 +386,40 @@ class HDVController
         exit;
     }
 
+    public function checkInOutDelete()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        $entryId = $_GET['entry_id'] ?? null;
+
+        if (!$tourId || !$entryId) {
+            $_SESSION['hdv_error'] = "Thông tin không hợp lệ.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $row = getCheckInOutById($entryId);
+        if (!$row || $row['TourID'] != $tourId) {
+            $_SESSION['hdv_error'] = "Bản ghi không tồn tại hoặc không thuộc tour này.";
+            header("Location: ?act=hdv-checkin-checkout&id=" . $tourId);
+            exit;
+        }
+
+        if (deleteCheckInOutEntry($entryId)) {
+            $_SESSION['hdv_success'] = "Đã xóa bản ghi thành công.";
+        } else {
+            $_SESSION['hdv_error'] = "Có lỗi xảy ra khi xóa.";
+        }
+
+        header("Location: ?act=hdv-checkin-checkout&id=" . $tourId);
+        exit;
+    }
+
     // Trang yêu cầu đặc biệt
     public function specialRequests()
     {
@@ -450,6 +484,35 @@ class HDVController
         }
 
         header("Location: ?act=hdv-special-requests&id=" . $tourId);
+        exit;
+    }
+
+    // Tự động phân phòng: giao quyền phân phòng cho HDV (gán phòng cho khách chưa có phòng)
+    public function assignRooms()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        if (!$tourId) {
+            $_SESSION['hdv_error'] = "Thông tin tour không hợp lệ.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        // Gọi model để tự động phân phòng
+        $assigned = autoAssignRooms($tourId, $_SESSION['hdv_id']);
+
+        if ($assigned > 0) {
+            $_SESSION['hdv_success'] = "Đã phân phòng cho $assigned khách thành công.";
+        } else {
+            $_SESSION['hdv_success'] = "Không có khách cần phân phòng hoặc đã được phân trước đó.";
+        }
+
+        header("Location: ?act=hdv-tour-detail&id=" . $tourId);
         exit;
     }
 }
