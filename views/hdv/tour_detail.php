@@ -2,8 +2,44 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-
-$hdvName = $_SESSION['hdv_name'] ?? 'HDV';
+// MOCK DATA (Giả lập dữ liệu để hiển thị giao diện - Xóa khi chạy thật)
+if (!isset($tour)) {
+    $tour = [
+        'TourID' => 'T001',
+        'TourName' => 'Hành trình di sản: Đà Nẵng - Hội An - Huế',
+        'CategoryName' => 'Văn hóa',
+        'Price' => 5990000,
+        'StartDate' => '15/06/2025',
+        'EndDate' => '19/06/2025',
+        'SupplierName' => 'Sun World Travel',
+        'Description' => "Ngày 1: Đón khách tại sân bay, tham quan Bán đảo Sơn Trà.\nNgày 2: Bà Nà Hills - Cầu Vàng.\nNgày 3: Phố cổ Hội An - Thả đèn hoa đăng."
+    ];
+}
+if (!isset($customers)) {
+    $customers = [
+        ['FullName' => 'Nguyễn Văn An', 'Phone' => '0901234567', 'RoomNumber' => '301'],
+        ['FullName' => 'Trần Thị Bích', 'Phone' => '0912345678', 'RoomNumber' => '302'],
+        ['FullName' => 'Lê Tuấn Cường', 'Phone' => '0987654321', 'RoomNumber' => '301'],
+    ];
+}
+if (!isset($logs)) {
+    $logs = [
+        [
+            'LogID' => 1,
+            'LogDate' => '2025-06-15 08:30:00',
+            'Note' => 'Đã đón đủ 20 khách tại sân bay Đà Nẵng. Xe khởi hành đi ăn trưa.',
+            'Incident' => '',
+            'Images' => json_encode(['https://images.unsplash.com/photo-1559592413-7cec430aaec3?auto=format&fit=crop&w=100&q=80'])
+        ],
+        [
+            'LogID' => 2,
+            'LogDate' => '2025-06-15 14:00:00',
+            'Note' => 'Khách check-in khách sạn Mường Thanh.',
+            'Incident' => 'Khách phòng 302 báo hỏng điều hòa, đang liên hệ lễ tân đổi phòng.',
+            'Images' => ''
+        ]
+    ];
+}
 ?>
 
 <!doctype html>
@@ -12,267 +48,515 @@ $hdvName = $_SESSION['hdv_name'] ?? 'HDV';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Chi tiết tour</title>
+    <title>Chi tiết Tour - Portal HDV</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
     <style>
-        /* Navbar HDV */
-        .navbar {
-            border-radius: 0 0 12px 12px;
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+            --danger-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --text-main: #2d3748;
         }
 
-        /* Body nền nhẹ */
         body {
-            background: #f5f7fa;
-            font-family: 'Segoe UI', sans-serif;
+            background-color: #f3f4f6;
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+            background-repeat: no-repeat;
+            background-size: 100% 400px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding-top: 80px;
+            /* Space for Navbar */
+            min-height: 100vh;
         }
 
-        /* Tour Info Card */
-        .tour-info-card {
-            border-radius: 14px;
-            transition: 0.3s;
+        /* Glass Navbar */
+        .navbar {
+            background: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
         }
 
-        .tour-info-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+        /* Card Styling */
+        .glass-card {
+            background: #fff;
+            border: none;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
         }
 
-        .tour-info-card .card-header {
-            border-top-left-radius: 14px;
-            border-top-right-radius: 14px;
+        /* Modern Tabs */
+        .nav-pills {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 6px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
         }
 
-        .tour-info-card .card-body p,
-        .tour-info-card .card-body span {
-            margin-bottom: 0.5rem;
+        .nav-pills .nav-item {
+            flex: 1;
+            text-align: center;
         }
 
-        .tour-info-card .text-primary {
+        .nav-pills .nav-link {
+            border-radius: 50px;
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.6rem 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-pills .nav-link.active {
+            background: #fff;
+            color: #4f46e5;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: scale(1.02);
+        }
+
+        /* Info Tab Styling */
+        .price-text {
+            background: var(--primary-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .info-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px dashed #e2e8f0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .icon-box {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: #f1f5f9;
+            color: #6366f1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
             font-size: 1.1rem;
         }
 
-        /* Feature Card (nhật ký, check-in, yêu cầu đặc biệt) */
-        .feature-card {
-            transition: 0.25s;
+        /* Customer List Styling */
+        .customer-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--secondary-gradient);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(132, 250, 176, 0.3);
         }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15) !important;
+        /* Timeline / Logs Styling */
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            padding-bottom: 25px;
+            border-left: 2px solid #e2e8f0;
         }
 
-        /* Log item */
-        .log-item {
-            border-left: 4px solid #0d6efd;
-            padding-left: 10px;
-            margin-bottom: 12px;
-            background: #fdfdfd;
-            border-radius: 8px;
+        .timeline-item:last-child {
+            border-left: 2px solid transparent;
         }
 
-        .log-item:hover {
-            background: #f1f7ff;
+        .timeline-dot {
+            position: absolute;
+            left: -9px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.2);
         }
 
-        /* Hình ảnh nhật ký */
-        .img-thumbnail {
-            border-radius: 10px;
+        /* Floating Action Button */
+        .fab-container {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 999;
         }
 
-        /* Bảng */
-        table thead {
-            background: #0dcaf0;
+        .fab-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
             color: white;
-        }
-
-        table tbody tr:hover {
-            background: #f1f1f1;
-        }
-
-        /* Nút info bootstrap tuỳ chỉnh */
-        .btn-info {
-            background: #0ea5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+            font-size: 26px;
             border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 13px;
+            transition: transform 0.2s;
         }
 
-        .btn-info:hover {
-            background: #0284c7;
+        .fab-btn:active {
+            transform: scale(0.9);
         }
 
-        /* Shadow mềm cho các card */
-        .shadow-soft {
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        /* Action Buttons Grid */
+        .action-btn-lg {
+            border: none;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+            height: 100%;
+        }
+
+        .action-btn-lg:hover {
+            transform: translateY(-3px);
+        }
+
+        .action-btn-lg i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .btn-diary {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .btn-request {
+            background: #ffe4e6;
+            color: #be123c;
+        }
+        .btn-checkin {
+            background: #dcfce7;
+            color: #16a34a;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand navbar-dark bg-primary shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="?act=hdv-tour">
-                <i class="bi bi-person-badge"></i>
-                Hướng dẫn viên: <?= htmlspecialchars($hdvName) ?>
+    <nav class="navbar navbar-expand fixed-top px-3">
+        <div class="d-flex align-items-center w-100">
+            <a href="?act=hdv-tour" class="btn btn-light rounded-circle shadow-sm me-3"
+                style="width: 40px; height: 40px; display:flex; align-items:center; justify-content:center;">
+                <i class="bi bi-arrow-left text-dark"></i>
             </a>
-            <div>
-                <a class="btn btn-light btn-sm" href="?act=hdv-logout">
-                    Đăng xuất
-                </a>
+
+            <div class="flex-grow-1" style="min-width: 0;">
+                <div class="small text-muted text-uppercase fw-bold" style="font-size: 0.7rem; letter-spacing: 1px;">Chi
+                    tiết hành trình</div>
+                <div class="fw-bold text-dark text-truncate fs-6">
+                    <?= htmlspecialchars($tour['TourName'] ?? 'Chi tiết Tour') ?>
+                </div>
+            </div>
+
+            <div class="dropdown ms-2">
+                <button class="btn btn-light rounded-circle shadow-sm" type="button" data-bs-toggle="dropdown"
+                    style="width: 40px; height: 40px;">
+                    <i class="bi bi-three-dots-vertical"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 p-2">
+                    <li><a class="dropdown-item rounded-3 mb-1"
+                            href="?act=hdv-checkin-checkout&id=<?= $tour['TourID'] ?>"><i
+                                class="bi bi-qr-code-scan me-2 text-primary"></i>Check-in/out</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item rounded-3 text-danger" href="?act=hdv-logout"><i
+                                class="bi bi-box-arrow-right me-2"></i>Thoát</a></li>
+                </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container py-4">
+    <div class="container pb-5">
 
-        <!-- Back button -->
-        <a href="?act=hdv-tour" class="btn btn-outline-secondary btn-sm mb-3">
-            <i class="bi bi-arrow-left"></i> Quay lại
-        </a>
-
-        <!-- Tour Info -->
-        <div class="card shadow-sm tour-info-card mb-4 border-0">
-            <div class="card-header bg-light border-bottom">
-                <h4 class="mb-0 fw-bold"><?= htmlspecialchars($tour['TourName'] ?? '---') ?></h4>
+        <?php if (!empty($_SESSION['hdv_success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <?= htmlspecialchars($_SESSION['hdv_success']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="card-body">
-                <div class="row mb-2">
-                    <!-- Cột 1: Loại + Nhà cung cấp -->
-                    <div class="col-sm-4">
-                        <p class="mb-1"><strong>Loại:</strong> <?= htmlspecialchars($tour['CategoryName'] ?? '') ?></p>
-                        <p class="mb-1"><strong>Nhà cung cấp:</strong> <?= htmlspecialchars($tour['SupplierName'] ?? '') ?></p>
+        <?php unset($_SESSION['hdv_success']);
+        endif; ?>
+
+        <?php if (!empty($_SESSION['hdv_error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <?= htmlspecialchars($_SESSION['hdv_error']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php unset($_SESSION['hdv_error']);
+        endif; ?>
+
+        <ul class="nav nav-pills shadow-sm" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active w-100" data-bs-toggle="pill" data-bs-target="#pills-info">
+                    Thông tin
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link w-100" data-bs-toggle="pill" data-bs-target="#pills-customers">
+                    Khách (<?= count($customers ?? []) ?>)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link w-100" data-bs-toggle="pill" data-bs-target="#pills-logs">
+                    Nhật ký
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="pills-tabContent">
+
+            <div class="tab-pane fade show active" id="pills-info">
+                <div class="glass-card p-4">
+                    <div class="mb-3">
+                        <h6 class="text-uppercase small text-muted">Thông tin tour đã tham gia</h6>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-start mb-4">
+                        <span class="badge rounded-pill px-3 py-2" style="background: #e9d8fd; color: #553c9a;">
+                            <?= htmlspecialchars($tour['CategoryName'] ?? 'Tour') ?>
+                        </span>
+                        <div class="fs-4 price-text">
+                            <?= number_format($tour['Price'] ?? 0, 0, ',', '.') ?> <small>đ</small>
+                        </div>
                     </div>
 
-                    <!-- Cột 2: Giá + Mô tả -->
-                    <div class="col-sm-4">
-                        <p class="mb-1"><strong>Giá:</strong> <?= number_format($tour['Price'] ?? 0) ?> VNĐ</span></p>
-                        <p class="mb-1"><strong>Mô tả:</strong> <?= nl2br(htmlspecialchars($tour['Description'] ?? '')) ?></span></p>
+                    <div class="mb-4">
+                        <div class="info-row">
+                            <div class="icon-box"><i class="bi bi-calendar-check"></i></div>
+                            <div>
+                                <div class="small text-muted">Khởi hành</div>
+                                <div class="fw-bold text-dark"><?= htmlspecialchars($tour['StartDate'] ?? '') ?></div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="icon-box text-danger"><i class="bi bi-calendar-x"></i></div>
+                            <div>
+                                <div class="small text-muted">Kết thúc</div>
+                                <div class="fw-bold text-dark"><?= htmlspecialchars($tour['EndDate'] ?? '') ?></div>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="icon-box text-success"><i class="bi bi-buildings"></i></div>
+                            <div>
+                                <div class="small text-muted">Nhà cung cấp</div>
+                                <div class="fw-bold text-dark"><?= htmlspecialchars($tour['SupplierName'] ?? '') ?>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Cột 3: Khởi hành + Kết thúc -->
-                    <div class="col-sm-4">
-                        <p class="mb-1"><strong>Khởi hành:</strong> <?= htmlspecialchars($tour['StartDate'] ?? '') ?></p>
-                        <p class="mb-1"><strong>Kết thúc:</strong> <?= htmlspecialchars($tour['EndDate'] ?? '') ?></p>
+                    <h6 class="fw-bold text-dark mb-2"><i class="bi bi-text-paragraph me-2 text-primary"></i>Lịch trình
+                        sơ lược</h6>
+                    <div class="bg-light p-3 rounded-4 text-secondary small" style="line-height: 1.6;">
+                        <?= nl2br(htmlspecialchars($tour['Description'] ?? 'Chưa có mô tả chi tiết.')) ?>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <a href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>" class="d-block text-decoration-none">
+                            <div class="action-btn-lg btn-diary shadow-sm">
+                                <i class="bi bi-journal-plus"></i>
+                                <span class="fw-bold d-block">Viết nhật ký</span>
+                                <small class="opacity-75">Cập nhật tiến độ</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <a href="?act=hdv-special-requests&id=<?= $tour['TourID'] ?>"
+                            class="d-block text-decoration-none">
+                            <div class="action-btn-lg btn-request shadow-sm">
+                                <i class="bi bi-heart-pulse"></i>
+                                <span class="fw-bold d-block">Yêu cầu</span>
+                                <small class="opacity-75">Sức khỏe & Ăn uống</small>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <a href="?act=hdv-checkin-checkout&id=<?= $tour['TourID'] ?>" class="d-block text-decoration-none">
+                            <div class="action-btn-lg btn-checkin shadow-sm">
+                                <i class="bi bi-geo-fill"></i>
+                                <span class="fw-bold d-block">Check-in/Check-out</span>
+                                <small class="opacity-75">Xác nhận đến và rời điểm</small>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Feature boxes -->
-        <div class="row g-4 mb-4">
-
-            <div class="col-md-4">
-                <div class="card feature-card shadow-sm border-primary text-center p-3">
-                    <h6 class="text-primary fw-bold mb-1">Nhật ký tour</h6>
-                    <p class="small text-muted">Thêm/Cập nhật lịch trình và sự cố</p>
-                    <a href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>" class="btn btn-primary btn-sm">
-                        <i class="bi bi-journal-plus"></i> Thêm nhật ký
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card feature-card shadow-sm border-success text-center p-3">
-                    <h6 class="text-success fw-bold mb-1">Check-in/Check-out</h6>
-                    <p class="small text-muted">Quản lý trạng thái đoàn</p>
-                    <a href="?act=hdv-checkin-checkout&id=<?= $tour['TourID'] ?>" class="btn btn-success btn-sm">
-                        <i class="bi bi-check-circle"></i> Quản lý check-in/check-out
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-4">
-                <div class="card feature-card shadow-sm border-info text-center p-3">
-                    <h6 class="text-info fw-bold mb-1">Yêu cầu đặc biệt</h6>
-                    <p class="small text-muted">Tình trạng sức khỏe và hỗ trợ riêng của khách</p>
-                    <a href="?act=hdv-special-requests&id=<?= $tour['TourID'] ?>" class="btn btn-info btn-sm text-white">
-                        <i class="bi bi-heart"></i> Quản lý yêu cầu
-                    </a>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Two-column layout -->
-        <div class="row g-4">
-
-            <!-- Left: Customer list -->
-            <div class="col-md-6">
-                <div class="card shadow-sm">
-                    <div class="card-header bg-info text-white fw-bold">
-                        <i class="bi bi-people"></i> Danh sách khách
+            <div class="tab-pane fade" id="pills-customers">
+                <div class="glass-card">
+                    <div class="p-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+                        <span class="fw-bold text-muted small text-uppercase">Danh sách thành viên</span>
+                        <div class="d-flex gap-2">
+                            <form method="post" action="?act=hdv-assign-rooms&id=<?= urlencode($tour['TourID']) ?>" onsubmit="return confirm('Xác nhận giao phòng tự động cho các khách chưa có phòng?');">
+                                <button type="submit" class="btn btn-sm btn-primary rounded-pill shadow-sm fw-bold">
+                                    <i class="bi bi-door-open-fill me-1"></i> Giao phòng tự động
+                                </button>
+                            </form>
+                            <button class="btn btn-sm btn-white border rounded-pill shadow-sm text-primary fw-bold"
+                                onclick="window.print()">
+                                <i class="bi bi-printer me-1"></i> In
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-body p-0">
-                        <table class="table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Họ tên</th>
-                                    <th>Số điện thoại</th>
-                                    <th>Phòng</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($customers)): foreach ($customers as $c): ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($c['FullName']) ?></td>
-                                            <td><?= htmlspecialchars($c['Phone']) ?></td>
-                                            <td><?= htmlspecialchars($c['RoomNumber']) ?></td>
-                                        </tr>
-                                    <?php endforeach;
-                                else: ?>
-                                    <tr>
-                                        <td colspan="3" class="text-center py-3 text-muted">
-                                            Không có khách
-                                        </td>
-                                    </tr>
+                    <div class="list-group list-group-flush">
+                        <?php if (!empty($customers)): foreach ($customers as $c): ?>
+                                <div class="list-group-item p-3 border-bottom-0 border-top-0"
+                                    style="border-bottom: 1px solid #f1f5f9 !important;">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="customer-avatar flex-shrink-0">
+                                            <?php
+                                            $parts = explode(' ', $c['FullName']);
+                                            echo substr(end($parts), 0, 1);
+                                            ?>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-bold text-dark mb-1"><?= htmlspecialchars($c['FullName']) ?></div>
+                                            <div class="d-flex gap-2">
+                                                <a href="tel:<?= $c['Phone'] ?>"
+                                                    class="badge bg-light text-secondary border text-decoration-none fw-normal">
+                                                    <i class="bi bi-telephone-fill me-1 text-success"></i>
+                                                    <?= htmlspecialchars($c['Phone']) ?>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="d-block text-muted" style="font-size: 0.7rem;">PHÒNG</small>
+                                            <span
+                                                class="fw-bold text-primary"><?= htmlspecialchars($c['RoomNumber'] ?? '-') ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach;
+                        else: ?>
+                            <div class="p-5 text-center text-muted">
+                                <i class="bi bi-people display-4 opacity-25"></i>
+                                <p class="mt-2">Chưa có dữ liệu khách hàng.</p>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="pills-logs">
+                <div class="glass-card p-4">
+                    <h5 class="fw-bold mb-4">Nhật ký hành trình</h5>
+
+                    <?php if (!empty($logs)): ?>
+                        <?php foreach ($logs as $l): ?>
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <span class="fw-bold text-dark"><?= date('H:i', strtotime($l['LogDate'])) ?></span>
+                                        <span class="text-muted small ms-1"><?= date('d/m', strtotime($l['LogDate'])) ?></span>
+                                    </div>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i
+                                                class="bi bi-three-dots"></i></button>
+                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                            <li><a class="dropdown-item"
+                                                    href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>&log_id=<?= $l['LogID'] ?>">Sửa</a>
+                                            </li>
+                                            <li><a class="dropdown-item text-danger"
+                                                    href="?act=hdv-diary-delete&id=<?= $tour['TourID'] ?>&log_id=<?= $l['LogID'] ?>"
+                                                    onclick="return confirm('Xóa?')">Xóa</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="bg-light rounded-3 p-3 mb-2">
+                                    <p class="mb-0 text-secondary" style="font-size: 0.95rem;">
+                                        <?= nl2br(htmlspecialchars($l['Note'])) ?></p>
+                                </div>
+
+                                <?php if (!empty($l['Incident'])): ?>
+                                    <div class="alert alert-danger border-0 d-flex align-items-start gap-2 shadow-sm"
+                                        style="background-color: #fff5f5; color: #c53030;">
+                                        <i class="bi bi-exclamation-octagon-fill mt-1"></i>
+                                        <div>
+                                            <strong>Sự cố:</strong>
+                                            <div class="small mt-1"><?= nl2br(htmlspecialchars($l['Incident'])) ?></div>
+                                        </div>
+                                    </div>
                                 <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Right: Tour Log -->
-            <div class="col-md-6">
-                <div class="card">
-                    <div class="card-header bg-warning">Lịch trình/Nhật ký</div>
-                    <div class="card-body p-0">
-                        <table class="table mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Ngày/Giờ</th>
-                                    <th>Ghi chú</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($logs)): foreach ($logs as $l): ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($l['LogDate']) ?></td>
-                                            <td><?= htmlspecialchars($l['Note']) ?></td>
-                                        </tr>
-                                    <?php endforeach;
-                                else: ?>
-                                    <tr>
-                                        <td colspan="2" class="text-center">Chưa có nhật ký</td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-
+                                <?php if (!empty($l['Images'])):
+                                    $images = json_decode($l['Images'], true);
+                                    if (!empty($images)): ?>
+                                        <div class="d-flex gap-2 overflow-auto mt-2">
+                                            <?php foreach ($images as $img): ?>
+                                                <a href="<?= $img ?>" target="_blank">
+                                                    <img src="<?= $img ?>" class="rounded-3 shadow-sm"
+                                                        style="width: 70px; height: 70px; object-fit: cover; border: 2px solid white;">
+                                                </a>
+                                            <?php endforeach; ?>
+                                        </div>
+                                <?php endif;
+                                endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-5">
+                            <div class="bg-light rounded-circle d-inline-flex p-4 mb-3">
+                                <i class="bi bi-journal-album display-4 text-muted opacity-50"></i>
+                            </div>
+                            <p class="text-muted">Chưa có nhật ký nào được ghi lại.</p>
+                            <button class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
+                                <i class="bi bi-plus-lg me-1"></i> Tạo mới ngay
+                            </button>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
         </div>
-
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="fab-container">
+        <a href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>" class="fab-btn text-decoration-none"
+            title="Viết nhật ký">
+            <i class="bi bi-pencil-square"></i>
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
