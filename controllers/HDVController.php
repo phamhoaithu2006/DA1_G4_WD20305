@@ -37,17 +37,28 @@ class HDVController
         }
 
         // Kiểm tra mật khẩu plain text
+        $passwordOk = false;
         if ($emp['Password'] === $password) {
-            $_SESSION['hdv_id'] = $emp['EmployeeID'];
-            $_SESSION['hdv_name'] = $emp['FullName'];
-            header("Location: ?act=hdv-dashboard");
-            exit;
+            $passwordOk = true;
+        } elseif (password_verify($password, $emp['Password'])) {
+            $passwordOk = true;
         }
 
-        // Nếu dùng mật khẩu hash (bcrypt)
-        if (password_verify($password, $emp['Password'])) {
+        if ($passwordOk) {
+            // Nếu nhân viên có Role = 'admin' -> gán session admin
+            $role = isset($emp['Role']) ? strtolower($emp['Role']) : '';
+            if ($role === 'admin') {
+                $_SESSION['user_role'] = 'admin';
+                $_SESSION['user_id'] = $emp['EmployeeID'];
+                $_SESSION['user_name'] = $emp['FullName'];
+                header("Location: ?act=dashboard");
+                exit;
+            }
+
+            // Mặc định là HDV
             $_SESSION['hdv_id'] = $emp['EmployeeID'];
             $_SESSION['hdv_name'] = $emp['FullName'];
+            $_SESSION['user_role'] = 'hdv';
             header("Location: ?act=hdv-dashboard");
             exit;
         }

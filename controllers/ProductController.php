@@ -44,14 +44,15 @@ class ProductController
 
     public function Home()
     {
-        $title = "Trang chủ quản lý";
+        $title = "Trang chủ";
         require_once 'views/admin/home.php';
     }
+
     public function adminDashboard()
     {
         $tour = new ProductModel();
         $tours = $tour->getAllTour();
-        $title = "This is admin home page";
+        $title = "Tổng quan";
         require_once 'views/admin/Tour_and_product/category.php';
     }
     public function adminDetail($id)
