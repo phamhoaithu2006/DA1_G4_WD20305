@@ -515,4 +515,72 @@ class HDVController
         header("Location: ?act=hdv-tour-detail&id=" . $tourId);
         exit;
     }
+
+    // Điểm danh khách: đánh dấu đã điểm danh
+    public function customerCheckInSave()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        $customerId = $_POST['customer_id'] ?? null;
+
+        if (!$tourId || !$customerId) {
+            $_SESSION['hdv_error'] = "Thông tin không hợp lệ.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $ok = setCustomerAttendance($tourId, $customerId, $_SESSION['hdv_id'], 1);
+        if ($ok) {
+            $_SESSION['hdv_success'] = "Đã điểm danh khách thành công.";
+        } else {
+            $_SESSION['hdv_error'] = "Có lỗi xảy ra khi điểm danh. Vui lòng thử lại.";
+        }
+
+        header("Location: ?act=hdv-tour-detail&id=" . $tourId);
+        exit;
+    }
+
+    // Bỏ điểm danh khách: đánh dấu chưa điểm danh
+    public function customerCheckOutSave()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        $customerId = $_POST['customer_id'] ?? null;
+
+        if (!$tourId || !$customerId) {
+            $_SESSION['hdv_error'] = "Thông tin không hợp lệ.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $ok = setCustomerAttendance($tourId, $customerId, $_SESSION['hdv_id'], 0);
+        if ($ok) {
+            $_SESSION['hdv_success'] = "Đã bỏ điểm danh khách.";
+        } else {
+            $_SESSION['hdv_error'] = "Có lỗi xảy ra khi cập nhật điểm danh.";
+        }
+
+        header("Location: ?act=hdv-tour-detail&id=" . $tourId);
+        exit;
+    }
 }
