@@ -56,14 +56,35 @@ function getTourDetailById($tourId)
 function getCustomersInTour($tourId)
 {
     $conn = connectDB();
-    $sql = "SELECT c.FullName, c.Email, c.Phone, tc.RoomNumber, tc.Note
+    $sql = "SELECT c.CustomerID, c.FullName, c.Email, c.Phone, tc.RoomNumber, tc.Note
             FROM TourCustomer tc
             JOIN Customer c ON tc.CustomerID = c.CustomerID
             WHERE tc.TourID = :tid";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute(['tid' => $tourId]);
-    return $stmt->fetchAll();
+    $rows = $stmt->fetchAll();
+
+    foreach ($rows as &$row) {
+        $row['AttendanceChecked'] = 0;
+        $row['AttendanceTime'] = null;
+        $row['AttendanceBy'] = null;
+
+        $note = $row['Note'] ?? '';
+        if (!empty($note)) {
+            $decoded = json_decode($note, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                if (isset($decoded['attendance']) && is_array($decoded['attendance'])) {
+                    $att = $decoded['attendance'];
+                    $row['AttendanceChecked'] = !empty($att['checked']) ? 1 : 0;
+                    $row['AttendanceTime'] = $att['time'] ?? null;
+                    $row['AttendanceBy'] = $att['by'] ?? null;
+                }
+            }
+        }
+    }
+
+    return $rows;
 }
 
 // Lấy nhật ký tour
@@ -605,4 +626,34 @@ function saveSpecialRequest($data)
         'tid' => $data['TourID'],
         'cid' => $data['CustomerID']
     ]);
+}
+
+function setCustomerAttendance($tourId, $customerId, $employeeId, $checked)
+{
+    $conn = connectDB();
+
+    $stmt = $conn->prepare("SELECT Note FROM TourCustomer WHERE TourID = :tid AND CustomerID = :cid LIMIT 1");
+    $stmt->execute(['tid' => $tourId, 'cid' => $customerId]);
+    $current = $stmt->fetchColumn();
+
+    $decoded = [];
+    if (!empty($current)) {
+        $tmp = json_decode($current, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($tmp)) {
+            $decoded = $tmp;
+        } else {
+            $decoded = ['note_text' => $current];
+        }
+    }
+
+    $decoded['attendance'] = [
+        'checked' => $checked ? 1 : 0,
+        'time' => date('c'),
+        'by' => $employeeId
+    ];
+
+    $noteJson = json_encode($decoded, JSON_UNESCAPED_UNICODE);
+
+    $update = $conn->prepare("UPDATE TourCustomer SET Note = :note WHERE TourID = :tid AND CustomerID = :cid");
+    return $update->execute(['note' => $noteJson, 'tid' => $tourId, 'cid' => $customerId]);
 }
