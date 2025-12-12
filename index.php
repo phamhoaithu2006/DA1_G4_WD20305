@@ -96,4 +96,6 @@ match ($act) {
     'hdv-checkin-delete' => (new HDVController())->checkInOutDelete(),
     'hdv-special-requests' => (new HDVController())->specialRequests(),
     'hdv-special-request-save' => (new HDVController())->specialRequestSave(),
+    'hdv-customer-checkin' => (new HDVController())->customerCheckInSave(),
+    'hdv-customer-checkout' => (new HDVController())->customerCheckOutSave(),
 };
