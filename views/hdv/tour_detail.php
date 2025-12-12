@@ -448,12 +448,25 @@ if (!isset($logs)) {
                                         </div>
                                         <div class="flex-grow-1">
                                             <div class="fw-bold text-dark mb-1"><?= htmlspecialchars($c['FullName']) ?></div>
-                                            <div class="d-flex gap-2">
+                                            <div class="d-flex flex-wrap gap-2 align-items-center">
                                                 <a href="tel:<?= $c['Phone'] ?>"
                                                     class="badge bg-light text-secondary border text-decoration-none fw-normal">
                                                     <i class="bi bi-telephone-fill me-1 text-success"></i>
                                                     <?= htmlspecialchars($c['Phone']) ?>
                                                 </a>
+                                                <?php if (!empty($c['AttendanceChecked'])): ?>
+                                                    <span class="badge bg-success text-white fw-normal">Đã điểm danh</span>
+                                                    <form method="post" action="?act=hdv-customer-checkout&id=<?= urlencode($tour['TourID']) ?>">
+                                                        <input type="hidden" name="customer_id" value="<?= htmlspecialchars($c['CustomerID']) ?>">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Bỏ điểm danh</button>
+                                                    </form>
+                                                <?php else: ?>
+                                                    <span class="badge bg-secondary text-white fw-normal">Chưa điểm danh</span>
+                                                    <form method="post" action="?act=hdv-customer-checkin&id=<?= urlencode($tour['TourID']) ?>">
+                                                        <input type="hidden" name="customer_id" value="<?= htmlspecialchars($c['CustomerID']) ?>">
+                                                        <button type="submit" class="btn btn-sm btn-success rounded-pill">Điểm danh</button>
+                                                    </form>
+                                                <?php endif; ?>
                                             </div>
                                         </div>
                                         <div class="text-end">
