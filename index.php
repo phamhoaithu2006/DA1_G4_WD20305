@@ -78,6 +78,26 @@ match ($act) {
     'service-status-update' => (new TourAssignmentController())->updateServiceStatus(), // Đổi tên cho khớp logic
     'tour-customer-add' => (new TourAssignmentController())->addTourCustomer(),
 
+    // Nhật kí tour của admin
+    'tour-list' => (new TourLogController())->index($tourID),
+    'tourlog-list' => (new TourLogController())->index($tourID),
+    'tourlog-create' => (new TourLogController())->createForm($tourID),
+    'tourlog-store' => (new TourLogController())->store(),
+    'tourlog-edit' => (new TourLogController())->editForm($id),
+    'tourlog-update' => (new TourLogController())->update($id),
+    'tourlog-delete' => (new TourLogController())->delete($id, $tourID),
+
+
+    // --- BÁO CÁO TÀI CHÍNH ---
+    'finance-report' => (new FinanceController($db))->index(),
+    'finance-detail' => (new FinanceController($db))->detail($tourID),
+
+    // Route cũ (Hiệu suất TB)
+    'tour-performance' => (new FinanceController($db))->performanceReport(),
+
+    // ===> ĐÂY LÀ ROUTE MỚI BẠN CẦN THÊM <===
+    'finance-compare' => (new FinanceController($db))->compare(),
+
     // --- HDV ---
     'hdv-login' => (new HDVController())->login(),
     'hdv-check-login' => (new HDVController())->checkLogin(),
@@ -87,14 +107,17 @@ match ($act) {
     'hdv-tour-detail' => (new HDVController())->tourDetail($id),
     'hdv-room' => (new HDVController())->roomAssign(),
     'hdv-room-save' => (new HDVController())->roomAssignSave(),
-    'hdv-assign-rooms' => (new HDVController())->assignRooms(),
+    // Nhật ký & cập nhật tour của hdv
     'hdv-diary-form' => (new HDVController())->diaryForm(),
     'hdv-diary-save' => (new HDVController())->diarySave(),
     'hdv-checkin-checkout' => (new HDVController())->checkInOut(),
     'hdv-checkin-save' => (new HDVController())->checkInSave(),
     'hdv-checkout-save' => (new HDVController())->checkOutSave(),
+    'hdv-checkin-delete' => (new HDVController())->checkInOutDelete(),
     'hdv-special-requests' => (new HDVController())->specialRequests(),
     'hdv-special-request-save' => (new HDVController())->specialRequestSave(),
+    'hdv-customer-checkin' => (new HDVController())->customerCheckInSave(),
+    'hdv-customer-checkout' => (new HDVController())->customerCheckOutSave(),
 
     // Default
     default => (new ProductController())->Home(),

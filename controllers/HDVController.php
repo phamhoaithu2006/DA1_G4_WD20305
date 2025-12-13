@@ -397,6 +397,40 @@ class HDVController
         exit;
     }
 
+    public function checkInOutDelete()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        $entryId = $_GET['entry_id'] ?? null;
+
+        if (!$tourId || !$entryId) {
+            $_SESSION['hdv_error'] = "Thông tin không hợp lệ.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $row = getCheckInOutById($entryId);
+        if (!$row || $row['TourID'] != $tourId) {
+            $_SESSION['hdv_error'] = "Bản ghi không tồn tại hoặc không thuộc tour này.";
+            header("Location: ?act=hdv-checkin-checkout&id=" . $tourId);
+            exit;
+        }
+
+        if (deleteCheckInOutEntry($entryId)) {
+            $_SESSION['hdv_success'] = "Đã xóa bản ghi thành công.";
+        } else {
+            $_SESSION['hdv_error'] = "Có lỗi xảy ra khi xóa.";
+        }
+
+        header("Location: ?act=hdv-checkin-checkout&id=" . $tourId);
+        exit;
+    }
+
     // Trang yêu cầu đặc biệt
     public function specialRequests()
     {
@@ -489,41 +523,6 @@ class HDVController
         require_once './views/hdv/tour_detail.php';
     }
 
-    // Tự động giao phòng (POST)
-    public function assignRooms()
-    {
-        session_start();
-        if (empty($_SESSION['hdv_id'])) {
-            header("Location: ?act=hdv-login");
-            exit;
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            header("Location: ?act=hdv-tour");
-            exit;
-        }
-
-        $tourId = $_GET['id'] ?? null;
-        if (!$tourId) {
-            header("Location: ?act=hdv-tour");
-            exit;
-        }
-
-        $assigned = 0;
-        if (function_exists('autoAssignRooms')) {
-            $assigned = autoAssignRooms($tourId, $_SESSION['hdv_id']);
-        }
-
-        if ($assigned > 0) {
-            $_SESSION['hdv_success'] = "Giao phòng tự động thành công: {$assigned} khách.";
-        } else {
-            $_SESSION['hdv_error'] = "Không có khách nào cần phân phòng hoặc có lỗi khi giao phòng.";
-        }
-
-        header("Location: ?act=hdv-tour-detail&id=" . $tourId);
-        exit;
-    }
-
     // Lưu phân phòng (POST)
     public function roomAssignSave()
     {
@@ -549,6 +548,74 @@ class HDVController
 
         $_SESSION['hdv_success'] = "Phân phòng thành công!";
         header("Location: ?act=hdv-room&id=" . $tourId);
+        exit;
+    }
+
+    // Điểm danh khách: đánh dấu đã điểm danh
+    public function customerCheckInSave()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        $customerId = $_POST['customer_id'] ?? null;
+
+        if (!$tourId || !$customerId) {
+            $_SESSION['hdv_error'] = "Thông tin không hợp lệ.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $ok = setCustomerAttendance($tourId, $customerId, $_SESSION['hdv_id'], 1);
+        if ($ok) {
+            $_SESSION['hdv_success'] = "Đã điểm danh khách thành công.";
+        } else {
+            $_SESSION['hdv_error'] = "Có lỗi xảy ra khi điểm danh. Vui lòng thử lại.";
+        }
+
+        header("Location: ?act=hdv-tour-detail&id=" . $tourId);
+        exit;
+    }
+
+    // Bỏ điểm danh khách: đánh dấu chưa điểm danh
+    public function customerCheckOutSave()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        $customerId = $_POST['customer_id'] ?? null;
+
+        if (!$tourId || !$customerId) {
+            $_SESSION['hdv_error'] = "Thông tin không hợp lệ.";
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        $ok = setCustomerAttendance($tourId, $customerId, $_SESSION['hdv_id'], 0);
+        if ($ok) {
+            $_SESSION['hdv_success'] = "Đã bỏ điểm danh khách.";
+        } else {
+            $_SESSION['hdv_error'] = "Có lỗi xảy ra khi cập nhật điểm danh.";
+        }
+
+        header("Location: ?act=hdv-tour-detail&id=" . $tourId);
         exit;
     }
 }

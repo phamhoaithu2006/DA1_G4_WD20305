@@ -435,6 +435,43 @@ function getCheckInOutHistory($tourId)
     return $rows;
 }
 
+function getCheckInOutById($entryId)
+{
+    $conn = connectDB();
+    if (!tableExists('TourCheckInOut')) {
+        return null;
+    }
+    // Xây dựng select động theo cột hiện có
+    $select = ['CheckInOutID', 'TourID', 'EmployeeID', 'Type', 'Note', 'CreatedAt'];
+    try {
+        $hasLocation = $conn->query("SHOW COLUMNS FROM TourCheckInOut LIKE 'Location'")->rowCount() > 0;
+        if ($hasLocation) {
+            $select[] = 'Location';
+        }
+    } catch (Exception $e) {
+    }
+
+    $sql = "SELECT " . implode(', ', $select) . " FROM TourCheckInOut WHERE CheckInOutID = :id LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['id' => $entryId]);
+    $row = $stmt->fetch();
+    if ($row && !isset($row['Location'])) {
+        $row['Location'] = null;
+    }
+    return $row;
+}
+
+function deleteCheckInOutEntry($entryId)
+{
+    $conn = connectDB();
+    if (!tableExists('TourCheckInOut')) {
+        return false;
+    }
+    $sql = "DELETE FROM TourCheckInOut WHERE CheckInOutID = :id";
+    $stmt = $conn->prepare($sql);
+    return $stmt->execute(['id' => $entryId]);
+}
+
 // Lấy danh sách khách với thông tin yêu cầu đặc biệt (đọc từ cột Note dạng JSON)
 function getCustomersWithSpecialRequests($tourId)
 {
@@ -502,6 +539,36 @@ function saveSpecialRequest($data)
     ]);
 }
 
+function setCustomerAttendance($tourId, $customerId, $employeeId, $checked)
+{
+    $conn = connectDB();
+
+    $stmt = $conn->prepare("SELECT Note FROM TourCustomer WHERE TourID = :tid AND CustomerID = :cid LIMIT 1");
+    $stmt->execute(['tid' => $tourId, 'cid' => $customerId]);
+    $current = $stmt->fetchColumn();
+
+    $decoded = [];
+    if (!empty($current)) {
+        $tmp = json_decode($current, true);
+        if (json_last_error() === JSON_ERROR_NONE && is_array($tmp)) {
+            $decoded = $tmp;
+        } else {
+            $decoded = ['note_text' => $current];
+        }
+    }
+
+    $decoded['attendance'] = [
+        'checked' => $checked ? 1 : 0,
+        'time' => date('c'),
+        'by' => $employeeId
+    ];
+
+    $noteJson = json_encode($decoded, JSON_UNESCAPED_UNICODE);
+
+    $update = $conn->prepare("UPDATE TourCustomer SET Note = :note WHERE TourID = :tid AND CustomerID = :cid");
+    return $update->execute(['note' => $noteJson, 'tid' => $tourId, 'cid' => $customerId]);
+}
+
 // Gán phòng cho một khách (dùng khi HDV nhập tay)
 function assignRoom($tourId, $customerId, $roomNumber)
 {
@@ -531,41 +598,4 @@ function getRoomsOfTour($tourId)
         $rooms[$room][] = $r['CustomerID'];
     }
     return $rooms;
-}
-
-// Tự động gán phòng cho các khách chưa có phòng trong tour
-function autoAssignRooms($tourId, $employeeId)
-{
-    $conn = connectDB();
-    try {
-        $conn->beginTransaction();
-
-        // Lấy số phòng lớn nhất hiện có (chỉ số số nếu có)
-        $sqlMax = "SELECT MAX(CAST(RoomNumber AS UNSIGNED)) AS max_room FROM TourCustomer WHERE TourID = :tid AND RoomNumber REGEXP '^[0-9]+'";
-        $stmt = $conn->prepare($sqlMax);
-        $stmt->execute(['tid' => $tourId]);
-        $row = $stmt->fetch();
-        $maxRoom = $row && $row['max_room'] !== null ? (int)$row['max_room'] : 0;
-
-        // Lấy danh sách khách chưa có phòng
-        $sql = "SELECT CustomerID FROM TourCustomer WHERE TourID = :tid AND (RoomNumber IS NULL OR TRIM(RoomNumber) = '') ORDER BY CustomerID ASC";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(['tid' => $tourId]);
-        $rows = $stmt->fetchAll();
-
-        $assigned = 0;
-        foreach ($rows as $r) {
-            $maxRoom++;
-            $roomStr = (string)$maxRoom;
-            $upd = $conn->prepare("UPDATE TourCustomer SET RoomNumber = :room WHERE TourID = :tid AND CustomerID = :cid");
-            $ok = $upd->execute(['room' => $roomStr, 'tid' => $tourId, 'cid' => $r['CustomerID']]);
-            if ($ok) $assigned++;
-        }
-
-        $conn->commit();
-        return $assigned;
-    } catch (Exception $e) {
-        if ($conn->inTransaction()) $conn->rollBack();
-        return 0;
-    }
 }

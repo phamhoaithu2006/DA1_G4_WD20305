@@ -95,6 +95,7 @@ if (session_status() == PHP_SESSION_NONE) {
         /* Info Tab Styling */
         .price-text {
             background: var(--primary-gradient);
+            background-clip: text;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
@@ -221,6 +222,11 @@ if (session_status() == PHP_SESSION_NONE) {
             background: #ffe4e6;
             color: #be123c;
         }
+
+        .btn-checkin {
+            background: #dcfce7;
+            color: #16a34a;
+        }
     </style>
 </head>
 
@@ -249,11 +255,11 @@ if (session_status() == PHP_SESSION_NONE) {
                 <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 mt-2 p-2">
                     <li><a class="dropdown-item rounded-3 mb-1"
                             href="?act=hdv-checkin-checkout&id=<?= $tour['TourID'] ?>"><i
-                                class="bi bi-qr-code-scan me-2 text-primary"></i>Check-in/out</a></li>
+                                class="bi bi-qr-code-scan me-2 text-primary"></i>Check-in/Check-out</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item rounded-3 text-danger" href="?act=hdv-tour"><i
+                    <li><a class="dropdown-item rounded-3 text-danger" href="?act=hdv-logout"><i
                                 class="bi bi-box-arrow-right me-2"></i>Thoát</a></li>
                 </ul>
             </div>
@@ -261,6 +267,22 @@ if (session_status() == PHP_SESSION_NONE) {
     </nav>
 
     <div class="container pb-5">
+
+        <?php if (!empty($_SESSION['hdv_success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                <?= htmlspecialchars($_SESSION['hdv_success']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php unset($_SESSION['hdv_success']);
+        endif; ?>
+
+        <?php if (!empty($_SESSION['hdv_error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                <?= htmlspecialchars($_SESSION['hdv_error']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php unset($_SESSION['hdv_error']);
+        endif; ?>
 
         <ul class="nav nav-pills shadow-sm" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -284,6 +306,9 @@ if (session_status() == PHP_SESSION_NONE) {
 
             <div class="tab-pane fade show active" id="pills-info">
                 <div class="glass-card p-4">
+                    <div class="mb-3">
+                        <h6 class="text-uppercase small text-muted">Thông tin tour đã tham gia</h6>
+                    </div>
                     <div class="d-flex justify-content-between align-items-start mb-4">
                         <span class="badge rounded-pill px-3 py-2" style="background: #e9d8fd; color: #553c9a;">
                             <?= htmlspecialchars($tour['CategoryName'] ?? 'Tour') ?>
@@ -326,7 +351,7 @@ if (session_status() == PHP_SESSION_NONE) {
                 </div>
 
                 <div class="row g-3">
-                    <div class="col-6">
+                    <div class="col-lg-4 col-md-6 col-12">
                         <a href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>" class="d-block text-decoration-none">
                             <div class="action-btn-lg btn-diary shadow-sm">
                                 <i class="bi bi-journal-plus"></i>
@@ -335,7 +360,7 @@ if (session_status() == PHP_SESSION_NONE) {
                             </div>
                         </a>
                     </div>
-                    <div class="col-6">
+                    <div class="col-lg-4 col-md-6 col-12">
                         <a href="?act=hdv-special-requests&id=<?= $tour['TourID'] ?>"
                             class="d-block text-decoration-none">
                             <div class="action-btn-lg btn-request shadow-sm">
@@ -345,8 +370,18 @@ if (session_status() == PHP_SESSION_NONE) {
                             </div>
                         </a>
                     </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <a href="?act=hdv-checkin-checkout&id=<?= $tour['TourID'] ?>" class="d-block text-decoration-none">
+                            <div class="action-btn-lg btn-checkin shadow-sm">
+                                <i class="bi bi-geo-fill"></i>
+                                <span class="fw-bold d-block">Check-in/Check-out</span>
+                                <small class="opacity-75">Xác nhận đến và rời điểm</small>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
+
 
             <div class="tab-pane fade" id="pills-customers">
                 <div class="glass-card">
@@ -429,6 +464,19 @@ if (session_status() == PHP_SESSION_NONE) {
                                                     </a>
                                                 </div>
                                             </div>
+                                            <?php if (!empty($c['AttendanceChecked'])): ?>
+                                                <span class="badge bg-success text-white fw-normal">Đã điểm danh</span>
+                                                <form method="post" action="?act=hdv-customer-checkout&id=<?= urlencode($tour['TourID']) ?>">
+                                                    <input type="hidden" name="customer_id" value="<?= htmlspecialchars($c['CustomerID']) ?>">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">Bỏ điểm danh</button>
+                                                </form>
+                                            <?php else: ?>
+                                                <span class="badge bg-secondary text-white fw-normal">Chưa điểm danh</span>
+                                                <form method="post" action="?act=hdv-customer-checkin&id=<?= urlencode($tour['TourID']) ?>">
+                                                    <input type="hidden" name="customer_id" value="<?= htmlspecialchars($c['CustomerID']) ?>">
+                                                    <button type="submit" class="btn btn-sm btn-success rounded-pill">Điểm danh</button>
+                                                </form>
+                                            <?php endif; ?>
                                             <div class="text-end">
                                                 <small class="d-block text-muted" style="font-size: 0.7rem;">PHÒNG</small>
                                                 <span class="fw-bold text-primary"><?= htmlspecialchars($c['RoomNumber'] ?? '-') ?></span>
