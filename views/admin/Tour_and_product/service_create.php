@@ -9,7 +9,7 @@
     <div class="admin-content flex-grow-1 p-4" style="background-color: #f8f9fc;">
 
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold text-dark mb-0">Liên kết Dịch vụ Tour</h4>
+            <h4 class="fw-bold text-dark mb-0">Liên kết dịch vụ Tour</h4>
             <a href="javascript:history.back()" class="btn btn-outline-secondary shadow-sm">
                 <i class="bi bi-arrow-left"></i> Quay lại
             </a>
@@ -25,11 +25,11 @@
                                     class="text-danger">*</span></label>
                             <select name="tour_id" class="form-select" required>
                                 <option value="">-- Chọn Tour --</option>
-                                <?php foreach($tours as $t): ?>
-                                <option value="<?= $t['TourID'] ?>"
-                                    <?= (isset($preSelectedTourId) && $preSelectedTourId == $t['TourID']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($t['TourName']) ?>
-                                </option>
+                                <?php foreach ($tours as $t): ?>
+                                    <option value="<?= $t['TourID'] ?>"
+                                        <?= (isset($preSelectedTourId) && $preSelectedTourId == $t['TourID']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($t['TourName']) ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
@@ -38,10 +38,10 @@
                             <label class="form-label fw-bold">Nhà cung cấp <span class="text-danger">*</span></label>
                             <select name="supplier_id" class="form-select" required>
                                 <option value="">-- Chọn NCC --</option>
-                                <?php foreach($suppliers as $s): ?>
-                                <option value="<?= $s['SupplierID'] ?>">
-                                    <?= htmlspecialchars($s['SupplierName']) ?>
-                                </option>
+                                <?php foreach ($suppliers as $s): ?>
+                                    <option value="<?= $s['SupplierID'] ?>">
+                                        <?= htmlspecialchars($s['SupplierName']) ?>
+                                    </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

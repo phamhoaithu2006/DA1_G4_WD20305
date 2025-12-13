@@ -35,7 +35,15 @@
             <li>
                 <a href="?act=employees" class="nav-link <?= ($_GET['act'] ?? '') == 'employees' ? 'active' : '' ?>">
                     <i class="bi bi-people"></i>
-                    <span>Nhân sự (HR)</span>
+                    <span>Nhân sự</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="?act=tourlog-list&tourID=1"
+                    class="nav-link <?= ($_GET['act'] ?? '') == 'tourlog-list' ? 'active' : '' ?>">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Nhật kí Tour</span>
                 </a>
             </li>
 
@@ -47,6 +55,32 @@
                     <span>Phản hồi & Đánh giá</span>
                 </a>
             </li>
+
+            <li class="nav-header mt-3 mb-1 text-uppercase">Tổng kết</li>
+            <li>
+                <a href="?act=finance-report"
+                    class="nav-link <?= ($_GET['act'] ?? '') == 'finance-report' ? 'active' : '' ?>">
+                    <i class="bi bi-currency-dollar"></i>
+                    <span>Tổng hợp lợi nhuận</span>
+                </a>
+            </li>
+            <li>
+                <a href="?act=tour-performance"
+                    class="nav-link <?= ($_GET['act'] ?? '') == 'tour-performance' ? 'active' : '' ?>">
+                    <i class="bi bi-activity"></i>
+                    <span>Hiệu quả</span>
+                </a>
+            </li>
+            <li>
+                <a href="?act=finance-compare"
+                    class="nav-link <?= ($_GET['act'] ?? '') == 'finance-compare' ? 'active' : '' ?>">
+                    <i class="bi bi-graph-up-arrow"></i>
+                    <span>So sánh hiệu quả Tour</span>
+                </a>
+            </li>
+
+
+
         </ul>
     </div>
 

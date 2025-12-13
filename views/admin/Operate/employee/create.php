@@ -11,8 +11,8 @@
     <div class="admin-content flex-grow-1 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark mb-1">Thêm Nhân sự mới</h2>
-                <p class="text-muted mb-0">Tạo hồ sơ HDV, Tài xế hoặc Điều hành viên.</p>
+                <h2 class="fw-bold text-dark mb-1">Thêm nhân sự mới</h2>
+                <p class="text-muted mb-0">Tạo hồ sơ Hướng dẫn viên, Tài xế hoặc Điều hành viên</p>
             </div>
             <a href="index.php?act=employees" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i> Quay lại
@@ -78,7 +78,7 @@
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Vai trò <span class="text-danger">*</span></label>
                                     <select name="role" class="form-select">
-                                        <option value="Hướng dẫn viên">Hướng dẫn viên (Tour Guide)</option>
+                                        <option value="Hướng dẫn viên">Hướng dẫn viên (Tour guide)</option>
                                         <option value="Tài xế">Tài xế (Driver)</option>
                                         <option value="Nhân viên điều hành">Điều hành (Operator)</option>
                                         <option value="Quản lý">Quản lý (Manager)</option>
@@ -86,12 +86,12 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Phân loại / Chuyên môn</label>
+                                    <label class="form-label">Phân loại/Chuyên môn</label>
                                     <select name="type" class="form-select">
                                         <option value="Nội địa">Chuyên Tour Nội địa</option>
-                                        <option value="Quốc tế (Inbound)">Quốc tế (Inbound)</option>
-                                        <option value="Quốc tế (Outbound)">Quốc tế (Outbound)</option>
-                                        <option value="Chuyên khách đoàn">Chuyên khách đoàn</option>
+                                        <option value="Quốc tế (Inbound)">Chuyên Tour Quốc tế (Inbound)</option>
+                                        <option value="Quốc tế (Outbound)">Chuyên Tour Quốc tế (Outbound)</option>
+                                        <option value="Chuyên khách đoàn">Chuyên Tour Khách đoàn</option>
                                         <option value="Freelancer">Cộng tác viên (Freelancer)</option>
                                     </select>
                                 </div>
@@ -107,15 +107,15 @@
                                 </div>
 
                                 <div class="col-12">
-                                    <label class="form-label">Chứng chỉ / Bằng cấp</label>
+                                    <label class="form-label">Chứng chỉ/Bằng cấp</label>
                                     <textarea name="certs" class="form-control" rows="2"
-                                        placeholder="VD: Thẻ HDV Quốc tế số..., Chứng chỉ sơ cấp cứu..."></textarea>
+                                        placeholder="VD: Thẻ Hướng dẫn viên Quốc tế số, chứng chỉ sơ cấp cứu..."></textarea>
                                 </div>
 
                                 <div class="col-12">
-                                    <label class="form-label">Tình trạng sức khỏe / Lưu ý</label>
+                                    <label class="form-label">Tình trạng sức khỏe/Lưu ý</label>
                                     <textarea name="health" class="form-control" rows="2"
-                                        placeholder="Tốt, hoặc các lưu ý đặc biệt (say xe, dị ứng...)"></textarea>
+                                        placeholder="Tốt hoặc các lưu ý đặc biệt (say xe, dị ứng...)"></textarea>
                                 </div>
                             </div>
 
@@ -136,13 +136,13 @@
 </div>
 
 <script>
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('avatarPreview').src = e.target.result;
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
         }
-        reader.readAsDataURL(input.files[0]);
     }
-}
 </script>

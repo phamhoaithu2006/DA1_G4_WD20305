@@ -11,8 +11,8 @@
     <div class="admin-content flex-grow-1 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark mb-1">Tạo Booking Mới</h2>
-                <p class="text-muted mb-0">Đặt tour cho khách lẻ hoặc khách đoàn.</p>
+                <h2 class="fw-bold text-dark mb-1">Tạo Booking mới</h2>
+                <p class="text-muted mb-0">Đặt Tour cho khách lẻ hoặc khách đoàn</p>
             </div>
             <a href="?act=booking-list" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left"></i> Quay lại
@@ -20,10 +20,10 @@
         </div>
 
         <?php if (!empty($error)): ?>
-        <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> <strong>Lỗi:</strong> <?= htmlspecialchars($error) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i> <strong>Lỗi:</strong> <?= htmlspecialchars($error) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         <?php endif; ?>
 
         <form method="post" action="<?= BASE_URL ?>?act=booking-create" id="bookingForm" class="needs-validation"
@@ -34,7 +34,7 @@
                     <div class="card border-0 shadow-sm h-100">
                         <div class="card-header bg-white border-0 pt-4 px-4">
                             <h5 class="card-title fw-bold text-primary">
-                                <i class="bi bi-person-circle me-2"></i> Thông tin Người đặt (Trưởng đoàn)
+                                <i class="bi bi-person-circle me-2"></i> Thông tin người đặt (Trưởng đoàn)
                             </h5>
                         </div>
                         <div class="card-body p-4">
@@ -80,7 +80,7 @@
                     <div class="card border-0 shadow-sm h-100 bg-light-subtle">
                         <div class="card-header bg-transparent border-0 pt-4 px-4">
                             <h5 class="card-title fw-bold text-success">
-                                <i class="bi bi-airplane-engines me-2"></i> Chi tiết Chuyến đi
+                                <i class="bi bi-airplane-engines me-2"></i> Chi tiết chuyến đi
                             </h5>
                         </div>
                         <div class="card-body p-4">
@@ -88,15 +88,15 @@
                                 <label class="form-label fw-bold small text-uppercase text-secondary">Chọn Tour</label>
                                 <select name="tour_id" id="tourSelect"
                                     class="form-select form-select-lg shadow-sm border-0" required>
-                                    <option value="" data-price="0" data-slots="0" selected disabled>-- Chọn tour du
+                                    <option value="" data-price="0" data-slots="0" selected disabled>-- Chọn Tour du
                                         lịch --</option>
                                     <?php foreach ($tours as $t): ?>
-                                    <option value="<?= $t['TourID'] ?>" data-price="<?= $t['Price'] ?>"
-                                        data-slots="<?= $t['MaxSlots'] ?? 20 ?>"
-                                        <?= ($t['TourID'] == ($selectedTour ?? '') ? 'selected' : '') ?>>
-                                        <?= htmlspecialchars($t['TourName']) ?> (Còn trống:
-                                        <?= $t['MaxSlots'] ?? 'N/A' ?>)
-                                    </option>
+                                        <option value="<?= $t['TourID'] ?>" data-price="<?= $t['Price'] ?>"
+                                            data-slots="<?= $t['MaxSlots'] ?? 20 ?>"
+                                            <?= ($t['TourID'] == ($selectedTour ?? '') ? 'selected' : '') ?>>
+                                            <?= htmlspecialchars($t['TourName']) ?> (Còn trống:
+                                            <?= $t['MaxSlots'] ?? 'N/A' ?>)
+                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -141,7 +141,7 @@
 
                             <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow text-uppercase"
                                 id="btnSubmit">
-                                <i class="bi bi-check2-circle me-2"></i> Xác nhận Đặt Tour
+                                <i class="bi bi-check2-circle me-2"></i> Xác nhận đặt Tour
                             </button>
                         </div>
                     </div>
@@ -153,59 +153,59 @@
 </div>
 
 <script>
-const numPeopleInput = document.getElementById('numPeople');
-const groupSection = document.getElementById('group-section');
-const membersContainer = document.getElementById('members-container');
-const memberCountLabel = document.getElementById('member-count-label');
-const jsonInput = document.getElementById('group_members_json');
-const tourSelect = document.getElementById('tourSelect');
-const unitPriceEl = document.getElementById('unit-price');
-const totalPriceEl = document.getElementById('total-price');
-const form = document.getElementById('bookingForm');
+    const numPeopleInput = document.getElementById('numPeople');
+    const groupSection = document.getElementById('group-section');
+    const membersContainer = document.getElementById('members-container');
+    const memberCountLabel = document.getElementById('member-count-label');
+    const jsonInput = document.getElementById('group_members_json');
+    const tourSelect = document.getElementById('tourSelect');
+    const unitPriceEl = document.getElementById('unit-price');
+    const totalPriceEl = document.getElementById('total-price');
+    const form = document.getElementById('bookingForm');
 
-// 1. Hàm tăng giảm số lượng
-function adjustPeople(amount) {
-    let current = parseInt(numPeopleInput.value) || 1;
-    let newValue = current + amount;
-    if (newValue < 1) newValue = 1;
+    // 1. Hàm tăng giảm số lượng
+    function adjustPeople(amount) {
+        let current = parseInt(numPeopleInput.value) || 1;
+        let newValue = current + amount;
+        if (newValue < 1) newValue = 1;
 
-    // Check max slots
-    const selectedOption = tourSelect.options[tourSelect.selectedIndex];
-    const maxSlots = parseInt(selectedOption.getAttribute('data-slots')) || 999;
+        // Check max slots
+        const selectedOption = tourSelect.options[tourSelect.selectedIndex];
+        const maxSlots = parseInt(selectedOption.getAttribute('data-slots')) || 999;
 
-    if (newValue > maxSlots) {
-        alert(`Tour này chỉ tối đa ${maxSlots} người!`);
-        newValue = maxSlots;
+        if (newValue > maxSlots) {
+            alert(`Tour này chỉ tối đa ${maxSlots} người!`);
+            newValue = maxSlots;
+        }
+
+        numPeopleInput.value = newValue;
+        renderGroupInputs();
+        updatePrice();
     }
 
-    numPeopleInput.value = newValue;
-    renderGroupInputs();
-    updatePrice();
-}
+    // 2. Render các ô nhập liệu cho thành viên đi cùng
+    function renderGroupInputs() {
+        const totalPeople = parseInt(numPeopleInput.value) || 1;
+        const membersNeeded = totalPeople - 1; // Trừ 1 vì người đặt là trưởng đoàn
 
-// 2. Render các ô nhập liệu cho thành viên đi cùng
-function renderGroupInputs() {
-    const totalPeople = parseInt(numPeopleInput.value) || 1;
-    const membersNeeded = totalPeople - 1; // Trừ 1 vì người đặt là trưởng đoàn
+        if (membersNeeded > 0) {
+            groupSection.classList.remove('d-none');
+            memberCountLabel.innerText = membersNeeded;
+        } else {
+            groupSection.classList.add('d-none');
+            membersContainer.innerHTML = ''; // Clear nếu chỉ có 1 người
+            return;
+        }
 
-    if (membersNeeded > 0) {
-        groupSection.classList.remove('d-none');
-        memberCountLabel.innerText = membersNeeded;
-    } else {
-        groupSection.classList.add('d-none');
-        membersContainer.innerHTML = ''; // Clear nếu chỉ có 1 người
-        return;
-    }
+        // Logic thông minh: Giữ lại data đã nhập nếu số lượng tăng lên
+        const currentInputs = membersContainer.querySelectorAll('.member-row');
+        let html = '';
 
-    // Logic thông minh: Giữ lại data đã nhập nếu số lượng tăng lên
-    const currentInputs = membersContainer.querySelectorAll('.member-row');
-    let html = '';
-
-    for (let i = 0; i < membersNeeded; i++) {
-        // Nếu ô input đó đã tồn tại, giữ nguyên giá trị (để ko bị mất khi user tăng số lượng)
-        // Ở đây để đơn giản mình render lại nhưng trong thực tế nên appendChild
-        // Phiên bản đơn giản:
-        html += `
+        for (let i = 0; i < membersNeeded; i++) {
+            // Nếu ô input đó đã tồn tại, giữ nguyên giá trị (để ko bị mất khi user tăng số lượng)
+            // Ở đây để đơn giản mình render lại nhưng trong thực tế nên appendChild
+            // Phiên bản đơn giản:
+            html += `
                 <div class="member-row row g-2 mb-2 align-items-center bg-light p-2 rounded border">
                     <div class="col-auto">
                         <span class="badge bg-secondary rounded-circle">${i + 2}</span>
@@ -214,65 +214,65 @@ function renderGroupInputs() {
                         <input type="text" class="form-control form-control-sm member-name" placeholder="Tên thành viên ${i + 1}" required>
                     </div>
                     <div class="col-3">
-                        <input type="text" class="form-control form-control-sm member-phone" placeholder="SĐT (Tùy chọn)">
+                        <input type="text" class="form-control form-control-sm member-phone" placeholder="Số điện thoại (Tùy chọn)">
                     </div>
                     <div class="col-3">
                         <input type="text" class="form-control form-control-sm member-note" placeholder="Ghi chú">
                     </div>
                 </div>
             `;
-    }
-    membersContainer.innerHTML = html;
-}
-
-// 3. Cập nhật giá tiền
-function updatePrice() {
-    const selectedOption = tourSelect.options[tourSelect.selectedIndex];
-    if (!selectedOption) return;
-
-    const price = parseFloat(selectedOption.getAttribute('data-price')) || 0;
-    const qty = parseInt(numPeopleInput.value) || 1;
-
-    const total = price * qty;
-
-    unitPriceEl.innerText = new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-    }).format(price);
-    totalPriceEl.innerText = new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-    }).format(total);
-}
-
-// 4. Sự kiện lắng nghe
-numPeopleInput.addEventListener('change', () => {
-    renderGroupInputs();
-    updatePrice();
-});
-tourSelect.addEventListener('change', updatePrice);
-
-// 5. Trước khi submit form: Gom dữ liệu thành viên vào JSON
-form.addEventListener('submit', function(e) {
-    const rows = document.querySelectorAll('.member-row');
-    const membersData = [];
-
-    rows.forEach(row => {
-        const name = row.querySelector('.member-name').value;
-        const phone = row.querySelector('.member-phone').value;
-        const note = row.querySelector('.member-note').value;
-        if (name) {
-            membersData.push({
-                name,
-                phone,
-                note
-            });
         }
+        membersContainer.innerHTML = html;
+    }
+
+    // 3. Cập nhật giá tiền
+    function updatePrice() {
+        const selectedOption = tourSelect.options[tourSelect.selectedIndex];
+        if (!selectedOption) return;
+
+        const price = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+        const qty = parseInt(numPeopleInput.value) || 1;
+
+        const total = price * qty;
+
+        unitPriceEl.innerText = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(price);
+        totalPriceEl.innerText = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        }).format(total);
+    }
+
+    // 4. Sự kiện lắng nghe
+    numPeopleInput.addEventListener('change', () => {
+        renderGroupInputs();
+        updatePrice();
+    });
+    tourSelect.addEventListener('change', updatePrice);
+
+    // 5. Trước khi submit form: Gom dữ liệu thành viên vào JSON
+    form.addEventListener('submit', function(e) {
+        const rows = document.querySelectorAll('.member-row');
+        const membersData = [];
+
+        rows.forEach(row => {
+            const name = row.querySelector('.member-name').value;
+            const phone = row.querySelector('.member-phone').value;
+            const note = row.querySelector('.member-note').value;
+            if (name) {
+                membersData.push({
+                    name,
+                    phone,
+                    note
+                });
+            }
+        });
+
+        jsonInput.value = JSON.stringify(membersData);
     });
 
-    jsonInput.value = JSON.stringify(membersData);
-});
-
-// Init
-updatePrice();
+    // Init
+    updatePrice();
 </script>

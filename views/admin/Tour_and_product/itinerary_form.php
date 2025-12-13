@@ -11,7 +11,7 @@
     <div class="container mt-5">
         <div class="card shadow border-0" style="max-width: 600px; margin: 0 auto;">
             <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold text-primary">Thêm Lịch Trình: <?= htmlspecialchars($tour['TourName']) ?></h5>
+                <h5 class="mb-0 fw-bold text-primary">Thêm lịch trình: <?= htmlspecialchars($tour['TourName']) ?></h5>
             </div>
             <div class="card-body">
                 <form action="?act=tour-itinerary-store" method="POST">
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-bold">Khách sạn / Lưu trú</label>
+                        <label class="form-label fw-bold">Khách sạn/Lưu trú</label>
                         <input type="text" name="accommodation" class="form-control"
                             placeholder="VD: Khách sạn Mường Thanh">
                     </div>
@@ -56,7 +56,7 @@
                     </div>
 
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary">Lưu Lịch Trình</button>
+                        <button type="submit" class="btn btn-primary">Lưu lịch trình</button>
                         <a href="?act=detail&id=<?= $tour['TourID'] ?>" class="btn btn-secondary">Quay lại</a>
                     </div>
                 </form>

@@ -14,7 +14,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold text-dark mb-1">Cập nhật nhật ký</h2>
-                <p class="text-muted mb-0">Chỉnh sửa thông tin nhật ký của tour #<?= $log['TourID'] ?></p>
+                <p class="text-muted mb-0">Chỉnh sửa thông tin nhật ký của Tour #<?= $log['TourID'] ?></p>
             </div>
 
             <a href="<?= BASE_URL ?>?act=tourlog-list&tourID=<?= $log['TourID'] ?>" class="btn btn-secondary shadow-sm">
@@ -29,7 +29,31 @@
                 <form action="<?= BASE_URL ?>?act=tourlog-update&id=<?= $log['LogID'] ?>"
                     method="POST" enctype="multipart/form-data">
 
+
                     <input type="hidden" name="tour_id" value="<?= $log['TourID'] ?>">
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Nhân sự </label>
+                        <select name="employee_id" class="form-select rounded-3" required>
+                            <option value="">-- Chọn nhân sự --</option>
+                            <?php
+                            // GIẢ ĐỊNH: Biến $employees chứa danh sách nhân viên từ DB (bảng employee)
+                            // Cấu trúc của mỗi phần tử trong $employees là: ['EmployeeID' => X, 'FullName' => Y, 'Role' => Z]
+                            if (!empty($employees)) {
+                                foreach ($employees as $employee) {
+                                    // Hiển thị chỉ những người có vai trò là Hướng dẫn viên (nếu cần)
+                                    // Dựa trên dữ liệu bạn cung cấp, Role có thể là 'Hướng dẫn viên'
+                                    if ($employee['Role'] == 'Hướng dẫn viên' || $employee['Role'] == 'Admin') {
+                                        echo "<option value='{$employee['EmployeeID']}'>{$employee['FullName']} ({$employee['Role']})</option>";
+                                    }
+                                }
+                            } else {
+                                echo "<option value='' disabled>Không tìm thấy nhân viên nào.</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
+
 
                     <!-- NOTE -->
                     <div class="mb-4">
@@ -39,8 +63,10 @@
 
                     <!-- INCIDENT -->
                     <div class="mb-4">
-                        <label class="form-label fw-semibold">Sự cố phát sinh (Incident):</label>
-                        <textarea name="incident" class="form-control rounded-3" rows="2"><?= htmlspecialchars($log['Incident']) ?></textarea>
+                        <label class="form-label fw-semibold">Sự cố phát sinh (Nếu có):</label>
+                        <textarea name="incident" class="form-control rounded-3" rows="2">
+                            <?= htmlspecialchars($log['Incident'] ?? '') ?>
+                        </textarea>
                     </div>
 
                     <!-- IMAGE -->
@@ -54,7 +80,7 @@
                             <p class="text-muted">Chưa có ảnh</p>
                         <?php endif; ?>
 
-                        <label class="form-label fw-semibold">Chọn ảnh mới (nếu muốn thay đổi):</label>
+                        <label class="form-label fw-semibold">Chọn ảnh mới (Nếu muốn thay đổi):</label>
                         <input type="file" name="image" class="form-control rounded-3" accept="image/*">
                     </div>
 

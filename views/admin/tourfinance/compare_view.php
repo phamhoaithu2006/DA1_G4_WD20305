@@ -12,13 +12,13 @@
 
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark mb-1">So Sánh Hiệu Quả Tour</h2>
-                <p class="text-muted mb-0">Phân tích đối sánh doanh thu & lợi nhuận theo giai đoạn.</p>
+                <h2 class="fw-bold text-dark mb-1">So sánh hiệu quả Tour</h2>
+                <p class="text-muted mb-0">Phân tích đối sánh doanh thu & lợi nhuận theo giai đoạn</p>
             </div>
-            
+
             <form action="" method="GET" class="d-flex gap-2 bg-white p-2 rounded-4 shadow-sm border">
-                <input type="hidden" name="act" value="finance-compare"> 
-                
+                <input type="hidden" name="act" value="finance-compare">
+
                 <select name="type" class="form-select form-select-sm border-0 bg-light fw-bold" style="width: 140px;" onchange="this.form.submit()">
                     <option value="quarter" <?= ($type == 'quarter') ? 'selected' : '' ?>>Theo Quý</option>
                     <option value="month" <?= ($type == 'month') ? 'selected' : '' ?>>Theo Tháng</option>
@@ -26,14 +26,14 @@
                 </select>
 
                 <select name="year" class="form-select form-select-sm border-0 bg-light fw-bold" style="width: 110px;" onchange="this.form.submit()">
-                    <?php 
-                    for($i = date('Y'); $i >= date('Y')-2; $i--) {
+                    <?php
+                    for ($i = date('Y'); $i >= date('Y') - 2; $i--) {
                         $selected = ($year == $i) ? 'selected' : '';
                         echo "<option value='$i' $selected>Năm $i</option>";
-                    } 
+                    }
                     ?>
                 </select>
-                
+
                 <a href="<?= BASE_URL ?>?act=finance-report" class="btn btn-sm btn-light border rounded-3 ms-2" title="Thoát">
                     <i class="bi bi-x-lg"></i>
                 </a>
@@ -89,9 +89,9 @@
                                             <?= number_format($row['TotalProfit']) ?> ₫
                                         </td>
                                         <td class="text-center pe-4">
-                                            <?php 
-                                                $eff = $row['ProfitMargin'];
-                                                $badgeClass = $eff > 30 ? 'bg-success-subtle text-success-emphasis' : ($eff > 15 ? 'bg-warning-subtle text-warning-emphasis' : 'bg-danger-subtle text-danger-emphasis');
+                                            <?php
+                                            $eff = $row['ProfitMargin'];
+                                            $badgeClass = $eff > 30 ? 'bg-success-subtle text-success-emphasis' : ($eff > 15 ? 'bg-warning-subtle text-warning-emphasis' : 'bg-danger-subtle text-danger-emphasis');
                                             ?>
                                             <span class="badge rounded-pill <?= $badgeClass ?> px-3">
                                                 <?= number_format($eff, 1) ?>%
@@ -102,7 +102,7 @@
                             <?php else: ?>
                                 <tr>
                                     <td colspan="5" class="text-center py-5 text-muted">
-                                        Chưa có dữ liệu so sánh cho giai đoạn này.
+                                        Chưa có dữ liệu so sánh cho giai đoạn này
                                     </td>
                                 </tr>
                             <?php endif; ?>
@@ -126,8 +126,7 @@
         type: 'bar',
         data: {
             labels: labels,
-            datasets: [
-                {
+            datasets: [{
                     label: 'Doanh thu',
                     data: dataRevenue,
                     backgroundColor: 'rgba(13, 110, 253, 0.7)',
@@ -148,13 +147,18 @@
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.dataset.label + ': ' + new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.raw);
+                            return context.dataset.label + ': ' + new Intl.NumberFormat('vi-VN', {
+                                style: 'currency',
+                                currency: 'VND'
+                            }).format(context.raw);
                         }
                     }
                 }
             },
             scales: {
-                y: { beginAtZero: true }
+                y: {
+                    beginAtZero: true
+                }
             }
         }
     });

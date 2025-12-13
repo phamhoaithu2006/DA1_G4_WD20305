@@ -12,7 +12,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold text-dark mb-1">Cập nhật hồ sơ nhân sự</h2>
-                <p class="text-muted mb-0">Chỉnh sửa thông tin HDV, Tài xế hoặc Điều hành viên.</p>
+                <p class="text-muted mb-0">Chỉnh sửa thông tin Hướng dẫn viên, Tài xế hoặc Điều hành viên</p>
             </div>
             <a href="index.php?act=employees" class="btn btn-outline-secondary">
                 <i class="bi bi-arrow-left me-1"></i> Quay lại
@@ -28,9 +28,9 @@
                         <div class="card-body text-center p-4">
                             <div class="mb-3">
                                 <label for="avatarUpload" class="d-block cursor-pointer">
-                                    <?php 
-                                        // Kiểm tra nếu có ảnh cũ thì hiển thị, không thì hiện placeholder
-                                        $currentAvatar = !empty($employee['Avatar']) ? $employee['Avatar'] : 'https://via.placeholder.com/150';
+                                    <?php
+                                    // Kiểm tra nếu có ảnh cũ thì hiển thị, không thì hiện placeholder
+                                    $currentAvatar = !empty($employee['Avatar']) ? $employee['Avatar'] : 'https://via.placeholder.com/150';
                                     ?>
                                     <img src="<?= $currentAvatar ?>" id="avatarPreview"
                                         class="rounded-circle shadow-sm border"
@@ -91,35 +91,35 @@
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Vai trò <span class="text-danger">*</span></label>
                                     <select name="role" class="form-select">
-                                        <?php 
-                                            $roles = ['Hướng dẫn viên', 'Tài xế', 'Nhân viên điều hành', 'Quản lý'];
-                                            $currentRole = $employee['Role'] ?? '';
-                                            foreach($roles as $role):
+                                        <?php
+                                        $roles = ['Hướng dẫn viên', 'Tài xế', 'Nhân viên điều hành', 'Quản lý'];
+                                        $currentRole = $employee['Role'] ?? '';
+                                        foreach ($roles as $role):
                                         ?>
-                                        <option value="<?= $role ?>" <?= $currentRole == $role ? 'selected' : '' ?>>
-                                            <?= $role ?>
-                                        </option>
+                                            <option value="<?= $role ?>" <?= $currentRole == $role ? 'selected' : '' ?>>
+                                                <?= $role ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Phân loại / Chuyên môn</label>
+                                    <label class="form-label">Phân loại/Chuyên môn</label>
                                     <select name="type" class="form-select">
-                                        <?php 
-                                            $types = [
-                                                'Nội địa' => 'Chuyên Tour Nội địa',
-                                                'Quốc tế (Inbound)' => 'Quốc tế (Inbound)',
-                                                'Quốc tế (Outbound)' => 'Quốc tế (Outbound)',
-                                                'Chuyên khách đoàn' => 'Chuyên khách đoàn',
-                                                'Freelancer' => 'Cộng tác viên (Freelancer)'
-                                            ];
-                                            $currentType = $employee['Type'] ?? '';
-                                            foreach($types as $value => $label):
+                                        <?php
+                                        $types = [
+                                            'Nội địa' => 'Chuyên Tour Nội địa',
+                                            'Quốc tế (Inbound)' => 'Chuyên Tour Quốc tế (Inbound)',
+                                            'Quốc tế (Outbound)' => 'Chuyên Tour Quốc tế (Outbound)',
+                                            'Chuyên khách đoàn' => 'Chuyên Tour Khách đoàn',
+                                            'Freelancer' => 'Cộng tác viên (Freelancer)'
+                                        ];
+                                        $currentType = $employee['Type'] ?? '';
+                                        foreach ($types as $value => $label):
                                         ?>
-                                        <option value="<?= $value ?>" <?= $currentType == $value ? 'selected' : '' ?>>
-                                            <?= $label ?>
-                                        </option>
+                                            <option value="<?= $value ?>" <?= $currentType == $value ? 'selected' : '' ?>>
+                                                <?= $label ?>
+                                            </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
@@ -139,13 +139,13 @@
                                 <div class="col-12">
                                     <label class="form-label">Chứng chỉ / Bằng cấp</label>
                                     <textarea name="certs" class="form-control" rows="2"
-                                        placeholder="VD: Thẻ HDV Quốc tế số..."><?= htmlspecialchars($employee['Certificates'] ?? '') ?></textarea>
+                                        placeholder="VD: Thẻ Hướng dẫn viên Quốc tế số..."><?= htmlspecialchars($employee['Certificates'] ?? '') ?></textarea>
                                 </div>
 
                                 <div class="col-12">
                                     <label class="form-label">Tình trạng sức khỏe / Lưu ý</label>
                                     <textarea name="health" class="form-control" rows="2"
-                                        placeholder="Tốt, hoặc các lưu ý đặc biệt..."><?= htmlspecialchars($employee['HealthStatus'] ?? '') ?></textarea>
+                                        placeholder="Tốt hoặc các lưu ý đặc biệt..."><?= htmlspecialchars($employee['HealthStatus'] ?? '') ?></textarea>
                                 </div>
                             </div>
 
@@ -166,13 +166,13 @@
 </div>
 
 <script>
-function previewImage(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('avatarPreview').src = e.target.result;
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
         }
-        reader.readAsDataURL(input.files[0]);
     }
-}
 </script>

@@ -80,10 +80,10 @@
             <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>"><b>Trang chủ</b></a>
+                        <a class="nav-link" href="<?= BASE_URL ?>"><b>TRANG CHỦ</b></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= BASE_URL ?>?act=hdv-login"><b>Admin</b></a>
+                        <a class="nav-link" href="<?= BASE_URL ?>?act=hdv-login"><b>ADMIN</b></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL ?>?act=hdv-login"><b>HDV</b></a>
@@ -91,7 +91,7 @@
                 </ul>
 
                 <div class="d-flex">
-                    <a class="btn btn-outline-primary btn-login" href="<?= BASE_URL ?>?act=hdv-login">Đăng nhập</a>
+                    <a class="btn btn-outline-primary btn-login" href="<?= BASE_URL ?>?act=hdv-login">ĐĂNG NHẬP</a>
                 </div>
             </div>
         </div>

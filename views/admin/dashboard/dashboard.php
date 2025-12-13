@@ -14,7 +14,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4 pt-2">
             <div>
                 <h2 class="fw-bold text-dark mb-1">Tổng quan</h2>
-                <p class="text-muted mb-0">Chào mừng trở lại hệ thống quản lý Tour.</p>
+                <p class="text-muted mb-0">Chào mừng trở lại hệ thống quản lý Tour</p>
             </div>
             <div class="date-display px-3 py-2 bg-white rounded shadow-sm border">
                 <i class="bi bi-calendar-event text-primary me-2"></i>
@@ -155,78 +155,78 @@
                         </thead>
                         <tbody>
                             <?php if (!empty($data['recentBookings'])): ?>
-                            <?php foreach ($data['recentBookings'] as $index => $b): ?>
-                            <tr>
-                                <td class="ps-4">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar-initial rounded-circle bg-light text-primary fw-bold me-3 d-flex align-items-center justify-content-center"
-                                            style="width: 40px; height: 40px;">
-                                            <?= strtoupper(substr($b['CustomerName'] ?? 'U', 0, 1)) ?>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-dark"><?= htmlspecialchars($b['CustomerName']) ?>
+                                <?php foreach ($data['recentBookings'] as $index => $b): ?>
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-initial rounded-circle bg-light text-primary fw-bold me-3 d-flex align-items-center justify-content-center"
+                                                    style="width: 40px; height: 40px;">
+                                                    <?= strtoupper(substr($b['CustomerName'] ?? 'U', 0, 1)) ?>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold text-dark"><?= htmlspecialchars($b['CustomerName']) ?>
+                                                    </div>
+                                                    <small class="text-muted">#<?= $b['BookingID'] ?></small>
+                                                </div>
                                             </div>
-                                            <small class="text-muted">#<?= $b['BookingID'] ?></small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <?php if (!empty($b['Image'])): ?>
-                                        <img src="<?= $b['Image'] ?>" class="rounded me-2" width="40" height="40"
-                                            style="object-fit: cover;">
-                                        <?php else: ?>
-                                        <div class="rounded me-2 bg-light d-flex align-items-center justify-content-center text-muted"
-                                            style="width: 40px; height: 40px;">
-                                            <i class="bi bi-image"></i>
-                                        </div>
-                                        <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <?php if (!empty($b['Image'])): ?>
+                                                    <img src="<?= $b['Image'] ?>" class="rounded me-2" width="40" height="40"
+                                                        style="object-fit: cover;">
+                                                <?php else: ?>
+                                                    <div class="rounded me-2 bg-light d-flex align-items-center justify-content-center text-muted"
+                                                        style="width: 40px; height: 40px;">
+                                                        <i class="bi bi-image"></i>
+                                                    </div>
+                                                <?php endif; ?>
 
-                                        <span class="text-dark fw-medium"><?= htmlspecialchars($b['TourName']) ?></span>
-                                    </div>
-                                </td>
-                                <td class="text-muted">
-                                    <i class="bi bi-clock me-1"></i><?= date('d/m/Y', strtotime($b['BookingDate'])) ?>
-                                </td>
-                                <td class="text-end fw-bold text-dark">
-                                    <?= $b['TotalAmount'] !== null ? number_format($b['TotalAmount'], 0, ',', '.') . ' đ' : '-' ?>
-                                </td>
-                                <td class="text-center">
-                                    <?php 
-                                                $statusClass = 'bg-secondary-subtle text-secondary';
-                                                $icon = 'bi-circle';
-                                                
-                                                if ($b['Status'] === 'Đang xử lý') {
-                                                    $statusClass = 'bg-warning-subtle text-warning-emphasis';
-                                                    $icon = 'bi-hourglass-split';
-                                                } elseif ($b['Status'] === 'Đã xác nhận') {
-                                                    $statusClass = 'bg-info-subtle text-info-emphasis';
-                                                    $icon = 'bi-check-circle';
-                                                } elseif ($b['Status'] === 'Đã thanh toán') {
-                                                    $statusClass = 'bg-success-subtle text-success-emphasis';
-                                                    $icon = 'bi-cash-coin';
-                                                } elseif ($b['Status'] === 'Đã hủy') {
-                                                    $statusClass = 'bg-danger-subtle text-danger-emphasis';
-                                                    $icon = 'bi-x-circle';
-                                                }
+                                                <span class="text-dark fw-medium"><?= htmlspecialchars($b['TourName']) ?></span>
+                                            </div>
+                                        </td>
+                                        <td class="text-muted">
+                                            <i class="bi bi-clock me-1"></i><?= date('d/m/Y', strtotime($b['BookingDate'])) ?>
+                                        </td>
+                                        <td class="text-end fw-bold text-dark">
+                                            <?= $b['TotalAmount'] !== null ? number_format($b['TotalAmount'], 0, ',', '.') . ' đ' : '-' ?>
+                                        </td>
+                                        <td class="text-center">
+                                            <?php
+                                            $statusClass = 'bg-secondary-subtle text-secondary';
+                                            $icon = 'bi-circle';
+
+                                            if ($b['Status'] === 'Đang xử lý') {
+                                                $statusClass = 'bg-warning-subtle text-warning-emphasis';
+                                                $icon = 'bi-hourglass-split';
+                                            } elseif ($b['Status'] === 'Đã xác nhận') {
+                                                $statusClass = 'bg-info-subtle text-info-emphasis';
+                                                $icon = 'bi-check-circle';
+                                            } elseif ($b['Status'] === 'Đã thanh toán') {
+                                                $statusClass = 'bg-success-subtle text-success-emphasis';
+                                                $icon = 'bi-cash-coin';
+                                            } elseif ($b['Status'] === 'Đã hủy') {
+                                                $statusClass = 'bg-danger-subtle text-danger-emphasis';
+                                                $icon = 'bi-x-circle';
+                                            }
                                             ?>
-                                    <span class="badge rounded-pill <?= $statusClass ?> px-3 py-2">
-                                        <i class="bi <?= $icon ?> me-1"></i> <?= htmlspecialchars($b['Status']) ?>
-                                    </span>
-                                </td>
-                                <td class="text-center pe-4">
-                                    <a href="<?= BASE_URL ?>?act=booking-detail&id=<?= $b['BookingID'] ?>"
-                                        class="btn btn-sm btn-light text-primary border shadow-sm"
-                                        data-bs-toggle="tooltip" title="Xem chi tiết">
-                                        <i class="bi bi-arrow-right"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
+                                            <span class="badge rounded-pill <?= $statusClass ?> px-3 py-2">
+                                                <i class="bi <?= $icon ?> me-1"></i> <?= htmlspecialchars($b['Status']) ?>
+                                            </span>
+                                        </td>
+                                        <td class="text-center pe-4">
+                                            <a href="<?= BASE_URL ?>?act=booking-detail&id=<?= $b['BookingID'] ?>"
+                                                class="btn btn-sm btn-light text-primary border shadow-sm"
+                                                data-bs-toggle="tooltip" title="Xem chi tiết">
+                                                <i class="bi bi-arrow-right"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             <?php else: ?>
-                            <tr>
-                                <td colspan="6" class="text-center py-5 text-muted">Chưa có dữ liệu</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="6" class="text-center py-5 text-muted">Chưa có dữ liệu</td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -237,151 +237,151 @@
 </div>
 
 <style>
-/* --- QUAN TRỌNG: CẤU HÌNH LAYOUT --- */
-:root {
-    --header-height: 70px;
-    /* Chiều cao của Navbar */
-    --sidebar-width: 260px;
-    /* Chiều rộng Sidebar */
-}
+    /* --- QUAN TRỌNG: CẤU HÌNH LAYOUT --- */
+    :root {
+        --header-height: 70px;
+        /* Chiều cao của Navbar */
+        --sidebar-width: 260px;
+        /* Chiều rộng Sidebar */
+    }
 
-body {
-    background-color: #f5f7fa;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    /* Đẩy toàn bộ nội dung xuống dưới Navbar */
-    padding-top: var(--header-height);
-}
+    body {
+        background-color: #f5f7fa;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        /* Đẩy toàn bộ nội dung xuống dưới Navbar */
+        padding-top: var(--header-height);
+    }
 
-/* Sidebar cố định bên trái, nhưng bắt đầu từ dưới Navbar */
-.sidebar-wrapper {
-    width: var(--sidebar-width);
-    position: fixed;
-    top: var(--header-height);
-    /* Bắt đầu sau Navbar */
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-    overflow-y: auto;
-    /* Thêm transition mượt mà */
-    transition: all 0.3s;
-}
-
-/* Nội dung chính nằm bên phải Sidebar */
-.admin-content {
-    margin-left: var(--sidebar-width);
-    padding: 30px;
-    transition: all 0.3s;
-}
-
-/* Cards Style */
-.stat-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border-radius: 12px;
-}
-
-.stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
-}
-
-.stat-icon {
-    width: 48px;
-    height: 48px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
-
-/* Table Style */
-.table thead th {
-    font-weight: 600;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    border-bottom: 1px solid #e9ecef;
-    padding: 1rem 0.5rem;
-}
-
-.table tbody td {
-    padding: 1rem 0.5rem;
-}
-
-.avatar-initial {
-    font-size: 1.1rem;
-}
-
-/* Responsive cho Mobile */
-@media (max-width: 992px) {
+    /* Sidebar cố định bên trái, nhưng bắt đầu từ dưới Navbar */
     .sidebar-wrapper {
-        margin-left: calc(var(--sidebar-width) * -1);
-        /* Ẩn sidebar */
+        width: var(--sidebar-width);
+        position: fixed;
+        top: var(--header-height);
+        /* Bắt đầu sau Navbar */
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+        overflow-y: auto;
+        /* Thêm transition mượt mà */
+        transition: all 0.3s;
     }
 
+    /* Nội dung chính nằm bên phải Sidebar */
     .admin-content {
-        margin-left: 0;
-        /* Full width content */
+        margin-left: var(--sidebar-width);
+        padding: 30px;
+        transition: all 0.3s;
     }
 
-    /* Khi nào cần hiện sidebar thì thêm class .show vào sidebar-wrapper */
-}
+    /* Cards Style */
+    .stat-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 12px;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    .stat-icon {
+        width: 48px;
+        height: 48px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Table Style */
+    .table thead th {
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        border-bottom: 1px solid #e9ecef;
+        padding: 1rem 0.5rem;
+    }
+
+    .table tbody td {
+        padding: 1rem 0.5rem;
+    }
+
+    .avatar-initial {
+        font-size: 1.1rem;
+    }
+
+    /* Responsive cho Mobile */
+    @media (max-width: 992px) {
+        .sidebar-wrapper {
+            margin-left: calc(var(--sidebar-width) * -1);
+            /* Ẩn sidebar */
+        }
+
+        .admin-content {
+            margin-left: 0;
+            /* Full width content */
+        }
+
+        /* Khi nào cần hiện sidebar thì thêm class .show vào sidebar-wrapper */
+    }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Khởi tạo tooltip
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    });
+    document.addEventListener("DOMContentLoaded", function() {
+        // Khởi tạo tooltip
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        });
 
-    // Chart Demo (Dữ liệu mẫu)
-    const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
-    new Chart(ctxRevenue, {
-        type: 'line',
-        data: {
-            labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'],
-            datasets: [{
-                label: 'Doanh thu (Triệu VNĐ)',
-                data: [120, 190, 300, 500, 200, 300],
-                borderColor: '#0d6efd',
-                backgroundColor: 'rgba(13, 110, 253, 0.1)',
-                tension: 0.4,
-                fill: true
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
+        // Chart Demo (Dữ liệu mẫu)
+        const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctxRevenue, {
+            type: 'line',
+            data: {
+                labels: ['T1', 'T2', 'T3', 'T4', 'T5', 'T6'],
+                datasets: [{
+                    label: 'Doanh thu (Triệu VNĐ)',
+                    data: [120, 190, 300, 500, 200, 300],
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
             },
-            scales: {
-                y: {
-                    beginAtZero: true
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
                 }
             }
-        }
-    });
+        });
 
-    const ctxStatus = document.getElementById('statusChart').getContext('2d');
-    new Chart(ctxStatus, {
-        type: 'doughnut',
-        data: {
-            labels: ['Hoàn thành', 'Đang xử lý', 'Hủy'],
-            datasets: [{
-                data: [65, 25, 10],
-                backgroundColor: ['#198754', '#ffc107', '#dc3545'],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
+        const ctxStatus = document.getElementById('statusChart').getContext('2d');
+        new Chart(ctxStatus, {
+            type: 'doughnut',
+            data: {
+                labels: ['Hoàn thành', 'Đang xử lý', 'Hủy'],
+                datasets: [{
+                    data: [65, 25, 10],
+                    backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
                 }
             }
-        }
+        });
     });
-});
 </script>

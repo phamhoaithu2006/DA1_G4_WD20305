@@ -12,7 +12,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold text-dark mb-1">Quản lý Booking</h2>
-                <p class="text-muted mb-0">Danh sách các đơn đặt tour từ khách hàng.</p>
+                <p class="text-muted mb-0">Danh sách các đơn đặt tour từ khách hàng</p>
             </div>
             <a href="?act=booking-create" class="btn btn-primary shadow-sm">
                 <i class="bi bi-plus-lg me-1"></i> Tạo Booking mới
@@ -38,7 +38,7 @@
                         </thead>
                         <tbody>
                             <?php if (!empty($bookings)): ?>
-                            <?php foreach ($bookings as $b): 
+                                <?php foreach ($bookings as $b):
                                     // 1. LOGIC TRẠNG THÁI (STATUS MAPPING) - Cấu hình màu sắc tại đây cho gọn
                                     $statusMap = [
                                         'Đang xử lý'    => ['class' => 'bg-warning-subtle text-warning-emphasis', 'icon' => 'bi-hourglass-split'],
@@ -50,67 +50,67 @@
 
                                     // Lấy config trạng thái, nếu không có trong danh sách thì dùng default
                                     $currentStatus = $statusMap[$b['Status']] ?? ['class' => 'bg-secondary-subtle text-secondary', 'icon' => 'bi-circle'];
-                                    
+
                                     // Xử lý avatar chữ cái đầu
                                     $firstLetter = strtoupper(substr($b['CustomerName'] ?? 'K', 0, 1));
                                 ?>
-                            <tr>
-                                <td class="ps-4 fw-bold text-primary">#<?= $b['BookingID'] ?></td>
+                                    <tr>
+                                        <td class="ps-4 fw-bold text-primary">#<?= $b['BookingID'] ?></td>
 
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center me-3 shadow-sm"
-                                            style="width: 40px; height: 40px; font-size: 0.9rem;">
-                                            <?= $firstLetter ?>
-                                        </div>
-                                        <div>
-                                            <div class="fw-bold text-dark"><?= htmlspecialchars($b['CustomerName']) ?>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center me-3 shadow-sm"
+                                                    style="width: 40px; height: 40px; font-size: 0.9rem;">
+                                                    <?= $firstLetter ?>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold text-dark"><?= htmlspecialchars($b['CustomerName']) ?>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </td>
+                                        </td>
 
-                                <td>
-                                    <div class="text-dark fw-medium text-truncate" style="max-width: 250px;"
-                                        title="<?= htmlspecialchars($b['TourName']) ?>">
-                                        <?= htmlspecialchars($b['TourName']) ?>
-                                    </div>
-                                </td>
+                                        <td>
+                                            <div class="text-dark fw-medium text-truncate" style="max-width: 250px;"
+                                                title="<?= htmlspecialchars($b['TourName']) ?>">
+                                                <?= htmlspecialchars($b['TourName']) ?>
+                                            </div>
+                                        </td>
 
-                                <td class="text-muted small">
-                                    <i
-                                        class="bi bi-clock me-1"></i><?= date('d/m/Y H:i', strtotime($b['BookingDate'])) ?>
-                                </td>
+                                        <td class="text-muted small">
+                                            <i
+                                                class="bi bi-clock me-1"></i><?= date('d/m/Y H:i', strtotime($b['BookingDate'])) ?>
+                                        </td>
 
-                                <td class="text-end fw-bold text-dark">
-                                    <?= $b['TotalAmount'] !== null ? number_format($b['TotalAmount'], 0, ',', '.') . ' ₫' : '-' ?>
-                                </td>
+                                        <td class="text-end fw-bold text-dark">
+                                            <?= $b['TotalAmount'] !== null ? number_format($b['TotalAmount'], 0, ',', '.') . ' ₫' : '-' ?>
+                                        </td>
 
-                                <td class="text-center">
-                                    <span
-                                        class="badge rounded-pill <?= $currentStatus['class'] ?> px-3 py-2 border border-opacity-10">
-                                        <i class="bi <?= $currentStatus['icon'] ?> me-1"></i>
-                                        <?= htmlspecialchars($b['Status']) ?>
-                                    </span>
-                                </td>
+                                        <td class="text-center">
+                                            <span
+                                                class="badge rounded-pill <?= $currentStatus['class'] ?> px-3 py-2 border border-opacity-10">
+                                                <i class="bi <?= $currentStatus['icon'] ?> me-1"></i>
+                                                <?= htmlspecialchars($b['Status']) ?>
+                                            </span>
+                                        </td>
 
-                                <td class="text-center pe-4">
-                                    <a href="<?= BASE_URL ?>?act=booking-detail&id=<?= $b['BookingID'] ?>"
-                                        class="btn btn-sm btn-light border text-primary shadow-sm hover-elevate"
-                                        data-bs-toggle="tooltip" title="Xem chi tiết đơn hàng">
-                                        Xem chi tiết <i class="bi bi-arrow-right ms-1"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
+                                        <td class="text-center pe-4">
+                                            <a href="<?= BASE_URL ?>?act=booking-detail&id=<?= $b['BookingID'] ?>"
+                                                class="btn btn-sm btn-light border text-primary shadow-sm hover-elevate"
+                                                data-bs-toggle="tooltip" title="Xem chi tiết đơn hàng">
+                                                Xem chi tiết <i class="bi bi-arrow-right ms-1"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             <?php else: ?>
-                            <tr>
-                                <td colspan="7" class="text-center py-5 text-muted">
-                                    <div class="fs-1 text-light-emphasis mb-3"><i class="bi bi-inbox-fill"></i></div>
-                                    <p class="mb-0 fs-5">Chưa có booking nào</p>
-                                    <p class="small">Các đơn đặt tour mới sẽ xuất hiện tại đây.</p>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="7" class="text-center py-5 text-muted">
+                                        <div class="fs-1 text-light-emphasis mb-3"><i class="bi bi-inbox-fill"></i></div>
+                                        <p class="mb-0 fs-5">Chưa có booking nào</p>
+                                        <p class="small">Các đơn đặt tour mới sẽ xuất hiện tại đây</p>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>
@@ -122,9 +122,9 @@
 </div>
 
 <style>
-.hover-elevate:hover {
-    transform: translateY(-2px);
-    transition: all 0.2s ease;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
-}
+    .hover-elevate:hover {
+        transform: translateY(-2px);
+        transition: all 0.2s ease;
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+    }
 </style>

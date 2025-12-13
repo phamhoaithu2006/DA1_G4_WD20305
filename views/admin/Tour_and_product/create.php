@@ -194,7 +194,7 @@ require_once __DIR__ . '/../navbar.php';
                                                 required>
                                             <span class="input-group-text">VNĐ</span>
                                         </div>
-                                        <div class="form-text text-muted">Giá này chưa bao gồm khuyến mãi (nếu có).
+                                        <div class="form-text text-muted">Giá này chưa bao gồm khuyến mãi (nếu có)
                                         </div>
                                     </div>
                                 </div>

@@ -162,7 +162,7 @@ if (!empty($tours) && is_array($tours)) {
                                     <th style="width: 80px;">Hình ảnh</th>
                                     <th style="width: 25%;">Tên Tour</th>
                                     <th>Thời gian</th>
-                                    <th>Giá & KM</th>
+                                    <th>Giá & Khuyến mãi</th>
                                     <th>Trạng thái</th>
                                     <th class="text-end">Hành động</th>
                                 </tr>
@@ -268,8 +268,8 @@ if (!empty($tours) && is_array($tours)) {
             <div class="card shadow-sm border-0">
                 <div class="card-body text-center py-5">
                     <div class="mb-3 text-muted"><i class="bi bi-inbox fs-1"></i></div>
-                    <h5 class="text-muted">Chưa có dữ liệu tour nào</h5>
-                    <a href="?act=tour-create" class="btn btn-sm btn-primary mt-2">Thêm tour ngay</a>
+                    <h5 class="text-muted">Chưa có dữ liệu Tour nào</h5>
+                    <a href="?act=tour-create" class="btn btn-sm btn-primary mt-2">Thêm Tour ngay</a>
                 </div>
             </div>
             <?php endif; ?>

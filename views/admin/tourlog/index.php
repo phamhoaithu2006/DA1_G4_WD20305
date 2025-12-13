@@ -13,8 +13,8 @@
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="fw-bold text-dark mb-1">Nhật ký Tour</h2>
-                <p class="text-muted mb-0">Danh sách các nhật ký được ghi cho tour #<?= $tourID ?></p>
+                <h2 class="fw-bold text-dark mb-1">Nhật ký nhân sự</h2>
+                <p class="text-muted mb-0">Danh sách các nhật ký được ghi cho Tour #<?= $tourID ?></p>
             </div>
 
             <a href="<?= BASE_URL ?>?act=tourlog-create&tourID=<?= $tourID ?>" class="btn btn-primary shadow-sm">
@@ -50,11 +50,18 @@
                                             <?= date('d/m/Y H:i', strtotime($log['LogDate'])) ?>
                                         </td>
 
-                                        <td class="fw-semibold text-dark"><?= htmlspecialchars($log['FullName'] ?? 'N/A') ?></td>
+                                        <td class="fw-semibold text-dark">
+                                            <?= htmlspecialchars($log['FullName'] ?? 'N/A') ?>
+                                        </td>
 
-                                        <td class="text-dark"><?= nl2br(htmlspecialchars($log['Note'])) ?></td>
+                                        <td class="text-dark">
+                                            <?= nl2br(htmlspecialchars($log['Note'] ?? '')) ?>
+                                        </td>
 
-                                        <td class="fw-bold text-danger"><?= htmlspecialchars($log['Incident']) ?></td>
+                                        <td class="fw-bold text-danger">
+                                            <?= htmlspecialchars($log['Incident'] ?? '') ?>
+                                        </td>
+
 
                                         <td>
                                             <?php if (!empty($log['Images'])): ?>
@@ -84,7 +91,7 @@
                                 <tr>
                                     <td colspan="7" class="text-center py-5 text-muted">
                                         <div class="fs-1 text-light-emphasis mb-2"><i class="bi bi-journal-x"></i></div>
-                                        Chưa có nhật ký nào cho tour này
+                                        Chưa có nhật ký nào cho Tour này
                                     </td>
                                 </tr>
                             <?php endif; ?>

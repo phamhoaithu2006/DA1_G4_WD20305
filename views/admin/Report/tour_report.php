@@ -28,12 +28,12 @@
             </li>
             <li class="nav-item">
                 <button class="nav-link fw-bold" data-bs-toggle="tab" data-bs-target="#tab-feedback">
-                    <i class="bi bi-chat-heart me-2"></i>Phản hồi Khách hàng
+                    <i class="bi bi-chat-heart me-2"></i>Phản hồi khách hàng
                 </button>
             </li>
             <li class="nav-item">
                 <button class="nav-link fw-bold" data-bs-toggle="tab" data-bs-target="#tab-eval">
-                    <i class="bi bi-person-check me-2"></i>Đánh giá Nhân sự
+                    <i class="bi bi-person-check me-2"></i>Đánh giá nhân sự
                 </button>
             </li>
         </ul>
@@ -44,7 +44,7 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <div class="card border-0 shadow-sm">
-                            <div class="card-header bg-white fw-bold">Nhật ký hành trình (Cập nhật bởi HDV)</div>
+                            <div class="card-header bg-white fw-bold">Nhật ký hành trình (Cập nhật bởi Hướng dẫn viên)</div>
                             <div class="card-body p-0">
                                 <div class="table-responsive">
                                     <table class="table table-hover mb-0">
@@ -57,47 +57,49 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if(!empty($logs)): foreach($logs as $log): ?>
-                                            <tr>
-                                                <td>
-                                                    <div class="fw-bold"><?= date('H:i', strtotime($log['LogDate'])) ?>
-                                                    </div>
-                                                    <div class="small text-muted">
-                                                        <?= date('d/m', strtotime($log['LogDate'])) ?></div>
-                                                </td>
-                                                <td><span
-                                                        class="badge bg-light text-dark border"><?= htmlspecialchars($log['ReporterName']) ?></span>
-                                                </td>
-                                                <td>
-                                                    <?= nl2br(htmlspecialchars($log['Note'])) ?>
-                                                    <?php if(!empty($log['Images'])): 
-                                                        $imgs = json_decode($log['Images'], true);
-                                                        if($imgs): ?>
-                                                    <div class="d-flex gap-1 mt-2">
-                                                        <?php foreach($imgs as $img): ?>
-                                                        <img src="<?= $img ?>"
-                                                            style="width:50px; height:50px; object-fit:cover;"
-                                                            class="rounded border">
-                                                        <?php endforeach; ?>
-                                                    </div>
-                                                    <?php endif; endif; ?>
-                                                </td>
-                                                <td>
-                                                    <?php if(!empty($log['Incident'])): ?>
-                                                    <div class="alert alert-danger py-1 px-2 mb-0 small">
-                                                        <i class="bi bi-exclamation-triangle-fill me-1"></i>
-                                                        <?= htmlspecialchars($log['Incident']) ?>
-                                                    </div>
-                                                    <?php else: ?>
-                                                    <span class="text-success small"><i class="bi bi-check"></i> Ổn
-                                                        định</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                            </tr>
-                                            <?php endforeach; else: ?>
-                                            <tr>
-                                                <td colspan="4" class="text-center py-4">Chưa có nhật ký nào.</td>
-                                            </tr>
+                                            <?php if (!empty($logs)): foreach ($logs as $log): ?>
+                                                    <tr>
+                                                        <td>
+                                                            <div class="fw-bold"><?= date('H:i', strtotime($log['LogDate'])) ?>
+                                                            </div>
+                                                            <div class="small text-muted">
+                                                                <?= date('d/m', strtotime($log['LogDate'])) ?></div>
+                                                        </td>
+                                                        <td><span
+                                                                class="badge bg-light text-dark border"><?= htmlspecialchars($log['ReporterName']) ?></span>
+                                                        </td>
+                                                        <td>
+                                                            <?= nl2br(htmlspecialchars($log['Note'])) ?>
+                                                            <?php if (!empty($log['Images'])):
+                                                                $imgs = json_decode($log['Images'], true);
+                                                                if ($imgs): ?>
+                                                                    <div class="d-flex gap-1 mt-2">
+                                                                        <?php foreach ($imgs as $img): ?>
+                                                                            <img src="<?= $img ?>"
+                                                                                style="width:50px; height:50px; object-fit:cover;"
+                                                                                class="rounded border">
+                                                                        <?php endforeach; ?>
+                                                                    </div>
+                                                            <?php endif;
+                                                            endif; ?>
+                                                        </td>
+                                                        <td>
+                                                            <?php if (!empty($log['Incident'])): ?>
+                                                                <div class="alert alert-danger py-1 px-2 mb-0 small">
+                                                                    <i class="bi bi-exclamation-triangle-fill me-1"></i>
+                                                                    <?= htmlspecialchars($log['Incident']) ?>
+                                                                </div>
+                                                            <?php else: ?>
+                                                                <span class="text-success small"><i class="bi bi-check"></i> Ổn
+                                                                    định</span>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach;
+                                            else: ?>
+                                                <tr>
+                                                    <td colspan="4" class="text-center py-4">Chưa có nhật ký nào</td>
+                                                </tr>
                                             <?php endif; ?>
                                         </tbody>
                                     </table>
@@ -117,7 +119,7 @@
                                 </div>
                                 <p class="small text-muted text-justify">
                                     Lưu ý: Các sự cố về sức khỏe, hỏng xe, mất đồ cần được lập biên bản riêng và lưu trữ
-                                    tại bộ phận Pháp chế/Điều hành.
+                                    tại bộ phận pháp chế/điều hành.
                                 </p>
                             </div>
                         </div>
@@ -130,34 +132,35 @@
                     <div class="display-4 fw-bold text-warning me-3"><?= $avgRating ?></div>
                     <div>
                         <div class="text-warning">
-                            <?php for($i=1; $i<=5; $i++) echo $i <= round($avgRating) ? '<i class="bi bi-star-fill"></i>' : '<i class="bi bi-star"></i>'; ?>
+                            <?php for ($i = 1; $i <= 5; $i++) echo $i <= round($avgRating) ? '<i class="bi bi-star-fill"></i>' : '<i class="bi bi-star"></i>'; ?>
                         </div>
                         <div class="text-muted small">Dựa trên <?= count($feedbacks) ?> lượt đánh giá</div>
                     </div>
                 </div>
 
                 <div class="row g-4">
-                    <?php if(!empty($feedbacks)): foreach($feedbacks as $fb): ?>
-                    <div class="col-md-6">
-                        <div class="card border-0 shadow-sm h-100">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between mb-2">
-                                    <h6 class="fw-bold mb-0"><?= htmlspecialchars($fb['FullName']) ?></h6>
-                                    <div class="text-warning small">
-                                        <?php for($i=1; $i<=5; $i++) echo $i <= $fb['Rating'] ? '<i class="bi bi-star-fill"></i>' : '<i class="bi bi-star"></i>'; ?>
+                    <?php if (!empty($feedbacks)): foreach ($feedbacks as $fb): ?>
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between mb-2">
+                                            <h6 class="fw-bold mb-0"><?= htmlspecialchars($fb['FullName']) ?></h6>
+                                            <div class="text-warning small">
+                                                <?php for ($i = 1; $i <= 5; $i++) echo $i <= $fb['Rating'] ? '<i class="bi bi-star-fill"></i>' : '<i class="bi bi-star"></i>'; ?>
+                                            </div>
+                                        </div>
+                                        <p class="card-text text-secondary fst-italic">"<?= htmlspecialchars($fb['Comment']) ?>"
+                                        </p>
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <small class="text-muted"><?= date('d/m/Y', strtotime($fb['CreatedAt'])) ?></small>
+                                            <span class="badge bg-light text-dark border"><?= $fb['Type'] ?></span>
+                                        </div>
                                     </div>
                                 </div>
-                                <p class="card-text text-secondary fst-italic">"<?= htmlspecialchars($fb['Comment']) ?>"
-                                </p>
-                                <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <small class="text-muted"><?= date('d/m/Y', strtotime($fb['CreatedAt'])) ?></small>
-                                    <span class="badge bg-light text-dark border"><?= $fb['Type'] ?></span>
-                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <?php endforeach; else: ?>
-                    <div class="col-12 text-center py-5 text-muted">Chưa có phản hồi nào từ khách hàng.</div>
+                        <?php endforeach;
+                    else: ?>
+                        <div class="col-12 text-center py-5 text-muted">Chưa có phản hồi nào từ khách hàng</div>
                     <?php endif; ?>
                 </div>
             </div>
@@ -166,7 +169,7 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="card border-0 shadow-sm">
-                            <div class="card-header bg-white fw-bold">Form Đánh giá (Dành cho Quản lý)</div>
+                            <div class="card-header bg-white fw-bold">Form đánh giá (Dành cho Quản lý)</div>
                             <div class="card-body">
                                 <form action="?act=evaluate-staff" method="POST">
                                     <input type="hidden" name="tour_id" value="<?= $tour['TourID'] ?>">
@@ -174,10 +177,10 @@
                                         <label class="form-label">Chọn Nhân sự</label>
                                         <select name="employee_id" class="form-select" required>
                                             <option value="">-- Chọn nhân viên --</option>
-                                            <?php foreach($staffs as $s): ?>
-                                            <option value="<?= $s['EmployeeID'] ?>">
-                                                <?= $s['FullName'] ?> (<?= $s['TourRole'] ?>)
-                                            </option>
+                                            <?php foreach ($staffs as $s): ?>
+                                                <option value="<?= $s['EmployeeID'] ?>">
+                                                    <?= $s['FullName'] ?> (<?= $s['TourRole'] ?>)
+                                                </option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -187,11 +190,11 @@
                                             step="0.5" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label">Nhận xét / Rút kinh nghiệm</label>
+                                        <label class="form-label">Nhận xét/Rút kinh nghiệm</label>
                                         <textarea name="note" class="form-control" rows="4"
                                             placeholder="Thái độ phục vụ, xử lý tình huống..."></textarea>
                                     </div>
-                                    <button type="submit" class="btn btn-primary w-100">Lưu Đánh Giá</button>
+                                    <button type="submit" class="btn btn-primary w-100">Lưu đánh giá</button>
                                 </form>
                             </div>
                         </div>
@@ -211,25 +214,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if(!empty($evaluations)): foreach($evaluations as $ev): ?>
-                                        <tr>
-                                            <td class="fw-bold text-primary"><?= htmlspecialchars($ev['EmpName']) ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <span
-                                                    class="badge <?= $ev['Score']>=8 ? 'bg-success' : ($ev['Score']>=5 ? 'bg-warning' : 'bg-danger') ?>">
-                                                    <?= $ev['Score'] ?>
-                                                </span>
-                                            </td>
-                                            <td class="small text-secondary"><?= htmlspecialchars($ev['Note']) ?></td>
-                                            <td class="small text-muted">
-                                                <?= htmlspecialchars($ev['AdminName'] ?? 'Admin') ?></td>
-                                        </tr>
-                                        <?php endforeach; else: ?>
-                                        <tr>
-                                            <td colspan="4" class="text-center py-4 text-muted">Chưa có đánh giá nào.
-                                            </td>
-                                        </tr>
+                                        <?php if (!empty($evaluations)): foreach ($evaluations as $ev): ?>
+                                                <tr>
+                                                    <td class="fw-bold text-primary"><?= htmlspecialchars($ev['EmpName']) ?>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span
+                                                            class="badge <?= $ev['Score'] >= 8 ? 'bg-success' : ($ev['Score'] >= 5 ? 'bg-warning' : 'bg-danger') ?>">
+                                                            <?= $ev['Score'] ?>
+                                                        </span>
+                                                    </td>
+                                                    <td class="small text-secondary"><?= htmlspecialchars($ev['Note']) ?></td>
+                                                    <td class="small text-muted">
+                                                        <?= htmlspecialchars($ev['AdminName'] ?? 'Admin') ?></td>
+                                                </tr>
+                                            <?php endforeach;
+                                        else: ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center py-4 text-muted">Chưa có đánh giá nào
+                                                </td>
+                                            </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>

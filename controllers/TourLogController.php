@@ -1,13 +1,21 @@
 <?php
 // controllers/TourLogController.php
 
+// Vui lòng đảm bảo các file Model sau đã được include/require_once đúng đường dẫn
+// Ví dụ:
+// require_once 'models/TourLogModel.php';
+// require_once 'models/EmployeeModel.php'; 
+
 class TourLogController
 {
     public $tourLogModel;
+    public $employeeModel;
 
     public function __construct()
     {
         $this->tourLogModel = new TourLogModel();
+        // KHỞI TẠO EmployeeModel
+        $this->employeeModel = new EmployeeModel();
     }
 
     // Hiển thị danh sách Log (Route: tourlog-list)
@@ -26,6 +34,15 @@ class TourLogController
     // Hiển thị form thêm mới (Route: tourlog-create)
     public function createForm($tourID)
     {
+        // Lấy TẤT CẢ nhân viên từ Model
+        $allEmployees = $this->employeeModel->getAllEmployees();
+
+        // LỌC danh sách nhân viên chỉ giữ lại Hướng dẫn viên và Admin
+        $employees = array_filter($allEmployees, function ($employee) {
+            return in_array($employee['Role'], ['Hướng dẫn viên', 'Admin']);
+        });
+
+        // $tourID và $employees được truyền sang views/admin/tourlog/create.php
         require_once 'views/admin/tourlog/create.php';
     }
 
@@ -35,11 +52,9 @@ class TourLogController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $tourId = $_POST['tour_id'];
             $note = $_POST['note'];
-            $incident = $_POST['incident'];
-
-            // Giả sử lấy ID nhân viên từ Session Login
-            // $employeeId = $_SESSION['user']['id'] ?? 1; 
-            $employeeId = 1; // Tạm thời set cứng nếu chưa có login
+            $incident = $_POST['incident'] ?? null;
+            $logType = $_POST['log_type'];
+            $employeeId = $_POST['employee_id'];
 
             // Xử lý upload ảnh
             $imagePath = null;
@@ -55,7 +70,8 @@ class TourLogController
                 }
             }
 
-            $this->tourLogModel->insertLog($tourId, $employeeId, $note, $imagePath, $incident);
+            // CẬP NHẬT: Thêm $employeeId và $logType vào model
+            $this->tourLogModel->insertLog($tourId, $employeeId, $note, $imagePath, $incident, $logType);
 
             // Redirect về trang danh sách
             header("Location: index.php?act=tourlog-list&tourID=" . $tourId);
@@ -71,6 +87,16 @@ class TourLogController
             echo "Không tìm thấy nhật ký!";
             return;
         }
+
+        // Lấy TẤT CẢ nhân viên từ Model
+        $allEmployees = $this->employeeModel->getAllEmployees();
+
+        // LỌC danh sách nhân viên chỉ giữ lại Hướng dẫn viên và Admin
+        $employees = array_filter($allEmployees, function ($employee) {
+            return in_array($employee['Role'], ['Hướng dẫn viên', 'Admin']);
+        });
+
+        // Biến $employees và $log được truyền sang views/admin/tourlog/edit.php
         require_once 'views/admin/tourlog/edit.php';
     }
 
@@ -78,12 +104,17 @@ class TourLogController
     public function update($id)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $tourId = $_POST['tour_id']; // Để redirect về đúng chỗ
+            $tourId = $_POST['tour_id'];
             $note = $_POST['note'];
-            $incident = $_POST['incident'];
+            $incident = $_POST['incident'] ?? null;
+            $logType = $_POST['log_type'];
+            $employeeId = $_POST['employee_id'];
 
-            // Xử lý ảnh
-            $imagePath = null;
+            // Lấy đường dẫn ảnh cũ để tránh bị mất nếu người dùng không upload ảnh mới
+            $currentLog = $this->tourLogModel->getLogById($id);
+            $imagePath = $currentLog['Images'] ?? null; // Giữ ảnh cũ
+
+            // Xử lý ảnh mới
             if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                 $uploadDir = 'uploads/tourlogs/';
                 $fileName = time() . '_' . basename($_FILES['image']['name']);
@@ -92,7 +123,8 @@ class TourLogController
                 }
             }
 
-            $this->tourLogModel->updateLog($id, $note, $imagePath, $incident);
+            // CẬP NHẬT: Thêm $employeeId và $logType vào model
+            $this->tourLogModel->updateLog($id, $employeeId, $note, $imagePath, $incident, $logType);
 
             header("Location: index.php?act=tourlog-list&tourID=" . $tourId);
             exit();

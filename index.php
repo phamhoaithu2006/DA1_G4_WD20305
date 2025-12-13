@@ -10,6 +10,8 @@ require_once 'controllers/HDVController.php';
 require_once 'controllers/EmployeeController.php';
 require_once 'controllers/TourAssignmentController.php';
 require_once 'controllers/ReportController.php';
+require_once 'controllers/TourLogController.php';
+require_once 'controllers/FinanceController.php';
 
 // Require Models
 require_once './models/ProductModel.php';
@@ -19,6 +21,9 @@ require_once './models/EmployeeModel.php';
 require_once './models/TourAssignmentModel.php';
 require_once './models/DashboardModel.php';
 require_once './models/ReportModel.php';
+require_once './models/TourLogModel.php';
+require_once './models/FinanceModel.php';
+
 // Khởi tạo
 $act = $_GET['act'] ?? '/';
 $id = $_GET['id'] ?? '';

@@ -15,8 +15,8 @@
                 <div class="col-lg-4">
                     <div class="card border-0 shadow-sm rounded-4 mb-4">
                         <div class="card-body text-center p-5">
-                            <?php 
-                                $avatar = !empty($employee['Avatar']) ? $employee['Avatar'] : 'https://ui-avatars.com/api/?name='.urlencode($employee['FullName']);
+                            <?php
+                            $avatar = !empty($employee['Avatar']) ? $employee['Avatar'] : 'https://ui-avatars.com/api/?name=' . urlencode($employee['FullName']);
                             ?>
                             <img src="<?= $avatar ?>" class="rounded-circle shadow-sm mb-3" width="120" height="120"
                                 style="object-fit: cover;">
@@ -43,7 +43,7 @@
                             <div class="row text-center">
                                 <div class="col border-end">
                                     <h6 class="fw-bold mb-0"><?= $employee['ExperienceYears'] ?? 0 ?></h6>
-                                    <small class="text-muted" style="font-size: 0.7rem;">Năm KN</small>
+                                    <small class="text-muted" style="font-size: 0.7rem;">Năm kinh nghiệm</small>
                                 </div>
                                 <div class="col border-end">
                                     <h6 class="fw-bold mb-0"><?= count($assignedTours) ?></h6>
@@ -102,33 +102,33 @@
                                     </thead>
                                     <tbody>
                                         <?php if (!empty($assignedTours)): ?>
-                                        <?php foreach ($assignedTours as $t): 
+                                            <?php foreach ($assignedTours as $t):
                                                 $isCompleted = date('Y-m-d') > $t['EndDate'];
                                                 $statusClass = $isCompleted ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning-emphasis';
                                                 $statusText = $isCompleted ? 'Hoàn thành' : 'Sắp tới/Đang chạy';
                                             ?>
-                                        <tr>
-                                            <td class="ps-4">
-                                                <span
-                                                    class="fw-bold text-dark d-block"><?= htmlspecialchars($t['TourName']) ?></span>
-                                            </td>
-                                            <td class="small text-muted">
-                                                <?= date('d/m', strtotime($t['StartDate'])) ?> -
-                                                <?= date('d/m/Y', strtotime($t['EndDate'])) ?>
-                                            </td>
-                                            <td class="text-end pe-4">
-                                                <span
-                                                    class="badge rounded-pill <?= $statusClass ?>"><?= $statusText ?></span>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
+                                                <tr>
+                                                    <td class="ps-4">
+                                                        <span
+                                                            class="fw-bold text-dark d-block"><?= htmlspecialchars($t['TourName']) ?></span>
+                                                    </td>
+                                                    <td class="small text-muted">
+                                                        <?= date('d/m', strtotime($t['StartDate'])) ?> -
+                                                        <?= date('d/m/Y', strtotime($t['EndDate'])) ?>
+                                                    </td>
+                                                    <td class="text-end pe-4">
+                                                        <span
+                                                            class="badge rounded-pill <?= $statusClass ?>"><?= $statusText ?></span>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
                                         <?php else: ?>
-                                        <tr>
-                                            <td colspan="3" class="text-center py-5 text-muted">
-                                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                                Chưa có lịch sử dẫn tour.
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td colspan="3" class="text-center py-5 text-muted">
+                                                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                                    Chưa có lịch sử dẫn tour
+                                                </td>
+                                            </tr>
                                         <?php endif; ?>
                                     </tbody>
                                 </table>

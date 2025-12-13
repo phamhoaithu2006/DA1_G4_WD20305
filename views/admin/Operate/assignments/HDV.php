@@ -37,36 +37,36 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if(!empty($data)): ?>
-                            <?php foreach($data as $index => $hdv): ?>
-                            <tr>
-                                <td><?= $index + 1 ?></td>
-                                <td class="fw-bold"><?= htmlspecialchars($hdv['FullName']) ?></td>
-                                <td>
-                                    <div><i class="bi bi-telephone me-1"></i> <?= htmlspecialchars($hdv['Phone']) ?>
-                                    </div>
-                                    <div class="small text-muted"><?= htmlspecialchars($hdv['Email']) ?></div>
-                                </td>
-                                <td><?= isset($hdv['TourName']) ? htmlspecialchars($hdv['TourName']) : '<span class="text-muted">Đang rảnh</span>' ?>
-                                </td>
-                                <td class="small text-muted">
-                                    <?php if(isset($hdv['StartDate'])): ?>
-                                    <?= date('d/m', strtotime($hdv['StartDate'])) ?> -
-                                    <?= date('d/m/Y', strtotime($hdv['EndDate'])) ?>
-                                    <?php else: ?>
-                                    -
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <a href="?act=detailEmployee&id=<?= $hdv['EmployeeID'] ?? 0 ?>"
-                                        class="btn btn-sm btn-outline-info">Chi tiết</a>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
+                            <?php if (!empty($data)): ?>
+                                <?php foreach ($data as $index => $hdv): ?>
+                                    <tr>
+                                        <td><?= $index + 1 ?></td>
+                                        <td class="fw-bold"><?= htmlspecialchars($hdv['FullName']) ?></td>
+                                        <td>
+                                            <div><i class="bi bi-telephone me-1"></i> <?= htmlspecialchars($hdv['Phone']) ?>
+                                            </div>
+                                            <div class="small text-muted"><?= htmlspecialchars($hdv['Email']) ?></div>
+                                        </td>
+                                        <td><?= isset($hdv['TourName']) ? htmlspecialchars($hdv['TourName']) : '<span class="text-muted">Đang rảnh</span>' ?>
+                                        </td>
+                                        <td class="small text-muted">
+                                            <?php if (isset($hdv['StartDate'])): ?>
+                                                <?= date('d/m', strtotime($hdv['StartDate'])) ?> -
+                                                <?= date('d/m/Y', strtotime($hdv['EndDate'])) ?>
+                                            <?php else: ?>
+                                                -
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <a href="?act=detailEmployee&id=<?= $hdv['EmployeeID'] ?? 0 ?>"
+                                                class="btn btn-sm btn-outline-info">Chi tiết</a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             <?php else: ?>
-                            <tr>
-                                <td colspan="6" class="text-center py-4 text-muted">Chưa có dữ liệu HDV</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="6" class="text-center py-4 text-muted">Chưa có dữ liệu Hướng dẫn viên</td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>

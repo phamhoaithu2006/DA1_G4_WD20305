@@ -13,9 +13,9 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold text-dark mb-1">
-                    Chi tiết Tài chính Tour #<?= $tourID ?>
+                    Chi tiết tài chính Tour #<?= $tourID ?>
                 </h2>
-                <p class="text-muted mb-0">Bảng tổng quan doanh thu, chi phí và lợi nhuận của tour.</p>
+                <p class="text-muted mb-0">Bảng tổng quan doanh thu, chi phí và lợi nhuận của Tour</p>
             </div>
 
             <a href="<?= BASE_URL ?>?act=finance-report" class="btn btn-light border shadow-sm">
@@ -31,7 +31,7 @@
 
                     <div class="col-md-6">
                         <div class="card border-0 bg-light rounded-4 p-4 h-100 shadow-sm">
-                            <h6 class="text-secondary text-uppercase small fw-bold mb-2">Doanh Thu</h6>
+                            <h6 class="text-secondary text-uppercase small fw-bold mb-2">Doanh thu</h6>
                             <div class="d-flex align-items-center">
                                 <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center me-3"
                                     style="width: 55px; height: 55px; font-size: 1.4rem;">
@@ -46,7 +46,7 @@
 
                     <div class="col-md-6">
                         <div class="card border-0 bg-light rounded-4 p-4 h-100 shadow-sm">
-                            <h6 class="text-secondary text-uppercase small fw-bold mb-2">Chi Phí</h6>
+                            <h6 class="text-secondary text-uppercase small fw-bold mb-2">Chi phí</h6>
                             <div class="d-flex align-items-center">
                                 <div class="rounded-circle bg-danger-subtle text-danger d-flex align-items-center justify-content-center me-3"
                                     style="width: 55px; height: 55px; font-size: 1.4rem;">
@@ -81,7 +81,7 @@
                             : 'bg-warning-subtle text-warning-emphasis';
                         ?>
                         <div class="card border-0 <?= $percentClass ?> rounded-4 p-4 h-100 shadow-sm">
-                            <h6 class="text-uppercase small fw-bold mb-2">Tỷ Suất Lợi Nhuận</h6>
+                            <h6 class="text-uppercase small fw-bold mb-2">Tỷ suất lợi nhuận</h6>
                             <div class="d-flex align-items-center">
                                 <div class="rounded-circle d-flex align-items-center justify-content-center me-3"
                                     style="width: 55px; height: 55px; font-size: 1.4rem;">

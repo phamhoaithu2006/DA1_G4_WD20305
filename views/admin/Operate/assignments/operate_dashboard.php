@@ -4,45 +4,45 @@
 <?php require_once __DIR__ . '/../../navbar.php'; ?>
 
 <style>
-/* CSS cho Menu dính bên phải */
-.sticky-menu {
-    position: sticky;
-    top: 90px;
-    z-index: 99;
-}
+    /* CSS cho Menu dính bên phải */
+    .sticky-menu {
+        position: sticky;
+        top: 90px;
+        z-index: 99;
+    }
 
-/* Style cho tiêu đề section */
-.section-title {
-    border-left: 4px solid #0d6efd;
-    padding-left: 10px;
-}
+    /* Style cho tiêu đề section */
+    .section-title {
+        border-left: 4px solid #0d6efd;
+        padding-left: 10px;
+    }
 
-/* Scroll margin để không bị Header che khuất khi click menu */
-.scroll-mt {
-    scroll-margin-top: 100px;
-}
+    /* Scroll margin để không bị Header che khuất khi click menu */
+    .scroll-mt {
+        scroll-margin-top: 100px;
+    }
 
-/* Tùy chỉnh Nav Pills bên phải */
-.nav-pills .nav-link {
-    color: #6c757d;
-    font-weight: 500;
-    text-align: left;
-    padding: 8px 15px;
-    border-radius: 8px;
-    margin-bottom: 5px;
-    transition: all 0.2s;
-}
+    /* Tùy chỉnh Nav Pills bên phải */
+    .nav-pills .nav-link {
+        color: #6c757d;
+        font-weight: 500;
+        text-align: left;
+        padding: 8px 15px;
+        border-radius: 8px;
+        margin-bottom: 5px;
+        transition: all 0.2s;
+    }
 
-.nav-pills .nav-link:hover {
-    background-color: #f8f9fa;
-    color: #0d6efd;
-}
+    .nav-pills .nav-link:hover {
+        background-color: #f8f9fa;
+        color: #0d6efd;
+    }
 
-.nav-pills .nav-link.active {
-    background-color: #e8f0fe;
-    color: #0d6efd;
-    font-weight: 700;
-}
+    .nav-pills .nav-link.active {
+        background-color: #e8f0fe;
+        color: #0d6efd;
+        font-weight: 700;
+    }
 </style>
 
 <div class="d-flex admin-layout">
@@ -144,41 +144,42 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if(!empty($assignedStaff)): foreach($assignedStaff as $st): ?>
-                                    <tr>
-                                        <td class="ps-4">
-                                            <span
-                                                class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-3">
-                                                <?= $st['AssignedRole'] ?>
-                                            </span>
-                                        </td>
-                                        <td class="fw-bold text-dark"><?= htmlspecialchars($st['FullName']) ?></td>
-                                        <td>
-                                            <a href="tel:<?= $st['Phone'] ?>"
-                                                class="text-decoration-none text-muted small">
-                                                <i class="bi bi-telephone me-1"></i> <?= $st['Phone'] ?>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <span
-                                                class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
-                                                <i class="bi bi-check-circle-fill me-1"></i> Đã thông báo
-                                            </span>
-                                        </td>
-                                        <td class="text-end pe-4">
-                                            <a href="?act=remove-staff&id=<?= $st['AssignmentID'] ?>"
-                                                class="btn btn-sm btn-outline-danger border-0 rounded-circle"
-                                                onclick="return confirm('Gỡ nhân sự này?')" data-bs-toggle="tooltip"
-                                                title="Gỡ bỏ">
-                                                <i class="bi bi-x-lg"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; else: ?>
-                                    <tr>
-                                        <td colspan="5" class="text-center text-muted py-5 fst-italic">Chưa phân công
-                                            nhân sự nào.</td>
-                                    </tr>
+                                    <?php if (!empty($assignedStaff)): foreach ($assignedStaff as $st): ?>
+                                            <tr>
+                                                <td class="ps-4">
+                                                    <span
+                                                        class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill px-3">
+                                                        <?= $st['AssignedRole'] ?>
+                                                    </span>
+                                                </td>
+                                                <td class="fw-bold text-dark"><?= htmlspecialchars($st['FullName']) ?></td>
+                                                <td>
+                                                    <a href="tel:<?= $st['Phone'] ?>"
+                                                        class="text-decoration-none text-muted small">
+                                                        <i class="bi bi-telephone me-1"></i> <?= $st['Phone'] ?>
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <span
+                                                        class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                                                        <i class="bi bi-check-circle-fill me-1"></i> Đã thông báo
+                                                    </span>
+                                                </td>
+                                                <td class="text-end pe-4">
+                                                    <a href="?act=remove-staff&id=<?= $st['AssignmentID'] ?>"
+                                                        class="btn btn-sm btn-outline-danger border-0 rounded-circle"
+                                                        onclick="return confirm('Gỡ nhân sự này?')" data-bs-toggle="tooltip"
+                                                        title="Gỡ bỏ">
+                                                        <i class="bi bi-x-lg"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach;
+                                    else: ?>
+                                        <tr>
+                                            <td colspan="5" class="text-center text-muted py-5 fst-italic">Chưa phân công
+                                                nhân sự nào</td>
+                                        </tr>
                                     <?php endif; ?>
                                 </tbody>
                             </table>
@@ -201,7 +202,7 @@
                                 <thead class="bg-light">
                                     <tr>
                                         <th class="ps-4 py-3 text-secondary small fw-bold text-uppercase">Ngày dùng</th>
-                                        <th class="py-3 text-secondary small fw-bold text-uppercase">Loại DV</th>
+                                        <th class="py-3 text-secondary small fw-bold text-uppercase">Loại dịch vụ</th>
                                         <th class="py-3 text-secondary small fw-bold text-uppercase">Nhà cung cấp</th>
                                         <th class="py-3 text-secondary small fw-bold text-uppercase">Chi tiết</th>
                                         <th class="py-3 text-secondary small fw-bold text-uppercase">Trạng thái</th>
@@ -210,72 +211,73 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if(!empty($services)): foreach($services as $sv): 
-                                        $statusBadges = [
-                                            0 => '<span class="badge bg-secondary-subtle text-secondary border">Mới tạo</span>',
-                                            1 => '<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">Đã gửi mail</span>',
-                                            2 => '<span class="badge bg-success-subtle text-success border border-success-subtle">Đã xác nhận</span>',
-                                            3 => '<span class="badge bg-danger-subtle text-danger border border-danger-subtle">Đã hủy</span>'
-                                        ];
+                                    <?php if (!empty($services)): foreach ($services as $sv):
+                                            $statusBadges = [
+                                                0 => '<span class="badge bg-secondary-subtle text-secondary border">Mới tạo</span>',
+                                                1 => '<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">Đã gửi mail</span>',
+                                                2 => '<span class="badge bg-success-subtle text-success border border-success-subtle">Đã xác nhận</span>',
+                                                3 => '<span class="badge bg-danger-subtle text-danger border border-danger-subtle">Đã hủy</span>'
+                                            ];
                                     ?>
-                                    <tr>
-                                        <td class="ps-4">
-                                            <?php
-        // Kiểm tra xem key ServiceDate có tồn tại và có dữ liệu không
-        $hasDate = isset($sv['ServiceDate']) && !empty($sv['ServiceDate']);
-    ?>
-                                            <div class="fw-bold text-dark">
-                                                <?= $hasDate ? date('d/m', strtotime($sv['ServiceDate'])) : '--/--' ?>
-                                            </div>
-                                            <small class="text-muted" style="font-size: 0.7rem;">Năm
-                                                <?= $hasDate ? date('Y', strtotime($sv['ServiceDate'])) : '----' ?>
-                                            </small>
-                                        </td>
-                                        <td class="fw-bold text-primary"><?= htmlspecialchars($sv['ServiceType']) ?>
-                                        </td>
-                                        <td>
-                                            <div class="fw-bold text-dark"><?= htmlspecialchars($sv['SupplierName']) ?>
-                                            </div>
-                                            <small class="text-muted"><i class="bi bi-telephone me-1"></i>
-                                                <?= htmlspecialchars($sv['ContactInfo']) ?></small>
-                                        </td>
-                                        <td>
-                                            <div><strong>SL:</strong> <?= $sv['Quantity'] ?></div>
-                                            <small
-                                                class="text-muted fst-italic"><?= htmlspecialchars($sv['Note']) ?></small>
-                                        </td>
-                                        <td><?= $statusBadges[$sv['Status']] ?? '---' ?></td>
-                                        <td class="text-end pe-4">
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-light border dropdown-toggle shadow-sm"
-                                                    type="button" data-bs-toggle="dropdown">
-                                                    Thao tác
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                                    <li><a class="dropdown-item text-warning"
-                                                            href="?act=update-service-status&id=<?= $sv['ServiceID'] ?>&status=1&tour_id=<?= $tour['TourID'] ?>"><i
-                                                                class="bi bi-envelope me-2"></i>Gửi Mail Yêu cầu</a>
-                                                    </li>
-                                                    <li><a class="dropdown-item text-success"
-                                                            href="?act=update-service-status&id=<?= $sv['ServiceID'] ?>&status=2&tour_id=<?= $tour['TourID'] ?>"><i
-                                                                class="bi bi-check-lg me-2"></i>Xác nhận (NCC OK)</a>
-                                                    </li>
-                                                    <li>
-                                                        <hr class="dropdown-divider">
-                                                    </li>
-                                                    <li><a class="dropdown-item text-danger"
-                                                            href="?act=update-service-status&id=<?= $sv['ServiceID'] ?>&status=3&tour_id=<?= $tour['TourID'] ?>"
-                                                            onclick="return confirm('Hủy dịch vụ này?')"><i
-                                                                class="bi bi-trash me-2"></i>Hủy bỏ</a></li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; else: ?>
-                                    <tr>
-                                        <td colspan="6" class="text-center text-muted py-5 fst-italic">Chưa có dịch vụ
-                                            nào được đặt.</td>
-                                    </tr>
+                                            <tr>
+                                                <td class="ps-4">
+                                                    <?php
+                                                    // Kiểm tra xem key ServiceDate có tồn tại và có dữ liệu không
+                                                    $hasDate = isset($sv['ServiceDate']) && !empty($sv['ServiceDate']);
+                                                    ?>
+                                                    <div class="fw-bold text-dark">
+                                                        <?= $hasDate ? date('d/m', strtotime($sv['ServiceDate'])) : '--/--' ?>
+                                                    </div>
+                                                    <small class="text-muted" style="font-size: 0.7rem;">Năm
+                                                        <?= $hasDate ? date('Y', strtotime($sv['ServiceDate'])) : '----' ?>
+                                                    </small>
+                                                </td>
+                                                <td class="fw-bold text-primary"><?= htmlspecialchars($sv['ServiceType']) ?>
+                                                </td>
+                                                <td>
+                                                    <div class="fw-bold text-dark"><?= htmlspecialchars($sv['SupplierName']) ?>
+                                                    </div>
+                                                    <small class="text-muted"><i class="bi bi-telephone me-1"></i>
+                                                        <?= htmlspecialchars($sv['ContactInfo']) ?></small>
+                                                </td>
+                                                <td>
+                                                    <div><strong>SL:</strong> <?= $sv['Quantity'] ?></div>
+                                                    <small
+                                                        class="text-muted fst-italic"><?= htmlspecialchars($sv['Note']) ?></small>
+                                                </td>
+                                                <td><?= $statusBadges[$sv['Status']] ?? '---' ?></td>
+                                                <td class="text-end pe-4">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-sm btn-light border dropdown-toggle shadow-sm"
+                                                            type="button" data-bs-toggle="dropdown">
+                                                            Thao tác
+                                                        </button>
+                                                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                                            <li><a class="dropdown-item text-warning"
+                                                                    href="?act=update-service-status&id=<?= $sv['ServiceID'] ?>&status=1&tour_id=<?= $tour['TourID'] ?>"><i
+                                                                        class="bi bi-envelope me-2"></i>Gửi Mail yêu cầu</a>
+                                                            </li>
+                                                            <li><a class="dropdown-item text-success"
+                                                                    href="?act=update-service-status&id=<?= $sv['ServiceID'] ?>&status=2&tour_id=<?= $tour['TourID'] ?>"><i
+                                                                        class="bi bi-check-lg me-2"></i>Xác nhận (Ok)</a>
+                                                            </li>
+                                                            <li>
+                                                                <hr class="dropdown-divider">
+                                                            </li>
+                                                            <li><a class="dropdown-item text-danger"
+                                                                    href="?act=update-service-status&id=<?= $sv['ServiceID'] ?>&status=3&tour_id=<?= $tour['TourID'] ?>"
+                                                                    onclick="return confirm('Hủy dịch vụ này?')"><i
+                                                                        class="bi bi-trash me-2"></i>Hủy bỏ</a></li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach;
+                                    else: ?>
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted py-5 fst-italic">Chưa có dịch vụ
+                                                nào được đặt.</td>
+                                        </tr>
                                     <?php endif; ?>
                                 </tbody>
                             </table>
@@ -321,7 +323,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label fw-bold small text-uppercase text-secondary">Chọn Vai trò</label>
+                    <label class="form-label fw-bold small text-uppercase text-secondary">Chọn vai trò</label>
                     <select name="role" class="form-select shadow-sm" id="roleSelect" onchange="filterStaff()">
                         <option value="Hướng dẫn viên">Hướng dẫn viên</option>
                         <option value="Tài xế">Tài xế</option>
@@ -329,21 +331,21 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label fw-bold small text-uppercase text-secondary">Chọn Nhân viên (Đang
+                    <label class="form-label fw-bold small text-uppercase text-secondary">Chọn nhân viên (Đang
                         rảnh)</label>
                     <select name="employee_id" class="form-select shadow-sm" id="staffSelect">
                         <option value="">-- Chọn nhân viên --</option>
-                        <?php foreach($availableGuides as $g): ?>
-                        <option value="<?= $g['EmployeeID'] ?>" class="staff-option role-hdv"><?= $g['FullName'] ?>
-                            (HDV)</option>
+                        <?php foreach ($availableGuides as $g): ?>
+                            <option value="<?= $g['EmployeeID'] ?>" class="staff-option role-hdv"><?= $g['FullName'] ?>
+                                (HDV)</option>
                         <?php endforeach; ?>
-                        <?php foreach($availableDrivers as $d): ?>
-                        <option value="<?= $d['EmployeeID'] ?>" class="staff-option role-driver d-none">
-                            <?= $d['FullName'] ?> (Tài xế)</option>
+                        <?php foreach ($availableDrivers as $d): ?>
+                            <option value="<?= $d['EmployeeID'] ?>" class="staff-option role-driver d-none">
+                                <?= $d['FullName'] ?> (Tài xế)</option>
                         <?php endforeach; ?>
-                        <?php foreach($availableOps as $o): ?>
-                        <option value="<?= $o['EmployeeID'] ?>" class="staff-option role-ops d-none">
-                            <?= $o['FullName'] ?> (Điều hành)</option>
+                        <?php foreach ($availableOps as $o): ?>
+                            <option value="<?= $o['EmployeeID'] ?>" class="staff-option role-ops d-none">
+                                <?= $o['FullName'] ?> (Điều hành)</option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -361,7 +363,7 @@
         <form class="modal-content" action="?act=add-service" method="POST">
             <input type="hidden" name="tour_id" value="<?= $tour['TourID'] ?>">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title fw-bold">Đặt Dịch vụ Tour</h5>
+                <h5 class="modal-title fw-bold">Đặt dịch vụ Tour</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
@@ -385,8 +387,8 @@
                         <label class="form-label fw-bold small text-uppercase text-secondary">Nhà cung cấp</label>
                         <select name="supplier_id" class="form-select shadow-sm">
                             <option value="">-- Chọn NCC --</option>
-                            <?php foreach($suppliers as $s): ?>
-                            <option value="<?= $s['SupplierID'] ?>"><?= $s['SupplierName'] ?></option>
+                            <?php foreach ($suppliers as $s): ?>
+                                <option value="<?= $s['SupplierID'] ?>"><?= $s['SupplierName'] ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -399,7 +401,7 @@
                         <input type="number" name="price" class="form-control shadow-sm" placeholder="VNĐ">
                     </div>
                     <div class="col-12">
-                        <label class="form-label fw-bold small text-uppercase text-secondary">Ghi chú / Yêu cầu</label>
+                        <label class="form-label fw-bold small text-uppercase text-secondary">Ghi chú/Yêu cầu</label>
                         <textarea name="note" class="form-control shadow-sm" rows="3"
                             placeholder="VD: Phòng Twin, View biển..."></textarea>
                     </div>
@@ -415,31 +417,31 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// 1. Kích hoạt ScrollSpy
-document.addEventListener("DOMContentLoaded", function() {
-    var scrollSpy = new bootstrap.ScrollSpy(document.body, {
-        target: '#ops-scrollspy',
-        offset: 120
+    // 1. Kích hoạt ScrollSpy
+    document.addEventListener("DOMContentLoaded", function() {
+        var scrollSpy = new bootstrap.ScrollSpy(document.body, {
+            target: '#ops-scrollspy',
+            offset: 120
+        });
+
+        // Kích hoạt Tooltip
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
     });
 
-    // Kích hoạt Tooltip
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    })
-});
+    // 2. Script lọc nhân viên
+    function filterStaff() {
+        const role = document.getElementById('roleSelect').value;
+        const options = document.querySelectorAll('.staff-option');
+        options.forEach(opt => opt.classList.add('d-none'));
 
-// 2. Script lọc nhân viên
-function filterStaff() {
-    const role = document.getElementById('roleSelect').value;
-    const options = document.querySelectorAll('.staff-option');
-    options.forEach(opt => opt.classList.add('d-none'));
+        if (role === 'Hướng dẫn viên') document.querySelectorAll('.role-hdv').forEach(el => el.classList.remove('d-none'));
+        if (role === 'Tài xế') document.querySelectorAll('.role-driver').forEach(el => el.classList.remove('d-none'));
+        if (role === 'Nhân viên điều hành') document.querySelectorAll('.role-ops').forEach(el => el.classList.remove(
+            'd-none'));
 
-    if (role === 'Hướng dẫn viên') document.querySelectorAll('.role-hdv').forEach(el => el.classList.remove('d-none'));
-    if (role === 'Tài xế') document.querySelectorAll('.role-driver').forEach(el => el.classList.remove('d-none'));
-    if (role === 'Nhân viên điều hành') document.querySelectorAll('.role-ops').forEach(el => el.classList.remove(
-        'd-none'));
-
-    document.getElementById('staffSelect').value = "";
-}
+        document.getElementById('staffSelect').value = "";
+    }
 </script>

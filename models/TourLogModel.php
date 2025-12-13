@@ -8,6 +8,7 @@ class TourLogModel
     public function __construct()
     {
         // Sử dụng hàm connectDB() từ commons/function.php
+        // GIẢ ĐỊNH: connectDB() trả về đối tượng PDO
         $this->conn = connectDB();
     }
 
@@ -28,17 +29,18 @@ class TourLogModel
     // Lấy chi tiết 1 Log để sửa
     public function getLogById($logId)
     {
+        // Vẫn giữ nguyên, không cần sửa
         $sql = "SELECT * FROM tourlog WHERE LogID = :logId";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute([':logId' => $logId]);
         return $stmt->fetch();
     }
 
-    // Thêm mới Log
-    public function insertLog($tourId, $employeeId, $note, $image, $incident)
+    // Thêm mới Log - ĐÃ CẬP NHẬT: Thêm $employeeId và $logType
+    public function insertLog($tourId, $employeeId, $note, $image, $incident, $logType)
     {
-        $sql = "INSERT INTO tourlog (TourID, EmployeeID, Note, Images, Incident, LogDate) 
-                VALUES (:tourId, :employeeId, :note, :image, :incident, NOW())";
+        $sql = "INSERT INTO tourlog (TourID, EmployeeID, Note, Images, Incident, LogType, LogDate) 
+                VALUES (:tourId, :employeeId, :note, :image, :incident, :logType, NOW())";
 
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([
@@ -46,29 +48,41 @@ class TourLogModel
             ':employeeId' => $employeeId,
             ':note' => $note,
             ':image' => $image,
-            ':incident' => $incident
+            ':incident' => $incident,
+            ':logType' => $logType // THÊM MỚI
         ]);
     }
 
-    // Cập nhật Log
-    public function updateLog($logId, $note, $image, $incident)
+    // Cập nhật Log - ĐÃ CẬP NHẬT: Thêm $employeeId và $logType
+    public function updateLog($logId, $employeeId, $note, $image, $incident, $logType)
     {
-        // Nếu có ảnh mới thì update cả ảnh, không thì giữ nguyên
+        $baseSql = "UPDATE tourlog SET 
+                        EmployeeID = :employeeId, 
+                        Note = :note, 
+                        Incident = :incident, 
+                        LogType = :logType 
+                    WHERE LogID = :logId";
+
+        $params = [
+            ':employeeId' => $employeeId, // THÊM MỚI
+            ':note' => $note,
+            ':incident' => $incident,
+            ':logType' => $logType,       // THÊM MỚI
+            ':logId' => $logId
+        ];
+
+        // Nếu có ảnh mới thì update thêm trường Images
         if ($image !== null) {
-            $sql = "UPDATE tourlog SET Note = :note, Images = :image, Incident = :incident WHERE LogID = :logId";
-            $params = [
-                ':note' => $note,
-                ':image' => $image,
-                ':incident' => $incident,
-                ':logId' => $logId
-            ];
+            $sql = "UPDATE tourlog SET 
+                        EmployeeID = :employeeId, 
+                        Note = :note, 
+                        Images = :image, 
+                        Incident = :incident, 
+                        LogType = :logType 
+                    WHERE LogID = :logId";
+            $params[':image'] = $image;
         } else {
-            $sql = "UPDATE tourlog SET Note = :note, Incident = :incident WHERE LogID = :logId";
-            $params = [
-                ':note' => $note,
-                ':incident' => $incident,
-                ':logId' => $logId
-            ];
+            $sql = $baseSql;
         }
 
         $stmt = $this->conn->prepare($sql);
