@@ -2,28 +2,6 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-// Giả lập dữ liệu để test giao diện (bạn có thể xóa đoạn này khi chạy thực tế)
-if (!isset($tours)) {
-    $tours = [
-        [
-            'TourID' => 'T001',
-            'TourName' => 'Hành trình di sản Miền Trung: Đà Nẵng - Hội An - Huế',
-            'StartDate' => '2025-06-15',
-            'EndDate' => '2025-06-19',
-            'CategoryName' => 'Du lịch Biển',
-            'SupplierName' => 'Sun World Travel',
-        ],
-        [
-            'TourID' => 'T002',
-            'TourName' => 'Khám phá Tây Bắc mùa lúa chín',
-            'StartDate' => '2025-09-10',
-            'EndDate' => '2025-09-14',
-            'CategoryName' => 'Du lịch Núi',
-            'SupplierName' => 'Hà Giang Loop',
-        ]
-    ];
-}
-$hdvName = $_SESSION['hdv_name'] ?? 'Minh Tuấn';
 ?>
 
 <!doctype html>
