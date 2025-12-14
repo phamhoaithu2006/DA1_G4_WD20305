@@ -256,7 +256,7 @@ $hdvName = $_SESSION['hdv_name'] ?? 'Minh Tuấn';
                 <div class="hero-card p-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
                     <div>
                         <h2 class="fw-bold mb-1 text-dark">Xin chào, <?= htmlspecialchars($hdvName) ?>! 👋</h2>
-                        <p class="text-muted mb-0">Chúc bạn có những chuyến đi thượng lộ bình an và đầy niềm vui.</p>
+                        <p class="text-muted mb-0">Chúc bạn có những chuyến đi thượng lộ bình an và đầy niềm vui!</p>
                     </div>
                     <div class="d-flex gap-3">
                         <div class="text-center px-4 py-2 bg-light rounded-4">
@@ -265,7 +265,7 @@ $hdvName = $_SESSION['hdv_name'] ?? 'Minh Tuấn';
                         </div>
                         <div class="text-center px-4 py-2 bg-light rounded-4">
                             <div class="h4 fw-bold text-success mb-0">0</div>
-                            <small class="text-muted fw-bold" style="font-size: 0.7rem;">ĐANG CHẠY</small>
+                            <small class="text-muted fw-bold" style="font-size: 0.7rem;">TOUR ĐANG CHẠY</small>
                         </div>
                     </div>
                 </div>
