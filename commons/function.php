@@ -23,6 +23,75 @@ function connectDB()
     }
 }
 
+// =================================================================
+// BỔ SUNG CÁC HÀM HELPER CHO PDO (Để tránh lỗi "Call to undefined function")
+// =================================================================
+
+// 1. Hàm thực thi câu lệnh (INSERT, UPDATE, DELETE)
+function pdo_execute($sql) {
+    $sql_args = array_slice(func_get_args(), 1);
+    try {
+        $conn = connectDB();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($sql_args);
+        return true;
+    } catch (PDOException $e) {
+        throw $e;
+    } finally {
+        unset($conn);
+    }
+}
+
+// 2. Hàm truy vấn nhiều dòng (SELECT returning all)
+function pdo_query($sql) {
+    $sql_args = array_slice(func_get_args(), 1);
+    try {
+        $conn = connectDB();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($sql_args);
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        throw $e;
+    } finally {
+        unset($conn);
+    }
+}
+
+// 3. Hàm truy vấn 1 dòng (SELECT returning one)
+function pdo_query_one($sql) {
+    $sql_args = array_slice(func_get_args(), 1);
+    try {
+        $conn = connectDB();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($sql_args);
+        return $stmt->fetch();
+    } catch (PDOException $e) {
+        throw $e;
+    } finally {
+        unset($conn);
+    }
+}
+
+// 4. Hàm lấy 1 giá trị duy nhất (VD: đếm số dòng, lấy tên...)
+function pdo_query_value($sql) {
+    $sql_args = array_slice(func_get_args(), 1);
+    try {
+        $conn = connectDB();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($sql_args);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return array_values($row)[0];
+    } catch (PDOException $e) {
+        throw $e;
+    } finally {
+        unset($conn);
+    }
+}
+
+// =================================================================
+// CÁC HÀM XỬ LÝ FILE
+// =================================================================
+
 function uploadFile($file, $folderSave)
 {
     $file_upload = $file;

@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../main.php'; ?>
+<?php require_once __DIR__ . '/main.php'; ?>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -10,7 +10,7 @@
         <div class="text-center text-white">
             <h1>Chào mừng đến với hệ thống quản lý tour</h1>
             <p class="lead">Nền tảng giúp quản lý tour du lịch dễ dàng, nhanh chóng và hiệu quả</p>
-            <a href="?act=dashboard" class="btn btn-primary btn-lg mt-3">Bắt đầu ngay</a>
+            <a href="?act=hdv-login" class="btn btn-primary btn-lg mt-3">Bắt đầu ngay</a>
         </div>
     </div>
 
@@ -41,7 +41,7 @@
                     </div>
                     <h5 class="fw-bold mt-2">Quản lý tour</h5>
                     <p class="text-muted">Danh mục và thông tin chi tiết</p>
-                    <a href="?act=category" class="btn btn-outline-primary mt-3">Xem thêm</a>
+                    <a href="#" class="btn btn-outline-primary mt-3">Xem thêm</a>
                 </div>
             </div>
 
@@ -53,7 +53,7 @@
                     </div>
                     <h5 class="fw-bold mt-2">Quản lý nhân sự</h5>
                     <p class="text-muted">Lịch làm việc và thông tin khách hàng</p>
-                    <a href="?act=employees" class="btn btn-outline-success mt-3">Xem thêm</a>
+                    <a href="#" class="btn btn-outline-success mt-3">Xem thêm</a>
                 </div>
             </div>
 

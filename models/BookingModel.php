@@ -109,4 +109,51 @@ class BookingModel {
         $stmt->execute([':tourId' => $tourId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    // [MỚI] Kiểm tra chỗ trống của Tour
+    public function checkAvailability($tourId, $requestedSlots) {
+        // 1. Lấy MaxSlots của Tour
+        $stmt = $this->db->prepare("SELECT MaxSlots, TourName FROM Tour WHERE TourID = :id");
+        $stmt->execute([':id' => $tourId]);
+        $tour = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$tour) return ['status' => false, 'message' => 'Tour không tồn tại'];
+
+        $maxSlots = intval($tour['MaxSlots']);
+
+        // 2. Tính tổng số khách đã đặt (trừ những đơn đã hủy)
+        // Lưu ý: Tính tổng dựa trên số lượng khách trong bảng Booking hoặc đếm TourCustomer
+        // Ở đây giả sử mỗi Booking có trường TotalPeople hoặc ta đếm trong TourCustomer
+        // Cách tốt nhất là đếm trong TourCustomer nếu bạn lưu đủ danh sách, 
+        // hoặc nếu Booking chỉ lưu số lượng tổng thì cần thêm cột NumPeople vào bảng Booking. 
+        // Dưới đây mình dùng cách đếm TourCustomer (chính xác nhất theo code hiện tại).
+        
+        $sqlCount = "SELECT COUNT(*) as BookedCount 
+                     FROM Booking b
+                     JOIN TourCustomer tc ON b.TourID = tc.TourID AND b.CustomerID = tc.CustomerID
+                     WHERE b.TourID = :id AND b.Status != 'Đã hủy'";
+        
+        // *Tạm thời* để đơn giản, ta sẽ query bảng Booking nếu bạn chưa lưu đủ khách vào TourCustomer
+        // Nếu bạn muốn chuẩn, hãy thêm cột `NumPeople` vào bảng `Booking`.
+        // Dưới đây là logic giả định ta lấy tổng số người từ các booking đã có:
+        
+        // QUERY CHECK TỔNG SỐ KHÁCH ĐÃ ĐẶT (Cần đảm bảo logic đếm đúng)
+        // Cách đơn giản: Đếm số lượng record trong bảng TourCustomer của tour này (đã loại bỏ đơn hủy)
+        $sqlCheck = "SELECT COUNT(*) FROM TourCustomer tc 
+                     JOIN Booking b ON tc.TourID = b.TourID AND tc.CustomerID = b.CustomerID
+                     WHERE tc.TourID = :id AND b.Status != 'Đã hủy'";
+        $stmtCheck = $this->db->prepare($sqlCheck);
+        $stmtCheck->execute([':id' => $tourId]);
+        $bookedSlots = $stmtCheck->fetchColumn();
+
+        $remaining = $maxSlots - $bookedSlots;
+
+        if ($requestedSlots > $remaining) {
+            return [
+                'status' => false, 
+                'message' => "Tour '{$tour['TourName']}' chỉ còn trống $remaining chỗ (Yêu cầu: $requestedSlots)."
+            ];
+        }
+
+        return ['status' => true];
+    }
 }

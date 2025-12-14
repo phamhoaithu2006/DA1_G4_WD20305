@@ -38,16 +38,20 @@ class DashboardModel {
 
     // 5 booking gần đây
     public function getRecentBookings($limit = 5) {
-        $stmt = $this->conn->prepare("
-            SELECT b.BookingID, b.BookingDate, b.TotalAmount, b.Status,
-                   c.FullName AS CustomerName,
-                   t.TourName
-            FROM Booking b
-            LEFT JOIN Customer c ON b.CustomerID = c.CustomerID
-            LEFT JOIN Tour t ON b.TourID = t.TourID
-            ORDER BY b.BookingDate DESC
-            LIMIT :limit
-        ");
+        // Thêm t.Image vào dòng SELECT dưới đây
+       $sql = "
+        SELECT b.BookingID, b.BookingDate, b.TotalAmount, b.Status,
+               c.FullName AS CustomerName,
+               t.TourName,
+               t.Image  -- <--- BẠN ĐÃ CÓ DÒNG NÀY CHƯA?
+        FROM Booking b
+        LEFT JOIN Customer c ON b.CustomerID = c.CustomerID
+        LEFT JOIN Tour t ON b.TourID = t.TourID
+        ORDER BY b.BookingDate DESC
+        LIMIT :limit
+    ";
+
+        $stmt = $this->conn->prepare($sql);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

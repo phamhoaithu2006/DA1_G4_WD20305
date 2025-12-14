@@ -3,137 +3,176 @@
 
 <?php require_once __DIR__ . '/../../navbar.php'; ?>
 
-<div class="d-flex admin-layout">
-
-    <!-- Sidebar -->
-    <div class="sidebar-wrapper">
+<div class="d-flex admin-layout" style="min-height: 100vh;">
+    <div class="sidebar-wrapper bg-white shadow-sm border-end" style="width: 280px; flex-shrink: 0;">
         <?php require_once __DIR__ . '/../../sidebar.php'; ?>
     </div>
 
-    <!-- Content -->
-    <div class="admin-content flex-grow-1 p-4">
-        <div class="container mt-4">
-            <h2 class="text-primary mb-3"><?= isset($employee) ? 'Sửa' : 'Thêm' ?> nhân sự</h2>
-            <form method="post">
-                <div class="mb-3">
-                    <label class="form-label">Họ tên</label>
-                    <input type="text" name="name" class="form-control" value="<?= $employee['FullName'] ?? '' ?>"
-                        required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Chức vụ</label>
-                    <input type="text" name="role" class="form-control" value="<?= $employee['Role'] ?? '' ?>">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Số điện thoại</label>
-                    <input type="text" name="phone" class="form-control" value="<?= $employee['Phone'] ?? '' ?>">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" value="<?= $employee['Email'] ?? '' ?>">
-                </div>
-                <button type="submit" class="btn btn-success"><?= isset($employee) ? 'Cập nhật' : 'Thêm' ?></button>
-                <a href="index.php?action=employees" class="btn btn-secondary">Quay lại</a>
-            </form>
+    <div class="admin-content flex-grow-1 p-4 bg-light">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">Cập nhật hồ sơ nhân sự</h2>
+                <p class="text-muted mb-0">Chỉnh sửa thông tin Hướng dẫn viên, Tài xế hoặc Điều hành viên</p>
+            </div>
+            <a href="index.php?act=employees" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Quay lại
+            </a>
         </div>
 
-        <style>
-        /* STT column */
-        .stt-col {
-            text-align: center;
-            font-weight: 600;
-            width: 60px;
-        }
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<?= $employee['EmployeeID'] ?? '' ?>">
 
-        /* Bảng tổng thể */
-        .table-responsive {
-            border-radius: 12px;
-            padding: 25px;
-            background: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <label for="avatarUpload" class="d-block cursor-pointer">
+                                    <?php
+                                    // Kiểm tra nếu có ảnh cũ thì hiển thị, không thì hiện placeholder
+                                    $currentAvatar = !empty($employee['Avatar']) ? $employee['Avatar'] : 'https://via.placeholder.com/150';
+                                    ?>
+                                    <img src="<?= $currentAvatar ?>" id="avatarPreview"
+                                        class="rounded-circle shadow-sm border"
+                                        style="width: 150px; height: 150px; object-fit: cover;">
 
-        table.table-hover {
-            border-collapse: separate;
-            border-spacing: 0 10px;
-        }
+                                    <div class="mt-2 text-primary small fw-bold">
+                                        <i class="bi bi-camera"></i> Thay đổi ảnh
+                                    </div>
+                                </label>
+                                <input type="file" name="avatar" id="avatarUpload" class="d-none" accept="image/*"
+                                    onchange="previewImage(this)">
+                                <input type="hidden" name="old_avatar" value="<?= $employee['Avatar'] ?? '' ?>">
+                            </div>
+                            <h6 class="text-muted"><?= htmlspecialchars($employee['FullName'] ?? 'Nhân sự') ?></h6>
+                        </div>
+                    </div>
 
-        table.table-hover thead tr {
-            border-radius: 12px;
-        }
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h6 class="fw-bold text-primary"><i class="bi bi-shield-lock me-2"></i>Thông tin liên hệ
+                            </h6>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <label class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control" required
+                                    value="<?= htmlspecialchars($employee['Email'] ?? '') ?>"
+                                    placeholder="name@company.com">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="text" name="phone" class="form-control" required
+                                    value="<?= htmlspecialchars($employee['Phone'] ?? '') ?>" placeholder="09xxxxxxxx">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ngày sinh</label>
+                                <input type="date" name="dob" class="form-control"
+                                    value="<?= $employee['DateOfBirth'] ?? '' ?>">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        table.table-hover thead th {
-            background-color: #f1f5f9;
-            color: #212529;
-            font-weight: 600;
-            border-bottom: none;
-            text-align: center;
-        }
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h5 class="fw-bold text-dark"><i class="bi bi-person-badge me-2"></i>Hồ sơ chuyên môn</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Họ và tên <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="name" class="form-control" required
+                                        value="<?= htmlspecialchars($employee['FullName'] ?? '') ?>"
+                                        placeholder="Nguyễn Văn A">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Vai trò <span class="text-danger">*</span></label>
+                                    <select name="role" class="form-select">
+                                        <?php
+                                        $roles = ['Hướng dẫn viên', 'Tài xế', 'Nhân viên điều hành', 'Quản lý'];
+                                        $currentRole = $employee['Role'] ?? '';
+                                        foreach ($roles as $role):
+                                        ?>
+                                            <option value="<?= $role ?>" <?= $currentRole == $role ? 'selected' : '' ?>>
+                                                <?= $role ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
 
-        table.table-hover tbody tr {
-            background: #ffffff;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-        }
+                                <div class="col-md-6">
+                                    <label class="form-label">Phân loại/Chuyên môn</label>
+                                    <select name="type" class="form-select">
+                                        <?php
+                                        $types = [
+                                            'Nội địa' => 'Chuyên Tour Nội địa',
+                                            'Quốc tế (Inbound)' => 'Chuyên Tour Quốc tế (Inbound)',
+                                            'Quốc tế (Outbound)' => 'Chuyên Tour Quốc tế (Outbound)',
+                                            'Chuyên khách đoàn' => 'Chuyên Tour Khách đoàn',
+                                            'Freelancer' => 'Cộng tác viên (Freelancer)'
+                                        ];
+                                        $currentType = $employee['Type'] ?? '';
+                                        foreach ($types as $value => $label):
+                                        ?>
+                                            <option value="<?= $value ?>" <?= $currentType == $value ? 'selected' : '' ?>>
+                                                <?= $label ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Kinh nghiệm (Năm)</label>
+                                    <input type="number" name="exp" class="form-control" min="0"
+                                        value="<?= $employee['ExperienceYears'] ?? 0 ?>">
+                                </div>
 
-        table.table-hover tbody tr:hover {
-            background: #e1f0ff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-        }
+                                <div class="col-12">
+                                    <label class="form-label">Ngôn ngữ thành thạo</label>
+                                    <input type="text" name="langs" class="form-control"
+                                        value="<?= htmlspecialchars($employee['Languages'] ?? '') ?>"
+                                        placeholder="VD: Tiếng Anh, Tiếng Trung, Tiếng Pháp">
+                                </div>
 
-        table.table-hover tbody td {
-            vertical-align: middle;
-            text-align: center;
-        }
+                                <div class="col-12">
+                                    <label class="form-label">Chứng chỉ / Bằng cấp</label>
+                                    <textarea name="certs" class="form-control" rows="2"
+                                        placeholder="VD: Thẻ Hướng dẫn viên Quốc tế số..."><?= htmlspecialchars($employee['Certificates'] ?? '') ?></textarea>
+                                </div>
 
-        table.table-hover tbody td:first-child,
-        table.table-hover thead th:first-child {
-            text-align: center;
-        }
+                                <div class="col-12">
+                                    <label class="form-label">Tình trạng sức khỏe / Lưu ý</label>
+                                    <textarea name="health" class="form-control" rows="2"
+                                        placeholder="Tốt hoặc các lưu ý đặc biệt..."><?= htmlspecialchars($employee['HealthStatus'] ?? '') ?></textarea>
+                                </div>
+                            </div>
 
-        /* Buttons style */
-        .btn-sm {
-            font-size: 0.8rem;
-            padding: 0.35rem 0.6rem;
-            border-radius: 6px;
-        }
+                            <hr class="my-4">
 
-        .btn-warning i {
-            margin-right: 2px;
-        }
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="reset" class="btn btn-light">Khôi phục</button>
+                                <button type="submit" name="btn_update" class="btn btn-primary px-4 fw-bold">
+                                    <i class="bi bi-check-circle me-1"></i> Cập nhật hồ sơ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-        .btn-info i {
-            margin-right: 2px;
-        }
-
-        .btn-danger i {
-            margin-right: 2px;
-        }
-
-        /* Heading */
-        h2 {
-            font-weight: 700;
-            color: #0d6efd;
-            display: flex;
-            align-items: center;
-        }
-
-        h2 i {
-            margin-right: 8px;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .table-responsive {
-                padding: 15px;
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
             }
-
-            .stt-col {
-                width: 40px;
-            }
+            reader.readAsDataURL(input.files[0]);
         }
-        </style>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    }
+</script>
