@@ -539,15 +539,19 @@ class HDVController
             exit;
         }
 
-        // Duyệt từng khách HDV nhập phòng
-        foreach ($_POST['room'] as $customerId => $roomNumber) {
-            if ($roomNumber !== "") {
-                assignRoom($tourId, $customerId, $roomNumber);
+        $updated = 0;
+        if (isset($_POST['room']) && is_array($_POST['room'])) {
+            foreach ($_POST['room'] as $customerId => $roomNumber) {
+                $roomNumber = is_string($roomNumber) ? trim($roomNumber) : $roomNumber;
+                $value = ($roomNumber === '' ? null : $roomNumber);
+                if (assignRoom($tourId, $customerId, $value)) {
+                    $updated++;
+                }
             }
         }
 
-        $_SESSION['hdv_success'] = "Phân phòng thành công!";
-        header("Location: ?act=hdv-room&id=" . $tourId);
+        $_SESSION['hdv_success'] = $updated > 0 ? "Cập nhật phân phòng: {$updated} khách." : "Không có thay đổi được lưu.";
+        header("Location: ?act=hdv-tour-detail&id=" . $tourId);
         exit;
     }
 

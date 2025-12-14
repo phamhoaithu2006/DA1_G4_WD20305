@@ -200,10 +200,10 @@
                                         <button class="btn-close" data-bs-dismiss="modal"></button>
                                     </div>
 
-                                    <form method="POST" action="?act=hdv-tour-detail">
+                                    <form method="POST" action="?act=hdv-special-request-save&id=<?= $tour['TourID'] ?>">
                                         <div class="modal-body">
 
-                                            <input type="hidden" name="CustomerID" value="<?= $c['CustomerID'] ?>">
+                                        <input type="hidden" name="customer_id" value="<?= $c['CustomerID'] ?>">
 
                                             <label class="form-label mt-2">Họ tên</label>
                                             <input type="text" name="FullName" class="form-control"
@@ -216,12 +216,14 @@
                                             <label class="form-label mt-3">Phòng</label>
                                             <input type="text" name="RoomNumber" class="form-control"
                                                 value="<?= htmlspecialchars($c['RoomNumber'] ?? '') ?>">
+                                                
 
                                             <label class="form-label mt-3">Yêu cầu khác</label>
-                                            <textarea name="OtherRequests" class="form-control"><?= htmlspecialchars($c['OtherRequests'] ?? '') ?></textarea>
+                                            <textarea name="other_requests" class="form-control"><?= htmlspecialchars($c['OtherRequests'] ?? '') ?></textarea>
 
                                             <label class="form-label mt-3">Ghi chú</label>
-                                            <textarea name="SpecialRequests" class="form-control"><?= htmlspecialchars($c['SpecialRequests'] ?? '') ?></textarea>
+                                            <textarea name="note" class="form-control"><?= htmlspecialchars($c['SpecialRequests'] ?? '') ?></textarea>
+
 
                                         </div>
 
@@ -240,7 +242,7 @@
 
                     <tr>
                         <td colspan="5" class="text-center py-5 text-muted">
-                            Không có khách hàng nào.
+                            Không có khách hàng nào
                         </td>
                     </tr>
 

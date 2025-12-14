@@ -9,24 +9,6 @@ $tourId = $_GET['id'] ?? null;
 $error = $_SESSION['hdv_error'] ?? null;
 $success = $_SESSION['hdv_success'] ?? null;
 unset($_SESSION['hdv_error'], $_SESSION['hdv_success']);
-
-// MOCK DATA (Xóa khi chạy thật)
-if (!isset($checkinHistory)) {
-    $checkinHistory = [
-        [
-            'Type' => 'checkout',
-            'Location' => 'Sân bay Đà Nẵng',
-            'Note' => 'Khách quên mũ, đã quay lại lấy',
-            'CreatedAt' => '2025-06-15 10:30:00'
-        ],
-        [
-            'Type' => 'checkin',
-            'Location' => 'Sân bay Đà Nẵng',
-            'Note' => 'Đón đoàn đủ 20 pax',
-            'CreatedAt' => '2025-06-15 08:00:00'
-        ]
-    ];
-}
 ?>
 
 <!doctype html>
@@ -44,173 +26,173 @@ if (!isset($checkinHistory)) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
     <style>
-    :root {
-        --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --danger-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
-        /* Soft Red */
-        --danger-solid: #e11d48;
-        --glass-bg: rgba(255, 255, 255, 0.95);
-        --bg-color: #f3f4f6;
-        --text-main: #1f2937;
-    }
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --danger-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            /* Soft Red */
+            --danger-solid: #e11d48;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --bg-color: #f3f4f6;
+            --text-main: #1f2937;
+        }
 
-    body {
-        background-color: var(--bg-color);
-        background-image:
-            radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
-            radial-gradient(at 50% 100%, hsla(225, 39%, 30%, 1) 0, transparent 50%);
-        background-repeat: no-repeat;
-        background-size: 100% 400px;
-        background-attachment: fixed;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        padding-top: 80px;
-        color: var(--text-main);
-        padding-bottom: 40px;
-    }
+        body {
+            background-color: var(--bg-color);
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 100%, hsla(225, 39%, 30%, 1) 0, transparent 50%);
+            background-repeat: no-repeat;
+            background-size: 100% 400px;
+            background-attachment: fixed;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding-top: 80px;
+            color: var(--text-main);
+            padding-bottom: 40px;
+        }
 
-    /* Navbar Glass */
-    .navbar-glass {
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-        height: 65px;
-    }
+        /* Navbar Glass */
+        .navbar-glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            height: 65px;
+        }
 
-    /* Tabs Styling */
-    .nav-pills-custom {
-        background: #fff;
-        padding: 6px;
-        border-radius: 50px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-        margin-bottom: 20px;
-        display: flex;
-    }
+        /* Tabs Styling */
+        .nav-pills-custom {
+            background: #fff;
+            padding: 6px;
+            border-radius: 50px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            display: flex;
+        }
 
-    .nav-pills-custom .nav-link {
-        flex: 1;
-        border-radius: 50px;
-        color: #64748b;
-        font-weight: 600;
-        padding: 10px;
-        transition: all 0.3s;
-    }
+        .nav-pills-custom .nav-link {
+            flex: 1;
+            border-radius: 50px;
+            color: #64748b;
+            font-weight: 600;
+            padding: 10px;
+            transition: all 0.3s;
+        }
 
-    .nav-pills-custom .nav-link.active {
-        color: #fff;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+        .nav-pills-custom .nav-link.active {
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-    .nav-pills-custom .nav-link.active#tab-checkin {
-        background: var(--primary-gradient);
-    }
+        .nav-pills-custom .nav-link.active#tab-checkin {
+            background: var(--primary-gradient);
+        }
 
-    .nav-pills-custom .nav-link.active#tab-checkout {
-        background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
-    }
+        .nav-pills-custom .nav-link.active#tab-checkout {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+        }
 
-    /* Card Form */
-    .glass-card {
-        background: #fff;
-        border-radius: 24px;
-        box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-        padding: 24px;
-        border: none;
-        overflow: hidden;
-        position: relative;
-    }
+        /* Card Form */
+        .glass-card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
+            padding: 24px;
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
 
-    .form-control-custom {
-        border: 1px solid #e2e8f0;
-        background-color: #f8fafc;
-        border-radius: 12px;
-        padding: 14px;
-        font-size: 1rem;
-    }
+        .form-control-custom {
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 1rem;
+        }
 
-    .form-control-custom:focus {
-        background-color: #fff;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        border-color: #6366f1;
-    }
+        .form-control-custom:focus {
+            background-color: #fff;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            border-color: #6366f1;
+        }
 
-    /* Buttons */
-    .btn-checkin {
-        background: var(--primary-gradient);
-        border: none;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-    }
+        /* Buttons */
+        .btn-checkin {
+            background: var(--primary-gradient);
+            border: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
 
-    .btn-checkout {
-        background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
-        border: none;
-        box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
-    }
+        .btn-checkout {
+            background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+        }
 
-    .btn-action {
-        width: 100%;
-        padding: 14px;
-        border-radius: 12px;
-        color: white;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        transition: transform 0.2s;
-    }
+        .btn-action {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s;
+        }
 
-    .btn-action:active {
-        transform: scale(0.98);
-    }
+        .btn-action:active {
+            transform: scale(0.98);
+        }
 
-    /* Timeline Styling */
-    .timeline-container {
-        position: relative;
-        padding-left: 20px;
-    }
+        /* Timeline Styling */
+        .timeline-container {
+            position: relative;
+            padding-left: 20px;
+        }
 
-    .timeline-line {
-        position: absolute;
-        left: 9px;
-        top: 10px;
-        bottom: 30px;
-        width: 2px;
-        background: #e2e8f0;
-    }
+        .timeline-line {
+            position: absolute;
+            left: 9px;
+            top: 10px;
+            bottom: 30px;
+            width: 2px;
+            background: #e2e8f0;
+        }
 
-    .timeline-item {
-        position: relative;
-        padding-left: 30px;
-        padding-bottom: 25px;
-    }
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            padding-bottom: 25px;
+        }
 
-    .timeline-dot {
-        position: absolute;
-        left: 0;
-        top: 2px;
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        border: 3px solid #fff;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        z-index: 2;
-    }
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 2px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
 
-    .dot-in {
-        background: #6366f1;
-    }
+        .dot-in {
+            background: #6366f1;
+        }
 
-    .dot-out {
-        background: #e11d48;
-    }
+        .dot-out {
+            background: #e11d48;
+        }
 
-    .time-badge {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: #94a3b8;
-        margin-bottom: 4px;
-    }
+        .time-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 
@@ -224,7 +206,7 @@ if (!isset($checkinHistory)) {
                 <i class="bi bi-arrow-left text-dark fs-5"></i>
             </a>
             <div class="flex-grow-1 text-center">
-                <div class="fw-bold fs-6">Check-in / Check-out</div>
+                <div class="fw-bold fs-6">Check-in/Check-out</div>
                 <div class="small text-muted" style="font-size: 0.75rem;">Quản lý điểm đến</div>
             </div>
             <div style="width: 40px;"></div>
@@ -234,19 +216,19 @@ if (!isset($checkinHistory)) {
     <div class="container" style="max-width: 600px;">
 
         <?php if ($error): ?>
-        <div
-            class="alert alert-danger rounded-4 border-0 shadow-sm mb-4 d-flex align-items-center animate__animated animate__shakeX">
-            <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
-            <div><?= htmlspecialchars($error) ?></div>
-        </div>
+            <div
+                class="alert alert-danger rounded-4 border-0 shadow-sm mb-4 d-flex align-items-center animate__animated animate__shakeX">
+                <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+                <div><?= htmlspecialchars($error) ?></div>
+            </div>
         <?php endif; ?>
 
         <?php if ($success): ?>
-        <div
-            class="alert alert-success rounded-4 border-0 shadow-sm mb-4 d-flex align-items-center animate__animated animate__fadeInDown">
-            <i class="bi bi-check-circle-fill fs-5 me-2"></i>
-            <div><?= htmlspecialchars($success) ?></div>
-        </div>
+            <div
+                class="alert alert-success rounded-4 border-0 shadow-sm mb-4 d-flex align-items-center animate__animated animate__fadeInDown">
+                <i class="bi bi-check-circle-fill fs-5 me-2"></i>
+                <div><?= htmlspecialchars($success) ?></div>
+            </div>
         <?php endif; ?>
 
         <ul class="nav nav-pills nav-pills-custom" id="pills-tab" role="tablist">
@@ -274,7 +256,7 @@ if (!isset($checkinHistory)) {
                                 <i class="bi bi-geo-alt-fill fs-1"></i>
                             </div>
                             <h5 class="fw-bold text-primary">Đến điểm tham quan</h5>
-                            <p class="text-muted small">Xác nhận đoàn đã đến địa điểm an toàn.</p>
+                            <p class="text-muted small">Xác nhận đoàn đã đến địa điểm an toàn</p>
                         </div>
 
                         <div class="mb-3">
@@ -304,7 +286,7 @@ if (!isset($checkinHistory)) {
                                 <i class="bi bi-box-arrow-right fs-1"></i>
                             </div>
                             <h5 class="fw-bold text-danger">Rời địa điểm</h5>
-                            <p class="text-muted small">Xác nhận đoàn rời đi, kiểm tra hành lý.</p>
+                            <p class="text-muted small">Xác nhận đoàn rời đi, kiểm tra hành lý</p>
                         </div>
 
                         <div class="mb-3">
@@ -328,74 +310,74 @@ if (!isset($checkinHistory)) {
         </div>
 
         <?php if (!empty($checkinHistory)): ?>
-        <div class="mt-5">
-            <h6 class="fw-bold text-secondary text-uppercase mb-4 ps-2 border-start border-4 border-primary">
-                Hoạt động gần đây
-            </h6>
+            <div class="mt-5">
+                <h6 class="fw-bold text-secondary text-uppercase mb-4 ps-2 border-start border-4 border-primary">
+                    Hoạt động gần đây
+                </h6>
 
-            <div class="glass-card p-0">
-                <div class="p-4 timeline-container">
-                    <div class="timeline-line"></div>
+                <div class="glass-card p-0">
+                    <div class="p-4 timeline-container">
+                        <div class="timeline-line"></div>
 
-                    <?php foreach ($checkinHistory as $row): 
-                        // Logic tách chuỗi cũ (giữ nguyên)
-                        $locVal = $row['Location'] ?? null;
-                        $noteVal = $row['Note'] ?? '';
-                        if ($locVal === null && !empty($row['Note'])) {
-                            $parts = explode('|', $row['Note']);
-                            if (strpos($parts[0], 'Địa điểm:') === 0) {
-                                $locVal = trim(substr($parts[0], strlen('Địa điểm:')));
-                                $noteVal = isset($parts[1]) ? trim($parts[1]) : '';
+                        <?php foreach ($checkinHistory as $row):
+                            // Logic tách chuỗi cũ (giữ nguyên)
+                            $locVal = $row['Location'] ?? null;
+                            $noteVal = $row['Note'] ?? '';
+                            if ($locVal === null && !empty($row['Note'])) {
+                                $parts = explode('|', $row['Note']);
+                                if (strpos($parts[0], 'Địa điểm:') === 0) {
+                                    $locVal = trim(substr($parts[0], strlen('Địa điểm:')));
+                                    $noteVal = isset($parts[1]) ? trim($parts[1]) : '';
+                                }
                             }
-                        }
-                        
-                        $isCheckin = ($row['Type'] === 'checkin');
-                        $icon = $isCheckin ? 'bi-geo-alt-fill' : 'bi-box-arrow-right';
-                        $colorClass = $isCheckin ? 'text-primary' : 'text-danger';
-                        $dotClass = $isCheckin ? 'dot-in' : 'dot-out';
-                        $title = $isCheckin ? 'Đã đến' : 'Đã rời';
-                    ?>
 
-                    <div class="timeline-item">
-                        <div class="timeline-dot <?= $dotClass ?>"></div>
+                            $isCheckin = ($row['Type'] === 'checkin');
+                            $icon = $isCheckin ? 'bi-geo-alt-fill' : 'bi-box-arrow-right';
+                            $colorClass = $isCheckin ? 'text-primary' : 'text-danger';
+                            $dotClass = $isCheckin ? 'dot-in' : 'dot-out';
+                            $title = $isCheckin ? 'Đã đến' : 'Đã rời';
+                        ?>
 
-                        <div class="d-flex justify-content-between align-items-center mb-1">
-                            <div class="time-badge"><i
-                                    class="bi bi-clock me-1"></i><?= date('H:i d/m', strtotime($row['CreatedAt'])) ?>
+                            <div class="timeline-item">
+                                <div class="timeline-dot <?= $dotClass ?>"></div>
+
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <div class="time-badge"><i
+                                            class="bi bi-clock me-1"></i><?= date('H:i d/m', strtotime($row['CreatedAt'])) ?>
+                                    </div>
+                                </div>
+
+                                <div class="fw-bold <?= $colorClass ?>" style="font-size: 1.05rem;">
+                                    <?= $title ?>: <?= htmlspecialchars($locVal ?? '---') ?>
+                                </div>
+
+                                <?php if ($noteVal): ?>
+                                    <div
+                                        class="mt-2 bg-light p-2 rounded-3 text-secondary small d-inline-block border border-light-subtle">
+                                        <i class="bi bi-chat-square-text me-1 opacity-50"></i> <?= htmlspecialchars($noteVal) ?>
+                                    </div>
+                                <?php endif; ?>
                             </div>
-                        </div>
-
-                        <div class="fw-bold <?= $colorClass ?>" style="font-size: 1.05rem;">
-                            <?= $title ?>: <?= htmlspecialchars($locVal ?? '---') ?>
-                        </div>
-
-                        <?php if($noteVal): ?>
-                        <div
-                            class="mt-2 bg-light p-2 rounded-3 text-secondary small d-inline-block border border-light-subtle">
-                            <i class="bi bi-chat-square-text me-1 opacity-50"></i> <?= htmlspecialchars($noteVal) ?>
-                        </div>
-                        <?php endif; ?>
+                        <?php endforeach; ?>
                     </div>
-                    <?php endforeach; ?>
                 </div>
             </div>
-        </div>
         <?php endif; ?>
 
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    // Optional: Auto focus input when tab changes
-    const triggerTabList = document.querySelectorAll('#pills-tab button')
-    triggerTabList.forEach(triggerEl => {
-        const tabTrigger = new bootstrap.Tab(triggerEl)
-        triggerEl.addEventListener('shown.bs.tab', event => {
-            const targetId = event.target.getAttribute('data-bs-target');
-            const input = document.querySelector(targetId + ' input[type="text"]');
-            if (input) input.focus();
+        // Optional: Auto focus input when tab changes
+        const triggerTabList = document.querySelectorAll('#pills-tab button')
+        triggerTabList.forEach(triggerEl => {
+            const tabTrigger = new bootstrap.Tab(triggerEl)
+            triggerEl.addEventListener('shown.bs.tab', event => {
+                const targetId = event.target.getAttribute('data-bs-target');
+                const input = document.querySelector(targetId + ' input[type="text"]');
+                if (input) input.focus();
+            })
         })
-    })
     </script>
 </body>
 

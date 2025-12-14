@@ -267,6 +267,8 @@ if (session_status() == PHP_SESSION_NONE) {
     </nav>
 
     <div class="container pb-5">
+        <?php $activeTab = isset($_GET['tab']) ? $_GET['tab'] : 'info'; ?>
+
 
         <?php if (!empty($_SESSION['hdv_success'])): ?>
             <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
@@ -286,17 +288,17 @@ if (session_status() == PHP_SESSION_NONE) {
 
         <ul class="nav nav-pills shadow-sm" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active w-100" data-bs-toggle="pill" data-bs-target="#pills-info">
+                <button class="nav-link w-100 <?php echo $activeTab === 'info' ? 'active' : ''; ?>" data-bs-toggle="pill" data-bs-target="#pills-info">
                     Thông tin
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link w-100" data-bs-toggle="pill" data-bs-target="#pills-customers">
+                <button class="nav-link w-100 <?php echo $activeTab === 'customers' ? 'active' : ''; ?>" data-bs-toggle="pill" data-bs-target="#pills-customers">
                     Khách (<?= count($customers ?? []) ?>)
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link w-100" data-bs-toggle="pill" data-bs-target="#pills-logs">
+                <button class="nav-link w-100 <?php echo $activeTab === 'logs' ? 'active' : ''; ?>" data-bs-toggle="pill" data-bs-target="#pills-logs">
                     Nhật ký
                 </button>
             </li>
@@ -307,7 +309,7 @@ if (session_status() == PHP_SESSION_NONE) {
             <div class="tab-pane fade show active" id="pills-info">
                 <div class="glass-card p-4">
                     <div class="mb-3">
-                        <h6 class="text-uppercase small text-muted">Thông tin tour đã tham gia</h6>
+                        <h6 class="text-uppercase small text-muted">Thông tin Tour đã tham gia</h6>
                     </div>
                     <div class="d-flex justify-content-between align-items-start mb-4">
                         <span class="badge rounded-pill px-3 py-2" style="background: #e9d8fd; color: #553c9a;">
@@ -424,7 +426,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                                     </div>
                                                 </div>
                                                 <div class="text-end">
-                                                    <small class="d-block text-muted" style="font-size: 0.7rem;">PHÒNG</small>
+                                                    <small class="d-block text-muted" style="font-size: 0.7rem;">Phòng</small>
                                                     <span class="fw-bold text-primary d-none"><?= htmlspecialchars($c['RoomNumber'] ?? '-') ?></span>
                                                 </div>
                                             </div>
@@ -433,7 +435,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                 else: ?>
                                     <div class="p-5 text-center text-muted">
                                         <i class="bi bi-people display-4 opacity-25"></i>
-                                        <p class="mt-2">Chưa có dữ liệu khách hàng.</p>
+                                        <p class="mt-2">Chưa có dữ liệu khách hàng</p>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -478,7 +480,7 @@ if (session_status() == PHP_SESSION_NONE) {
                                                 </form>
                                             <?php endif; ?>
                                             <div class="text-end">
-                                                <small class="d-block text-muted" style="font-size: 0.7rem;">PHÒNG</small>
+                                                <small class="d-block text-muted" style="font-size: 0.7rem;">Phòng</small>
                                                 <span class="fw-bold text-primary"><?= htmlspecialchars($c['RoomNumber'] ?? '-') ?></span>
                                             </div>
                                         </div>
@@ -487,7 +489,7 @@ if (session_status() == PHP_SESSION_NONE) {
                             else: ?>
                                 <div class="p-5 text-center text-muted">
                                     <i class="bi bi-people display-4 opacity-25"></i>
-                                    <p class="mt-2">Chưa có dữ liệu khách hàng.</p>
+                                    <p class="mt-2">Chưa có dữ liệu khách hàng</p>
                                 </div>
                             <?php endif; ?>
                         </div>

@@ -22,7 +22,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '';
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Đăng nhập Hệ thống Quản lý</title>
+    <title>ĐĂNG NHẬP HỆ THỐNG QUẢN LÝ</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -148,11 +148,11 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '';
                                     <form class="user" method="POST" action="?act=hdv-check-login">
                                         <div class="mb-3">
                                             <input type="email" class="form-control" name="email"
-                                                placeholder="Nhập địa chỉ Email..." required autofocus>
+                                                placeholder="Nhập Email" required autofocus>
                                         </div>
                                         <div class="mb-4">
                                             <input type="password" class="form-control" name="password"
-                                                placeholder="Mật khẩu" required>
+                                                placeholder="Nhập Mật khẩu" required>
                                         </div>
 
                                         <button type="submit" class="btn btn-primary w-100 d-block shadow-sm">
@@ -167,7 +167,7 @@ $baseUrl = defined('BASE_URL') ? BASE_URL : '';
                                     </div>
                                     <div class="text-center mt-2">
                                         <small class="text-muted" style="font-size: 0.75rem;">
-                                            &copy; 2025 Hệ thống Quản lý Tour Du lịch
+                                            &copy; 2025 Hệ thống quản lý Tour du lịch
                                         </small>
                                     </div>
                                 </div>

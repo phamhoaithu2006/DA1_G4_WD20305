@@ -63,7 +63,20 @@ function getCustomersInTour($tourId)
 
     $stmt = $conn->prepare($sql);
     $stmt->execute(['tid' => $tourId]);
-    return $stmt->fetchAll();
+    $rows = $stmt->fetchAll();
+
+    foreach ($rows as &$r) {
+        $checked = 0;
+        if (!empty($r['Note'])) {
+            $note = json_decode($r['Note'], true);
+            if (is_array($note) && isset($note['attendance']) && isset($note['attendance']['checked'])) {
+                $checked = (int)$note['attendance']['checked'] === 1 ? 1 : 0;
+            }
+        }
+        $r['AttendanceChecked'] = $checked;
+    }
+
+    return $rows;
 }
 
 // Lấy nhật ký tour
