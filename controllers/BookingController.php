@@ -1,4 +1,13 @@
 <?php
+// Điểm danh bên tour bên hdv
+// Nạp thêm thông tin
+// Thêm Lịch trình chi tiết bên Quản lý tour
+//Lịch trình chi tiết qua từng tour
+//lỗi trùng lặp khách hàng
+//Quản lý nhân sự tour đã hoàn thành, đang hoàn thành, sắp hoàn thành
+//danh sách tour nạp thêm dữ liệu phần mô tả
+//Sử lý booking theo người 1<
+//Làm phần login
 class BookingController
 {
     private $bookingModel;
@@ -22,38 +31,55 @@ class BookingController
     }
 
     // Form tạo booking (GET) và xử lý tạo (POST)
-    public function create()
+   public function create()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                // Lấy đầu vào
+                $tourId = intval($_POST['tour_id']);
+                $numPeople = intval($_POST['num_people'] ?? 1);
+
+                // 1. Lấy thông tin Tour để kiểm tra
+                // [MỚI] Thêm lấy StartDate để kiểm tra hạn
+                $stmt = $this->db->prepare("SELECT TourName, Price, MaxSlots, StartDate FROM Tour WHERE TourID = :id");
+                $stmt->execute([':id' => $tourId]);
+                $tour = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if (!$tour) {
+                    throw new Exception('Tour không tồn tại.');
+                }
+
+                // 2. [MỚI] KIỂM TRA HẠN ĐẶT TOUR (BACKEND VALIDATION)
+                $today = date('Y-m-d');
+                if ($tour['StartDate'] < $today) {
+                    throw new Exception("Tour '{$tour['TourName']}' đã khởi hành ngày " . date('d/m/Y', strtotime($tour['StartDate'])) . ". Không thể đặt chỗ.");
+                }
+
+                // 3. KIỂM TRA CHỖ TRỐNG
+                $availability = $this->bookingModel->checkAvailability($tourId, $numPeople);
+                if (!$availability['status']) {
+                    throw new Exception($availability['message']);
+                }
+
+                // 4. Xử lý thông tin người đặt
                 $isExistingCustomer = !empty($_POST['customer_id']);
                 if ($isExistingCustomer) {
                     $customerId = intval($_POST['customer_id']);
                 } else {
-                    // tạo customer mới
                     $custData = [
                         'FullName' => trim($_POST['fullname']),
-                        'Email' => trim($_POST['email'] ?? ''),
-                        'Phone' => trim($_POST['phone'] ?? ''),
-                        'Address' => trim($_POST['address'] ?? '')
+                        'Email'    => trim($_POST['email'] ?? ''),
+                        'Phone'    => trim($_POST['phone'] ?? ''),
+                        'Address'  => trim($_POST['address'] ?? '')
                     ];
-                    // Validation tối thiểu
-                    if (empty($custData['FullName'])) throw new Exception('Chưa nhập tên khách.');
+                    if (empty($custData['FullName'])) throw new Exception('Chưa nhập tên người đại diện.');
                     $customerId = $this->bookingModel->createCustomer($custData);
                 }
 
-                $tourId = intval($_POST['tour_id']);
-                $numPeople = intval($_POST['num_people'] ?? 1);
-                // Lấy giá tour (nếu muốn tự tính TotalAmount)
-                $stmt = $this->db->prepare("SELECT Price FROM Tour WHERE TourID = :id");
-                $stmt->execute([':id' => $tourId]);
-                $tour = $stmt->fetch(PDO::FETCH_ASSOC);
-                $price = $tour ? floatval($tour['Price']) : 0.0;
+                // 5. Tính tiền
+                $price = floatval($tour['Price']);
+                $totalAmount = $price * $numPeople;
 
-                $totalAmount = $price * max(1, $numPeople);
-
-                // Chuẩn bị bookingData
+                // 6. Chuẩn bị dữ liệu Booking
                 $bookingData = [
                     'CustomerID' => $customerId,
                     'TourID' => $tourId,
@@ -62,44 +88,67 @@ class BookingController
                     'TotalAmount' => $totalAmount
                 ];
 
-                // Nếu là đoàn: có thể có danh sách khách khác (ví dụ từ form JSON hoặc nhiều input)
+                // 7. Xử lý danh sách đoàn
                 $tourCustomers = [];
-                if (!empty($_POST['group_members'])) {
-                    // Giả sử group_members gửi lên là JSON array [{FullName, Phone, Email, RoomNumber, Note}, ...]
-                    $members = json_decode($_POST['group_members'], true);
-                    foreach ($members as $m) {
-                        // Tạo customer cho từng thành viên (hoặc nếu chỉ lưu thông tin tạm, có thể reuse)
-                        $memberCustId = $this->bookingModel->createCustomer([
-                            'FullName' => $m['FullName'],
-                            'Email' => $m['Email'] ?? null,
-                            'Phone' => $m['Phone'] ?? null,
-                            'Address' => $m['Address'] ?? null
-                        ]);
-                        $tourCustomers[] = [
-                            'CustomerID' => $memberCustId,
-                            'RoomNumber' => $m['RoomNumber'] ?? null,
-                            'Note' => $m['Note'] ?? null
-                        ];
+                $tourCustomers[] = [
+                    'CustomerID' => $customerId,
+                    'RoomNumber' => 'Chưa xếp',
+                    'Note' => 'Trưởng đoàn'
+                ];
+
+                if (!empty($_POST['group_members_json'])) {
+                    $members = json_decode($_POST['group_members_json'], true);
+                    if (is_array($members)) {
+                        foreach ($members as $m) {
+                            $memCustId = $this->bookingModel->createCustomer([
+                                'FullName' => $m['name'],
+                                'Phone'    => $m['phone'] ?? '',
+                                'Email'    => '',
+                                'Address'  => ''
+                            ]);
+                            
+                            $tourCustomers[] = [
+                                'CustomerID' => $memCustId,
+                                'RoomNumber' => 'Chưa xếp',
+                                'Note'       => $m['note'] ?? ''
+                            ];
+                        }
                     }
                 }
 
                 $bookingId = $this->bookingModel->createBooking($bookingData, $tourCustomers);
 
-                // Redirect hoặc hiển thị thành công
                 header("Location: " . BASE_URL . "?act=booking-detail&id=" . $bookingId);
                 exit;
+
             } catch (Exception $e) {
                 $error = $e->getMessage();
-                // Load lại view create với $error
+                
+                // [MỚI] Load lại danh sách tour (Chỉ lấy tour chưa khởi hành)
+                $sql = "SELECT TourID, TourName, Price, MaxSlots 
+                        FROM Tour 
+                        WHERE StartDate >= CURRENT_DATE 
+                        ORDER BY StartDate ASC";
+                $tours = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+                
                 require 'views/admin/Booking/create.php';
             }
         } else {
-            // GET: show form, cần list Tour để select
-            $tours = $this->db->query("SELECT TourID, TourName, Price FROM Tour")->fetchAll(PDO::FETCH_ASSOC);
+            // GET: Hiển thị form
+            // [MỚI] CHỈ LẤY CÁC TOUR CÓ NGÀY KHỞI HÀNH >= HÔM NAY
+            $sql = "SELECT TourID, TourName, Price, MaxSlots 
+                    FROM Tour 
+                    WHERE StartDate >= CURRENT_DATE 
+                    ORDER BY StartDate ASC";
+                    
+            $tours = $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Xử lý biến $selectedTour để tránh lỗi Undefined
+            $selectedTour = $_GET['tour_id'] ?? '';
+            
             require 'views/admin/Booking/create.php';
         }
     }
-
     // Xem chi tiết booking
     public function detail()
     {

@@ -4,136 +4,145 @@
 <?php require_once __DIR__ . '/../../navbar.php'; ?>
 
 <div class="d-flex admin-layout">
-
-    <!-- Sidebar -->
-    <div class="sidebar-wrapper">
+    <div class="sidebar-wrapper bg-white shadow-sm border-end">
         <?php require_once __DIR__ . '/../../sidebar.php'; ?>
     </div>
 
-    <!-- Content -->
     <div class="admin-content flex-grow-1 p-4">
-        <div class="container mt-4">
-            <h2 class="text-primary mb-3"><?= isset($employee) ? 'Sửa' : 'Thêm' ?> nhân sự</h2>
-            <form method="post">
-                <div class="mb-3">
-                    <label class="form-label">Họ tên</label>
-                    <input type="text" name="name" class="form-control" value="<?= $employee['FullName'] ?? '' ?>"
-                        required>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Chức vụ</label>
-                    <input type="text" name="role" class="form-control" value="<?= $employee['Role'] ?? '' ?>">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Số điện thoại</label>
-                    <input type="text" name="phone" class="form-control" value="<?= $employee['Phone'] ?? '' ?>">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" value="<?= $employee['Email'] ?? '' ?>">
-                </div>
-                <button type="submit" class="btn btn-success"><?= isset($employee) ? 'Cập nhật' : 'Thêm' ?></button>
-                <a href="index.php?action=employees" class="btn btn-secondary">Quay lại</a>
-            </form>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold text-dark mb-1">Thêm nhân sự mới</h2>
+                <p class="text-muted mb-0">Tạo hồ sơ Hướng dẫn viên, Tài xế hoặc Điều hành viên</p>
+            </div>
+            <a href="index.php?act=employees" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left me-1"></i> Quay lại
+            </a>
         </div>
 
-        <style>
-        /* STT column */
-        .stt-col {
-            text-align: center;
-            font-weight: 600;
-            width: 60px;
-        }
+        <form method="post" enctype="multipart/form-data">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-3">
+                                <label for="avatarUpload" class="d-block cursor-pointer">
+                                    <img src="https://via.placeholder.com/150" id="avatarPreview"
+                                        class="rounded-circle shadow-sm border"
+                                        style="width: 150px; height: 150px; object-fit: cover;">
+                                    <div class="mt-2 text-primary small fw-bold"><i class="bi bi-camera"></i> Tải ảnh
+                                        lên</div>
+                                </label>
+                                <input type="file" name="avatar" id="avatarUpload" class="d-none" accept="image/*"
+                                    onchange="previewImage(this)">
+                            </div>
+                            <h6 class="text-muted">Ảnh đại diện</h6>
+                        </div>
+                    </div>
 
-        /* Bảng tổng thể */
-        .table-responsive {
-            border-radius: 12px;
-            padding: 25px;
-            background: #fff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h6 class="fw-bold text-primary"><i class="bi bi-shield-lock me-2"></i>Thông tin liên hệ
+                            </h6>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="mb-3">
+                                <label class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control" required
+                                    placeholder="name@company.com">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Số điện thoại <span class="text-danger">*</span></label>
+                                <input type="text" name="phone" class="form-control" required placeholder="09xxxxxxxx">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ngày sinh</label>
+                                <input type="date" name="dob" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-        table.table-hover {
-            border-collapse: separate;
-            border-spacing: 0 10px;
-        }
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-white border-0 pt-4 px-4">
+                            <h5 class="fw-bold text-dark"><i class="bi bi-person-badge me-2"></i>Hồ sơ chuyên môn</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Họ và tên <span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" name="name" class="form-control" required
+                                        placeholder="Nguyễn Văn A">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Vai trò <span class="text-danger">*</span></label>
+                                    <select name="role" class="form-select">
+                                        <option value="Hướng dẫn viên">Hướng dẫn viên (Tour guide)</option>
+                                        <option value="Tài xế">Tài xế (Driver)</option>
+                                        <option value="Nhân viên điều hành">Điều hành (Operator)</option>
+                                        <option value="Quản lý">Quản lý (Manager)</option>
+                                    </select>
+                                </div>
 
-        table.table-hover thead tr {
-            border-radius: 12px;
-        }
+                                <div class="col-md-6">
+                                    <label class="form-label">Phân loại/Chuyên môn</label>
+                                    <select name="type" class="form-select">
+                                        <option value="Nội địa">Chuyên Tour Nội địa</option>
+                                        <option value="Quốc tế (Inbound)">Chuyên Tour Quốc tế (Inbound)</option>
+                                        <option value="Quốc tế (Outbound)">Chuyên Tour Quốc tế (Outbound)</option>
+                                        <option value="Chuyên khách đoàn">Chuyên Tour Khách đoàn</option>
+                                        <option value="Freelancer">Cộng tác viên (Freelancer)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Kinh nghiệm (Năm)</label>
+                                    <input type="number" name="exp" class="form-control" value="0" min="0">
+                                </div>
 
-        table.table-hover thead th {
-            background-color: #f1f5f9;
-            color: #212529;
-            font-weight: 600;
-            border-bottom: none;
-            text-align: center;
-        }
+                                <div class="col-12">
+                                    <label class="form-label">Ngôn ngữ thành thạo</label>
+                                    <input type="text" name="langs" class="form-control"
+                                        placeholder="VD: Tiếng Anh, Tiếng Trung, Tiếng Pháp">
+                                </div>
 
-        table.table-hover tbody tr {
-            background: #ffffff;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
-        }
+                                <div class="col-12">
+                                    <label class="form-label">Chứng chỉ/Bằng cấp</label>
+                                    <textarea name="certs" class="form-control" rows="2"
+                                        placeholder="VD: Thẻ Hướng dẫn viên Quốc tế số, chứng chỉ sơ cấp cứu..."></textarea>
+                                </div>
 
-        table.table-hover tbody tr:hover {
-            background: #e1f0ff;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-        }
+                                <div class="col-12">
+                                    <label class="form-label">Tình trạng sức khỏe/Lưu ý</label>
+                                    <textarea name="health" class="form-control" rows="2"
+                                        placeholder="Tốt hoặc các lưu ý đặc biệt (say xe, dị ứng...)"></textarea>
+                                </div>
+                            </div>
 
-        table.table-hover tbody td {
-            vertical-align: middle;
-            text-align: center;
-        }
+                            <hr class="my-4">
 
-        table.table-hover tbody td:first-child,
-        table.table-hover thead th:first-child {
-            text-align: center;
-        }
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="reset" class="btn btn-light">Làm mới</button>
+                                <button type="submit" class="btn btn-primary px-4 fw-bold">
+                                    <i class="bi bi-save me-1"></i> Lưu hồ sơ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
-        /* Buttons style */
-        .btn-sm {
-            font-size: 0.8rem;
-            padding: 0.35rem 0.6rem;
-            border-radius: 6px;
-        }
-
-        .btn-warning i {
-            margin-right: 2px;
-        }
-
-        .btn-info i {
-            margin-right: 2px;
-        }
-
-        .btn-danger i {
-            margin-right: 2px;
-        }
-
-        /* Heading */
-        h2 {
-            font-weight: 700;
-            color: #0d6efd;
-            display: flex;
-            align-items: center;
-        }
-
-        h2 i {
-            margin-right: 8px;
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .table-responsive {
-                padding: 15px;
+<script>
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('avatarPreview').src = e.target.result;
             }
-
-            .stt-col {
-                width: 40px;
-            }
+            reader.readAsDataURL(input.files[0]);
         }
-        </style>
-
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    }
+</script>

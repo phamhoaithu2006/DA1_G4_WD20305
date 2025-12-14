@@ -2,11 +2,13 @@
 // models/HDVModel.php
 // Model xử lý dữ liệu cho HDV
 
-// Kết nối DB
 require_once './commons/env.php';
 require_once './commons/function.php';
 
-// Sử dụng PDO (connectDB() trả về PDO)
+// =================================================================
+// 1. AUTH & GENERAL TOUR INFO
+// =================================================================
+
 // Lấy nhân viên theo email
 function getEmployeeByEmail($email)
 {
@@ -18,7 +20,6 @@ function getEmployeeByEmail($email)
 }
 
 // Lấy các tour được phân công cho HDV
-// Trả về mảng các hàng (array)
 function getAssignedTours($employeeId)
 {
     $conn = connectDB();
@@ -51,8 +52,11 @@ function getTourDetailById($tourId)
     return $stmt->fetch();
 }
 
-// Lấy danh sách khách trong tour
-// Trả về mảng
+// =================================================================
+// 2. CUSTOMER MANAGEMENT (Xử lý Khách hàng & JSON Data)
+// =================================================================
+
+// Lấy danh sách khách trong tour (Logic cơ bản)
 function getCustomersInTour($tourId)
 {
     $conn = connectDB();
@@ -87,130 +91,119 @@ function getCustomersInTour($tourId)
     return $rows;
 }
 
-// Lấy nhật ký tour
-// Trả về mảng
+// Gán phòng (Nhập tay nhanh)
+function assignRoom($tourId, $customerId, $roomNumber)
+{
+    $conn = connectDB();
+    $sql = "UPDATE TourCustomer SET RoomNumber = :room WHERE TourID = :tid AND CustomerID = :cid";
+    $stmt = $conn->prepare($sql);
+    return $stmt->execute([
+        'room' => $roomNumber,
+        'tid' => $tourId,
+        'cid' => $customerId
+    ]);
+}
+
+// Lấy danh sách phòng
+function getRoomsOfTour($tourId)
+{
+    $conn = connectDB();
+    $sql = "SELECT CustomerID, RoomNumber FROM TourCustomer WHERE TourID = :tid AND RoomNumber IS NOT NULL AND TRIM(RoomNumber) <> ''";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute(['tid' => $tourId]);
+    $rows = $stmt->fetchAll();
+
+    $rooms = [];
+    foreach ($rows as $r) {
+        $room = $r['RoomNumber'];
+        if (!isset($rooms[$room])) $rooms[$room] = [];
+        $rooms[$room][] = $r['CustomerID'];
+    }
+    return $rooms;
+}
+
+// =================================================================
+// 3. TOUR LOGS (Nhật ký hành trình)
+// =================================================================
+
 function getTourLogs($tourId)
 {
     $conn = connectDB();
+    ensureTourLogOptionalColumns();
 
     ensureTourLogOptionalColumns();
 
     // Kiểm tra xem các cột Images và Incident có tồn tại không
     try {
         $checkSql = "SHOW COLUMNS FROM TourLog LIKE 'Images'";
-        $checkStmt = $conn->query($checkSql);
-        $hasImages = $checkStmt->rowCount() > 0;
-
+        $hasImages = $conn->query($checkSql)->rowCount() > 0;
         $checkSql2 = "SHOW COLUMNS FROM TourLog LIKE 'Incident'";
-        $checkStmt2 = $conn->query($checkSql2);
-        $hasIncident = $checkStmt2->rowCount() > 0;
+        $hasIncident = $conn->query($checkSql2)->rowCount() > 0;
     } catch (Exception $e) {
-        // Nếu không kiểm tra được, giả sử không có
-        $hasImages = false;
-        $hasIncident = false;
+        $hasImages = false; $hasIncident = false;
     }
 
-    // Xây dựng select dựa trên các cột có sẵn
     $selectFields = "tl.LogID, tl.LogDate, tl.Note";
-    if ($hasImages) {
-        $selectFields .= ", tl.Images";
-    }
-    if ($hasIncident) {
-        $selectFields .= ", tl.Incident";
-    }
+    if ($hasImages) $selectFields .= ", tl.Images";
+    if ($hasIncident) $selectFields .= ", tl.Incident";
     $selectFields .= ", e.FullName AS EmployeeName";
 
-    $sql = "SELECT $selectFields
-            FROM TourLog tl
+    $sql = "SELECT $selectFields FROM TourLog tl
             LEFT JOIN Employee e ON tl.EmployeeID = e.EmployeeID
-            WHERE tl.TourID = :tid
-            ORDER BY tl.LogDate DESC";
+            WHERE tl.TourID = :tid ORDER BY tl.LogDate DESC";
 
     $stmt = $conn->prepare($sql);
     $stmt->execute(['tid' => $tourId]);
     $results = $stmt->fetchAll();
 
-    // Đảm bảo các key Images và Incident luôn tồn tại trong kết quả
     foreach ($results as &$row) {
-        if (!isset($row['Images'])) {
-            $row['Images'] = null;
-        }
-        if (!isset($row['Incident'])) {
-            $row['Incident'] = null;
-        }
+        if (!isset($row['Images'])) $row['Images'] = null;
+        if (!isset($row['Incident'])) $row['Incident'] = null;
     }
-
     return $results;
 }
 
-// Lấy một nhật ký theo id
 function getTourLogById($logId)
 {
     $conn = connectDB();
+    ensureTourLogOptionalColumns();
 
     ensureTourLogOptionalColumns();
 
     // Kiểm tra xem các cột Images và Incident có tồn tại không
     try {
-        $checkSql = "SHOW COLUMNS FROM TourLog LIKE 'Images'";
-        $checkStmt = $conn->query($checkSql);
-        $hasImages = $checkStmt->rowCount() > 0;
+        $hasImages = $conn->query("SHOW COLUMNS FROM TourLog LIKE 'Images'")->rowCount() > 0;
+        $hasIncident = $conn->query("SHOW COLUMNS FROM TourLog LIKE 'Incident'")->rowCount() > 0;
+    } catch (Exception $e) { $hasImages = false; $hasIncident = false; }
 
-        $checkSql2 = "SHOW COLUMNS FROM TourLog LIKE 'Incident'";
-        $checkStmt2 = $conn->query($checkSql2);
-        $hasIncident = $checkStmt2->rowCount() > 0;
-    } catch (Exception $e) {
-        $hasImages = false;
-        $hasIncident = false;
-    }
-
-    // Xây dựng select dựa trên các cột có sẵn
     $selectFields = "LogID, TourID, EmployeeID, LogDate, Note";
-    if ($hasImages) {
-        $selectFields .= ", Images";
-    }
-    if ($hasIncident) {
-        $selectFields .= ", Incident";
-    }
+    if ($hasImages) $selectFields .= ", Images";
+    if ($hasIncident) $selectFields .= ", Incident";
 
     $sql = "SELECT $selectFields FROM TourLog WHERE LogID = :lid LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->execute(['lid' => $logId]);
     $result = $stmt->fetch();
 
-    // Đảm bảo các key Images và Incident luôn tồn tại
     if ($result) {
-        if (!isset($result['Images'])) {
-            $result['Images'] = null;
-        }
-        if (!isset($result['Incident'])) {
-            $result['Incident'] = null;
-        }
+        if (!isset($result['Images'])) $result['Images'] = null;
+        if (!isset($result['Incident'])) $result['Incident'] = null;
     }
-
     return $result;
 }
 
-// Lưu nhật ký tour (thêm mới hoặc cập nhật)
 function saveTourLog($data)
 {
     $conn = connectDB();
+    ensureTourLogOptionalColumns();
 
     ensureTourLogOptionalColumns();
 
     // Kiểm tra xem các cột Images và Incident có tồn tại không
     try {
-        $checkSql = "SHOW COLUMNS FROM TourLog LIKE 'Images'";
-        $checkStmt = $conn->query($checkSql);
-        $hasImages = $checkStmt->rowCount() > 0;
-
-        $checkSql2 = "SHOW COLUMNS FROM TourLog LIKE 'Incident'";
-        $checkStmt2 = $conn->query($checkSql2);
-        $hasIncident = $checkStmt2->rowCount() > 0;
-    } catch (Exception $e) {
-        $hasImages = false;
-        $hasIncident = false;
-    }
+        $hasImages = $conn->query("SHOW COLUMNS FROM TourLog LIKE 'Images'")->rowCount() > 0;
+        $hasIncident = $conn->query("SHOW COLUMNS FROM TourLog LIKE 'Incident'")->rowCount() > 0;
+    } catch (Exception $e) { $hasImages = false; $hasIncident = false; }
 
     if (!empty($data['LogID'])) {
         // Cập nhật bản ghi hiện có
@@ -269,34 +262,24 @@ function saveTourLog($data)
     }
 }
 
-// Xóa nhật ký tour
 function deleteTourLog($logId)
 {
     $conn = connectDB();
-
-    // Lấy thông tin log trước khi xóa để xóa file ảnh
     $log = getTourLogById($logId);
-    if (!$log) {
-        return false;
-    }
+    if (!$log) return false;
 
-    // Xóa file ảnh nếu có
+    // Xóa file ảnh
     if (!empty($log['Images'])) {
         $images = json_decode($log['Images'], true);
         if (is_array($images)) {
             foreach ($images as $imgPath) {
-                // Chuyển URL thành đường dẫn file
                 if (strpos($imgPath, BASE_URL) === 0) {
                     $filePath = str_replace(BASE_URL, './', $imgPath);
-                    if (file_exists($filePath)) {
-                        @unlink($filePath);
-                    }
+                    if (file_exists($filePath)) @unlink($filePath);
                 }
             }
         }
     }
-
-    // Xóa record trong database
     $sql = "DELETE FROM TourLog WHERE LogID = :lid";
     $stmt = $conn->prepare($sql);
     return $stmt->execute(['lid' => $logId]);
@@ -369,28 +352,19 @@ function ensureCheckInOutTable()
     }
 }
 
-// Lưu check-in/check-out
 function saveCheckInOut($data)
 {
     $conn = connectDB();
-
-    if (!ensureCheckInOutTable()) {
-        return false;
-    }
+    if (!ensureCheckInOutTable()) return false;
 
     try {
-        $checkSql = "SHOW COLUMNS FROM TourCheckInOut LIKE 'Location'";
-        $checkStmt = $conn->query($checkSql);
-        $hasLocation = $checkStmt->rowCount() > 0;
-    } catch (Exception $e) {
-        $hasLocation = false;
-    }
+        $hasLocation = $conn->query("SHOW COLUMNS FROM TourCheckInOut LIKE 'Location'")->rowCount() > 0;
+    } catch (Exception $e) { $hasLocation = false; }
 
     if ($hasLocation) {
         $sql = "INSERT INTO TourCheckInOut (TourID, EmployeeID, Type, Location, Note, CreatedAt)
                 VALUES (:tid, :eid, :type, :location, :note, NOW())";
-        $stmt = $conn->prepare($sql);
-        return $stmt->execute([
+        return $conn->prepare($sql)->execute([
             'tid' => $data['TourID'],
             'eid' => $data['EmployeeID'],
             'type' => $data['Type'],
@@ -398,37 +372,29 @@ function saveCheckInOut($data)
             'note' => $data['Note'] ?? null
         ]);
     } else {
+        // Fallback cho DB cũ
         $sql = "INSERT INTO TourCheckInOut (TourID, EmployeeID, Type, Note, CreatedAt)
                 VALUES (:tid, :eid, :type, :note, NOW())";
-        $stmt = $conn->prepare($sql);
-        $locationText = isset($data['Location']) && strlen(trim($data['Location'])) > 0 ? trim($data['Location']) : '';
-        $noteText = isset($data['Note']) ? trim($data['Note']) : '';
-        $combinedNote = $locationText !== '' ? ('Địa điểm: ' . $locationText . ($noteText !== '' ? ' | ' . $noteText : '')) : ($noteText !== '' ? $noteText : null);
-        return $stmt->execute([
+        $loc = trim($data['Location'] ?? '');
+        $note = trim($data['Note'] ?? '');
+        $combined = $loc ? "Địa điểm: $loc" . ($note ? " | $note" : "") : $note;
+        return $conn->prepare($sql)->execute([
             'tid' => $data['TourID'],
             'eid' => $data['EmployeeID'],
             'type' => $data['Type'],
-            'note' => $combinedNote
+            'note' => $combined ?: null
         ]);
     }
 }
 
-// Lấy lịch sử check-in/check-out
 function getCheckInOutHistory($tourId)
 {
     $conn = connectDB();
-
-    if (!tableExists('TourCheckInOut')) {
-        return [];
-    }
+    if (!tableExists('TourCheckInOut')) return [];
 
     try {
-        $checkSql = "SHOW COLUMNS FROM TourCheckInOut LIKE 'Location'";
-        $checkStmt = $conn->query($checkSql);
-        $hasLocation = $checkStmt->rowCount() > 0;
-    } catch (Exception $e) {
-        $hasLocation = false;
-    }
+        $hasLocation = $conn->query("SHOW COLUMNS FROM TourCheckInOut LIKE 'Location'")->rowCount() > 0;
+    } catch (Exception $e) { $hasLocation = false; }
 
     $selectFields = "cio.CheckInOutID, cio.Type, cio.Note, cio.CreatedAt";
     if ($hasLocation) {
@@ -436,23 +402,16 @@ function getCheckInOutHistory($tourId)
     }
     $selectFields .= ", e.FullName AS EmployeeName";
 
-    $sql = "SELECT $selectFields
-            FROM TourCheckInOut cio
+    $sql = "SELECT $selectFields FROM TourCheckInOut cio
             LEFT JOIN Employee e ON cio.EmployeeID = e.EmployeeID
-            WHERE cio.TourID = :tid
-            ORDER BY cio.CreatedAt DESC";
+            WHERE cio.TourID = :tid ORDER BY cio.CreatedAt DESC";
     $stmt = $conn->prepare($sql);
     $stmt->execute(['tid' => $tourId]);
     $rows = $stmt->fetchAll();
 
     if (!$hasLocation) {
-        foreach ($rows as &$row) {
-            if (!isset($row['Location'])) {
-                $row['Location'] = null;
-            }
-        }
+        foreach ($rows as &$row) $row['Location'] = null;
     }
-
     return $rows;
 }
 
@@ -492,16 +451,22 @@ function deleteCheckInOutEntry($entryId)
 function getCustomersWithSpecialRequests($tourId)
 {
     $conn = connectDB();
+    if (!tableExists('TourCheckInOut')) return null;
+    
+    $select = ['CheckInOutID', 'TourID', 'EmployeeID', 'Type', 'Note', 'CreatedAt'];
+    try {
+        if ($conn->query("SHOW COLUMNS FROM TourCheckInOut LIKE 'Location'")->rowCount() > 0) {
+            $select[] = 'Location';
+        }
+    } catch (Exception $e) {}
 
-    $sql = "SELECT c.CustomerID, c.FullName, c.Email, c.Phone, 
-                   tc.RoomNumber, tc.Note
-            FROM TourCustomer tc
-            JOIN Customer c ON tc.CustomerID = c.CustomerID
-            WHERE tc.TourID = :tid";
-
+    $sql = "SELECT " . implode(', ', $select) . " FROM TourCheckInOut WHERE CheckInOutID = :id LIMIT 1";
     $stmt = $conn->prepare($sql);
-    $stmt->execute(['tid' => $tourId]);
-    $results = $stmt->fetchAll();
+    $stmt->execute(['id' => $entryId]);
+    $row = $stmt->fetch();
+    if ($row && !isset($row['Location'])) $row['Location'] = null;
+    return $row;
+}
 
     // Parse JSON từ cột Note
     foreach ($results as &$row) {
@@ -516,14 +481,18 @@ function getCustomersWithSpecialRequests($tourId)
             }
         }
 
-        // Gán giá trị mặc định nếu không có dữ liệu
-        $row['Vegetarian'] = $specialData['vegetarian'] ?? 0;
-        $row['MedicalCondition'] = $specialData['medical_condition'] ?? null;
-        $row['OtherRequests'] = $specialData['other_requests'] ?? null;
-        $row['SpecialRequests'] = $specialData['special_requests'] ?? null;
-    }
+// =================================================================
+// 5. HELPER FUNCTIONS
+// =================================================================
 
-    return $results;
+function tableExists($tableName)
+{
+    $conn = connectDB();
+    try {
+        $stmt = $conn->prepare("SHOW TABLES LIKE :table");
+        $stmt->execute(['table' => $tableName]);
+        return $stmt->rowCount() > 0;
+    } catch (Exception $e) { return false; }
 }
 
 // Tự động phân phòng cho các khách chưa có phòng, ghi nhận người phân phòng vào Note (JSON)
@@ -603,29 +572,31 @@ function autoAssignRooms($tourId, $employeeId)
 function saveSpecialRequest($data)
 {
     $conn = connectDB();
-
-    // Tạo object chứa thông tin yêu cầu đặc biệt
-    $specialRequestData = [
-        'vegetarian' => $data['Vegetarian'] ?? 0,
-        'medical_condition' => $data['MedicalCondition'] ?? null,
-        'other_requests' => $data['OtherRequests'] ?? null,
-        'special_requests' => $data['SpecialRequests'] ?? null
+    if (!tableExists('TourLog')) return;
+    $columns = [
+        'Images' => "ALTER TABLE TourLog ADD COLUMN Images TEXT NULL",
+        'Incident' => "ALTER TABLE TourLog ADD COLUMN Incident TEXT NULL"
     ];
 
-    // Chuyển thành JSON
-    $noteJson = json_encode($specialRequestData, JSON_UNESCAPED_UNICODE);
-
-    // Cập nhật vào cột Note của bảng TourCustomer
-    $sql = "UPDATE TourCustomer 
-            SET Note = :note
-            WHERE TourID = :tid AND CustomerID = :cid";
-
-    $stmt = $conn->prepare($sql);
-    return $stmt->execute([
-        'note' => $noteJson,
-        'tid' => $data['TourID'],
-        'cid' => $data['CustomerID']
-    ]);
+function ensureCheckInOutTable()
+{
+    $conn = connectDB();
+    if (tableExists('TourCheckInOut')) return true;
+    try {
+        $sql = "CREATE TABLE IF NOT EXISTS `TourCheckInOut` (
+          `CheckInOutID` INT(11) NOT NULL AUTO_INCREMENT,
+          `TourID` INT(11) NOT NULL,
+          `EmployeeID` INT(11) NOT NULL,
+          `Type` ENUM('checkin','checkout') NOT NULL,
+          `Note` TEXT NULL,
+          `CreatedAt` DATETIME NOT NULL,
+          PRIMARY KEY (`CheckInOutID`),
+          INDEX `idx_tour` (`TourID`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;";
+        $conn->exec($sql);
+        // Add Location if needed later manually or handled by logic
+        return true;
+    } catch (Exception $e) { return false; }
 }
 
 function setCustomerAttendance($tourId, $customerId, $employeeId, $checked)

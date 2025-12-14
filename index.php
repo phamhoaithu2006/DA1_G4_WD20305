@@ -1,54 +1,53 @@
 <?php
-// Require toàn bộ các file khai báo môi trường, thực thi,...(không require view)
-
 // Require file Common
-require_once './commons/env.php'; // khai báo biến môi trường
-require_once './commons/function.php'; // hàm hỗ trợ
+require_once './commons/env.php';
+require_once './commons/function.php';
 
-// Require toàn bộ file Controllers
+// Require Controllers
 require_once './controllers/ProductController.php';
 require_once './controllers/BookingController.php';
 require_once 'controllers/HDVController.php';
 require_once 'controllers/EmployeeController.php';
 require_once 'controllers/TourAssignmentController.php';
+require_once 'controllers/ReportController.php';
+require_once 'controllers/TourLogController.php';
+require_once 'controllers/FinanceController.php';
+require_once 'controllers/SupplierController.php';
 
-
-// Require toàn bộ file Models
+// Require Models
 require_once './models/ProductModel.php';
 require_once './models/BookingModel.php';
 require_once './models/HDVModel.php';
 require_once './models/EmployeeModel.php';
 require_once './models/TourAssignmentModel.php';
-
 require_once './models/DashboardModel.php';
+require_once './models/ReportModel.php';
+require_once './models/TourLogModel.php';
+require_once './models/FinanceModel.php';
 
-// Route
+// Khởi tạo
 $act = $_GET['act'] ?? '/';
 $id = $_GET['id'] ?? '';
 $db = connectDB();
 $tourID = isset($_GET['tourID']) ? intval($_GET['tourID']) : null;
 
-// Để bảo bảo tính chất chỉ gọi 1 hàm controller để xử lý request thì mình sử dụng match
-
 match ($act) {
-    // Trang chủ
-    '/' => (new ProductController())->Home(),
-    // Trang admin
-    'admin' => (new ProductController())->adminHome(),
-    'category' => (new ProductController())->adminDashboard(),
+    // --- TRANG CHỦ & PRODUCT ---
+    'home' => (new ProductController())->Home(),
+    'category' => (new ProductController())->adminDashboard(), // Danh sách Tour
     'detail' => (new ProductController())->adminDetail($id),
     'dashboard' => (new ProductController())->Dashboard(),
     'tour-create' => (new ProductController())->create(),
     'tour-delete' => (new ProductController())->delete($id),
 
-    // Trang booking
+    // --- BOOKING ---
     'booking-list' => (new BookingController($db))->index(),
-    'booking-detail' => (new BookingController($db))->detail($id),
+    'booking-detail' => (new BookingController($db))->detail(),
     'booking-create' => (new BookingController($db))->create(),
     'booking-update-status' => (new BookingController($db))->updateStatus(),
 
-    // Điều hành
-    'employees' => (new EmployeeController())->index(),
+    // --- ĐIỀU HÀNH & NHÂN SỰ ---
+    'employees' => (new EmployeeController())->index(), // Danh sách nhân sự
     'createEmployee' => (new EmployeeController())->create(),
     'detailEmployee' => (new EmployeeController())->detail($id),
     'editEmployee' => (new EmployeeController())->edit($id),

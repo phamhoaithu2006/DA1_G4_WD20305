@@ -484,7 +484,7 @@ if (!isset($logs)) {
                             </div>
                         <?php endif; ?>
                     </div>
-                </div>
+                </form>
             </div>
 
             <div class="tab-pane fade" id="pills-logs">
@@ -557,8 +557,154 @@ if (!isset($logs)) {
                         </div>
                     <?php endif; ?>
                 </div>
+                <form method="POST" action="?act=hdv-special-request-save&id=<?= $tour['TourID'] ?>">
+                    <div class="modal-body">
+                        <input type="hidden" name="customer_id" value="<?= $c['CustomerID'] ?>">
+                        <div class="mb-3">
+                            <label class="form-label small text-muted text-uppercase fw-bold">Họ và tên</label>
+                            <input type="text" name="FullName" class="form-control"
+                                value="<?= htmlspecialchars($c['FullName'] ?? '') ?>" required>
+                        </div>
+                        <div class="row g-2 mb-3">
+                            <div class="col-6">
+                                <label class="form-label small text-muted text-uppercase fw-bold">Số điện thoại</label>
+                                <input type="text" name="Phone" class="form-control"
+                                    value="<?= htmlspecialchars($c['Phone'] ?? '') ?>">
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small text-muted text-uppercase fw-bold">Phòng</label>
+                                <input type="text" name="RoomNumber" class="form-control"
+                                    value="<?= htmlspecialchars($c['RoomNumber'] ?? '') ?>">
+                            </div>
+                        </div>
+                        <div class="mb-3 bg-light p-3 rounded-3 d-flex justify-content-between align-items-center">
+                            <label class="form-check-label fw-bold" for="veg<?= $c['CustomerID'] ?>"><i
+                                    class="bi bi-flower1 me-2 text-success"></i>Ăn chay</label>
+                            <input class="form-check-input" type="checkbox" role="switch"
+                                id="veg<?= $c['CustomerID'] ?>" name="vegetarian" value="1"
+                                <?= !empty($c['Vegetarian']) ? 'checked' : '' ?>>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted text-uppercase fw-bold">Sức khỏe / Lưu ý</label>
+                            <textarea name="medical_condition" class="form-control"
+                                rows="2"><?= htmlspecialchars($c['MedicalCondition'] ?? '') ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted text-uppercase fw-bold">Yêu cầu khác</label>
+                            <textarea name="other_requests" class="form-control"
+                                rows="2"><?= htmlspecialchars($c['OtherRequests'] ?? '') ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small text-muted text-uppercase fw-bold">Ghi chú riêng
+                                (HDV)</label>
+                            <textarea name="note" class="form-control bg-light"
+                                rows="2"><?= htmlspecialchars($c['SpecialRequests'] ?? '') ?></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary px-4 fw-bold">Lưu thay đổi</button>
+                    </div>
+                </form>
             </div>
+        </div>
+    </div>
+    <?php endforeach; endif; ?>
 
+    <div class="modal fade" id="modalDiary" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold">Viết nhật ký mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="post" action="?act=hdv-diary-save&id=<?= $tour['TourID'] ?>"
+                    enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase text-muted">Nội dung</label>
+                            <textarea class="form-control bg-light border-0" name="note" rows="5"
+                                placeholder="Mô tả hoạt động, cảm nhận..." required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase text-muted">Hình ảnh</label>
+                            <input type="file" name="images[]" class="form-control" multiple accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-uppercase text-danger">Sự cố (Nếu có)</label>
+                            <textarea class="form-control border-danger-subtle" name="incident" rows="2"
+                                placeholder="Hỏng xe, khách ốm..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary px-4">Lưu Nhật Ký</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCheckInOut" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <ul class="nav nav-pills w-100 nav-fill p-1 bg-light rounded-pill" id="checkinTab" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active rounded-pill" id="in-tab" data-bs-toggle="pill"
+                                data-bs-target="#in-pane">Check-in (Đến)</button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link rounded-pill" id="out-tab" data-bs-toggle="pill"
+                                data-bs-target="#out-pane">Check-out (Rời)</button>
+                        </li>
+                    </ul>
+                    <button type="button" class="btn-close position-absolute end-0 top-0 m-3"
+                        data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-0">
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="in-pane">
+                            <form method="post" action="?act=hdv-checkin-save&id=<?= $tour['TourID'] ?>">
+                                <div class="text-center my-3">
+                                    <i class="bi bi-geo-alt-fill text-primary display-4"></i>
+                                    <h5 class="fw-bold mt-2">Xác nhận đến điểm</h5>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="checkin_location"
+                                        class="form-control form-control-lg text-center bg-light"
+                                        placeholder="Nhập tên địa điểm..." required>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea name="checkin_note" class="form-control" rows="2"
+                                        placeholder="Ghi chú (Tùy chọn)..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold rounded-pill">Xác nhận
+                                    Check-in</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="out-pane">
+                            <form method="post" action="?act=hdv-checkout-save&id=<?= $tour['TourID'] ?>">
+                                <div class="text-center my-3">
+                                    <i class="bi bi-box-arrow-right text-danger display-4"></i>
+                                    <h5 class="fw-bold mt-2">Xác nhận rời đi</h5>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" name="checkout_location"
+                                        class="form-control form-control-lg text-center bg-light"
+                                        placeholder="Nhập tên địa điểm..." required>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea name="checkout_note" class="form-control" rows="2"
+                                        placeholder="Ghi chú sự cố (nếu có)..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-danger w-100 py-2 fw-bold rounded-pill">Xác nhận
+                                    Check-out</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
