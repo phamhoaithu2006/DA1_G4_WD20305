@@ -15,7 +15,8 @@
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item"><a href="?act=booking-list" class="text-decoration-none">Booking</a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">Chi tiết #<?= $booking['BookingID'] ?></li>
+                    <li class="breadcrumb-item active" aria-current="page">Chi tiết #<?= $booking['BookingID'] ?? '?' ?>
+                    </li>
                 </ol>
             </nav>
             <a href="?act=booking-list" class="btn btn-outline-secondary btn-sm">
@@ -25,6 +26,7 @@
 
         <div class="row g-4">
             <div class="col-lg-8">
+
                 <div class="card border-0 shadow-sm rounded-4 mb-4">
                     <div class="card-header bg-white border-bottom-0 pt-4 px-4">
                         <h5 class="fw-bold text-dark"><i class="bi bi-ticket-perforated text-primary me-2"></i>Thông tin
@@ -34,17 +36,28 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="text-muted small text-uppercase fw-bold">Khách hàng</label>
-                                <div class="fs-5 fw-bold text-dark"><?= htmlspecialchars($booking['CustomerName']) ?>
+                                <div class="fs-5 fw-bold text-dark">
+                                    <?= htmlspecialchars($booking['CustomerName'] ?? 'Khách vãng lai') ?>
                                 </div>
                             </div>
+
                             <div class="col-md-6">
                                 <label class="text-muted small text-uppercase fw-bold">Ngày đặt</label>
-                                <div class="fs-5 text-dark"><?= date('d/m/Y H:i', strtotime($booking['BookingDate'])) ?>
+                                <div class="fs-5 text-dark">
+                                    <?php 
+                                    if (!empty($booking['BookingDate'])) {
+                                        echo date('d/m/Y H:i', strtotime($booking['BookingDate']));
+                                    } else {
+                                        echo '---';
+                                    }
+                                    ?>
                                 </div>
                             </div>
+
                             <div class="col-12">
                                 <label class="text-muted small text-uppercase fw-bold">Tour đăng ký</label>
-                                <div class="fs-5 text-primary fw-medium"><?= htmlspecialchars($booking['TourName']) ?>
+                                <div class="fs-5 text-primary fw-medium">
+                                    <?= htmlspecialchars($booking['TourName'] ?? 'Chưa cập nhật tên Tour') ?>
                                 </div>
                             </div>
                         </div>
@@ -54,7 +67,7 @@
                         <div class="d-flex justify-content-between align-items-center p-3 bg-light rounded-3">
                             <span class="fw-bold text-secondary">Tổng thanh toán:</span>
                             <span class="fs-4 fw-bold text-success">
-                                <?= $booking['TotalAmount'] !== null ? number_format($booking['TotalAmount'], 0, ',', '.') . ' VNĐ' : '-' ?>
+                                <?= isset($booking['TotalAmount']) ? number_format($booking['TotalAmount'], 0, ',', '.') . ' VNĐ' : '0 VNĐ' ?>
                             </span>
                         </div>
                     </div>
@@ -81,11 +94,19 @@
                                     <?php foreach ($tourCustomers as $index => $tc): ?>
                                     <tr>
                                         <td class="ps-4 text-muted"><?= $index + 1 ?></td>
-                                        <td class="fw-medium"><?= htmlspecialchars($tc['FullName']) ?></td>
-                                        <td><span
-                                                class="badge bg-light text-dark border"><?= htmlspecialchars($tc['RoomNumber'] ?? 'Chưa xếp') ?></span>
+
+                                        <td class="fw-medium">
+                                            <?= htmlspecialchars($tc['FullName'] ?? $tc['CustomerName'] ?? 'Thành viên đoàn') ?>
                                         </td>
-                                        <td class="pe-4 text-muted small"><?= htmlspecialchars($tc['Note'] ?? '-') ?>
+
+                                        <td>
+                                            <span class="badge bg-light text-dark border">
+                                                <?= htmlspecialchars($tc['RoomNumber'] ?? 'Chưa xếp') ?>
+                                            </span>
+                                        </td>
+
+                                        <td class="pe-4 text-muted small">
+                                            <?= htmlspecialchars($tc['Note'] ?? '-') ?>
                                         </td>
                                     </tr>
                                     <?php endforeach; ?>
@@ -100,7 +121,10 @@
             </div>
 
             <div class="col-lg-4">
-                <?php $isPaid = $booking['Status'] === 'Đã thanh toán'; ?>
+                <?php 
+                    $currentStatus = $booking['Status'] ?? 'Đang xử lý'; 
+                    $isPaid = ($currentStatus === 'Đã thanh toán'); 
+                ?>
 
                 <div class="card border-0 shadow-sm rounded-4">
                     <div class="card-header bg-white border-bottom-0 pt-4 px-4">
@@ -108,7 +132,7 @@
                     </div>
                     <div class="card-body p-4">
                         <form method="post" action="index.php?act=booking-update-status">
-                            <input type="hidden" name="booking_id" value="<?= $booking['BookingID'] ?>" />
+                            <input type="hidden" name="booking_id" value="<?= $booking['BookingID'] ?? '' ?>" />
 
                             <div class="mb-3">
                                 <label class="form-label fw-medium">Trạng thái hiện tại</label>
@@ -117,7 +141,7 @@
                                     <?php
                                     $statuses = ['Đang xử lý', 'Đã xác nhận', 'Đã thanh toán', 'Đã hủy'];
                                     foreach ($statuses as $s): ?>
-                                    <option value="<?= $s ?>" <?= $s == $booking['Status'] ? 'selected' : '' ?>>
+                                    <option value="<?= $s ?>" <?= $s == $currentStatus ? 'selected' : '' ?>>
                                         <?= $s ?>
                                     </option>
                                     <?php endforeach; ?>
@@ -138,6 +162,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

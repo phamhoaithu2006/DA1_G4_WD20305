@@ -16,6 +16,12 @@
                     <span>Quản lý Tour</span>
                 </a>
             </li>
+
+            <li>
+                <a href="?act=suppliers" class="nav-link <?= ($_GET['act'] ?? '') == 'suppliers' ? 'active' : '' ?>">
+                    <i class="bi bi-shop-window"></i> <span>Nhà cung cấp</span>
+                </a>
+            </li>
             <li>
                 <a href="?act=booking-list"
                     class="nav-link d-flex justify-content-between align-items-center <?= ($_GET['act'] ?? '') == 'booking-list' ? 'active' : '' ?>">
@@ -38,7 +44,6 @@
                     <span>Nhân sự</span>
                 </a>
             </li>
-
             <li>
                 <a href="?act=tourlog-list&tourID=1"
                     class="nav-link <?= ($_GET['act'] ?? '') == 'tourlog-list' ? 'active' : '' ?>">
@@ -78,9 +83,6 @@
                     <span>So sánh hiệu quả Tour</span>
                 </a>
             </li>
-
-
-
         </ul>
     </div>
 
@@ -109,132 +111,132 @@
 </div>
 
 <style>
-    /* 1. CỐ ĐỊNH SIDEBAR (FIXED LAYOUT) */
+/* 1. CỐ ĐỊNH SIDEBAR (FIXED LAYOUT) */
+.sidebar-wrapper {
+    width: 260px;
+    /* Chiều rộng cố định */
+    height: 100vh;
+    /* Chiều cao bằng 100% màn hình */
+    position: fixed;
+    /* Ghim chặt vào vị trí */
+    top: 0;
+    /* Sát mép trên */
+    left: 0;
+    /* Sát mép trái */
+    z-index: 1000;
+    /* Nổi lên trên các thành phần khác */
+    overflow: hidden;
+    /* Ẩn thanh cuộn ngoài */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 2. STYLE CHO CÁC THÀNH PHẦN */
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    background: #212529;
+    color: #fff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tracking-tight {
+    letter-spacing: -0.5px;
+}
+
+/* Menu Link */
+.nav-link {
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.nav-link i {
+    font-size: 1.1rem;
+    width: 24px;
+    margin-right: 10px;
+    text-align: center;
+    transition: color 0.2s;
+}
+
+/* Hover */
+.nav-link:hover {
+    background-color: #f8f9fa;
+    color: #0f172a;
+}
+
+.nav-link:hover i {
+    color: #0d6efd;
+}
+
+/* Active */
+.nav-link.active {
+    background-color: #f1f5f9 !important;
+    /* Xanh rất nhạt */
+    color: #0d6efd !important;
+    /* Xanh dương đậm */
+    font-weight: 600;
+}
+
+.admin-content {
+    margin-left: 260px !important;
+    /* Bằng width của Sidebar */
+    width: calc(100% - 260px) !important;
+    min-height: 100vh;
+    transition: all 0.3s;
+    /* Hiệu ứng mượt nếu sau này làm nút ẩn hiện menu */
+}
+
+/* Responsive: Trên Mobile thì ẩn Sidebar hoặc đẩy lại về 0 */
+@media (max-width: 992px) {
     .sidebar-wrapper {
-        width: 260px;
-        /* Chiều rộng cố định */
-        height: 100vh;
-        /* Chiều cao bằng 100% màn hình */
-        position: fixed;
-        /* Ghim chặt vào vị trí */
-        top: 0;
-        /* Sát mép trên */
-        left: 0;
-        /* Sát mép trái */
-        z-index: 1000;
-        /* Nổi lên trên các thành phần khác */
-        overflow: hidden;
-        /* Ẩn thanh cuộn ngoài */
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    }
-
-    /* 2. STYLE CHO CÁC THÀNH PHẦN */
-    .brand-icon {
-        width: 36px;
-        height: 36px;
-        background: #212529;
-        color: #fff;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .tracking-tight {
-        letter-spacing: -0.5px;
-    }
-
-    /* Menu Link */
-    .nav-link {
-        color: #64748b;
-        font-weight: 500;
-        font-size: 0.9rem;
-        padding: 0.7rem 1rem;
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-    }
-
-    .nav-link i {
-        font-size: 1.1rem;
-        width: 24px;
-        margin-right: 10px;
-        text-align: center;
-        transition: color 0.2s;
-    }
-
-    /* Hover */
-    .nav-link:hover {
-        background-color: #f8f9fa;
-        color: #0f172a;
-    }
-
-    .nav-link:hover i {
-        color: #0d6efd;
-    }
-
-    /* Active */
-    .nav-link.active {
-        background-color: #f1f5f9 !important;
-        /* Xanh rất nhạt */
-        color: #0d6efd !important;
-        /* Xanh dương đậm */
-        font-weight: 600;
+        margin-left: -260px;
+        /* Ẩn sidebar sang trái */
     }
 
     .admin-content {
-        margin-left: 260px !important;
-        /* Bằng width của Sidebar */
-        width: calc(100% - 260px) !important;
-        min-height: 100vh;
-        transition: all 0.3s;
-        /* Hiệu ứng mượt nếu sau này làm nút ẩn hiện menu */
+        margin-left: 0 !important;
+        /* Trả nội dung về full màn hình */
+        width: 100% !important;
     }
 
-    /* Responsive: Trên Mobile thì ẩn Sidebar hoặc đẩy lại về 0 */
-    @media (max-width: 992px) {
-        .sidebar-wrapper {
-            margin-left: -260px;
-            /* Ẩn sidebar sang trái */
-        }
-
-        .admin-content {
-            margin-left: 0 !important;
-            /* Trả nội dung về full màn hình */
-            width: 100% !important;
-        }
-
-        /* Khi bật menu trên mobile (cần thêm JS toggle class .active) */
-        .sidebar-wrapper.active {
-            margin-left: 0;
-        }
+    /* Khi bật menu trên mobile (cần thêm JS toggle class .active) */
+    .sidebar-wrapper.active {
+        margin-left: 0;
     }
+}
 
-    .nav-link.active i {
-        color: #0d6efd !important;
-    }
+.nav-link.active i {
+    color: #0d6efd !important;
+}
 
-    /* Header nhỏ */
-    .nav-header {
-        font-size: 0.7rem;
-        font-weight: 700;
-        color: #94a3b8;
-        padding-left: 1rem;
-        letter-spacing: 0.5px;
-    }
+/* Header nhỏ */
+.nav-header {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #94a3b8;
+    padding-left: 1rem;
+    letter-spacing: 0.5px;
+}
 
-    /* 3. SCROLLBAR TÙY CHỈNH (Chỉ cuộn phần menu giữa) */
-    .custom-scrollbar::-webkit-scrollbar {
-        width: 4px;
-    }
+/* 3. SCROLLBAR TÙY CHỈNH (Chỉ cuộn phần menu giữa) */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-track {
-        background: transparent;
-    }
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
 
-    .custom-scrollbar::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 4px;
-    }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
 </style>

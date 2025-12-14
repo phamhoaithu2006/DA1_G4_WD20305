@@ -12,6 +12,7 @@ require_once 'controllers/TourAssignmentController.php';
 require_once 'controllers/ReportController.php';
 require_once 'controllers/TourLogController.php';
 require_once 'controllers/FinanceController.php';
+require_once 'controllers/SupplierController.php';
 
 // Require Models
 require_once './models/ProductModel.php';
@@ -124,6 +125,18 @@ match ($act) {
     'hdv-customer-checkin' => (new HDVController())->customerCheckInSave(),
     'hdv-customer-checkout' => (new HDVController())->customerCheckOutSave(),
 
+    'hdv-customer-checkin' => (new HDVController())->customerCheckInSave(),   // (Cũ - có thể giữ hoặc bỏ)
+    'hdv-customer-checkout' => (new HDVController())->customerCheckOutSave(), // (Cũ - có thể giữ hoặc bỏ)
+    
+    // [MỚI] Thêm dòng này:
+    'hdv-attendance-save' => (new HDVController())->attendanceSaveBulk(),
+// --- [MỚI] QUẢN LÝ NHÀ CUNG CẤP ---
+    'suppliers'       => (new SupplierController())->index(),
+    'supplier-create' => (new SupplierController())->create(), // Hiển thị form thêm
+    'supplier-store'  => (new SupplierController())->store(),  // Xử lý lưu thêm mới
+    'supplier-edit'   => (new SupplierController())->edit($id), // Hiển thị form sửa
+    'supplier-update' => (new SupplierController())->update($id), // Xử lý lưu cập nhật
+    'supplier-delete' => (new SupplierController())->delete($id), // Xử lý xóa
     // Default
     default => (new ProductController())->Home(),
 };

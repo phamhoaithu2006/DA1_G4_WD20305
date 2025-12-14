@@ -457,8 +457,11 @@ class HDVController
         require_once './views/hdv/special_requests.php';
     }
 
-    // Lưu yêu cầu đặc biệt
-    public function specialRequestSave()
+    
+
+
+
+public function specialRequestSave()
     {
         session_start();
         if (empty($_SESSION['hdv_id'])) {
@@ -475,28 +478,37 @@ class HDVController
         $customerId = $_POST['customer_id'] ?? null;
 
         if (!$tourId || !$customerId) {
+            $_SESSION['hdv_error'] = "Dữ liệu không hợp lệ.";
             header("Location: ?act=hdv-tour");
             exit;
         }
 
+        // Thu thập dữ liệu từ Form (bao gồm cả Tên, SĐT, Phòng nếu có)
         $data = [
             'TourID' => $tourId,
             'CustomerID' => $customerId,
-            'Vegetarian' => isset($_POST['vegetarian']) ? (int)$_POST['vegetarian'] : 0,
-            'MedicalCondition' => trim($_POST['medical_condition'] ?? '') ?: null,
-            'OtherRequests' => trim($_POST['other_requests'] ?? '') ?: null,
-            'SpecialRequests' => trim($_POST['note'] ?? '') ?: null
+            'FullName' => trim($_POST['FullName'] ?? ''),
+            'Phone' => trim($_POST['Phone'] ?? ''),
+            'RoomNumber' => trim($_POST['RoomNumber'] ?? ''),
+            'Vegetarian' => isset($_POST['vegetarian']) ? 1 : 0, // Checkbox
+            'MedicalCondition' => trim($_POST['medical_condition'] ?? ''),
+            'OtherRequests' => trim($_POST['other_requests'] ?? ''),
+            'SpecialRequests' => trim($_POST['note'] ?? '') // Ghi chú chung
         ];
 
-        if (saveSpecialRequest($data)) {
-            $_SESSION['hdv_success'] = "Cập nhật yêu cầu đặc biệt thành công!";
+        // Gọi hàm Model mới updateCustomerInfoAndRequests
+        if (updateCustomerInfoAndRequests($data)) {
+            $_SESSION['hdv_success'] = "Cập nhật thông tin khách hàng thành công!";
         } else {
-            $_SESSION['hdv_error'] = "Có lỗi xảy ra khi cập nhật. Vui lòng kiểm tra database hoặc liên hệ quản trị viên.";
+            $_SESSION['hdv_error'] = "Có lỗi xảy ra khi cập nhật.";
         }
 
         header("Location: ?act=hdv-special-requests&id=" . $tourId);
         exit;
     }
+
+
+
 
     // Hiển thị trang phân phòng
     public function roomAssign()
@@ -589,6 +601,45 @@ class HDVController
         exit;
     }
 
+    public function attendanceSaveBulk()
+    {
+        session_start();
+        if (empty($_SESSION['hdv_id'])) {
+            header("Location: ?act=hdv-login");
+            exit;
+        }
+
+        $tourId = $_GET['id'] ?? null;
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !$tourId) {
+            header("Location: ?act=hdv-tour");
+            exit;
+        }
+
+        // 1. Lấy danh sách toàn bộ khách trong tour để đối chiếu
+        $allCustomers = getCustomersInTour($tourId);
+        
+        // 2. Lấy danh sách ID khách được tích chọn (gửi lên từ form)
+        // $_POST['attendance'] sẽ là mảng chứa các CustomerID được check
+        $presentCustomerIds = $_POST['attendance'] ?? [];
+
+        $countPresent = 0;
+
+        foreach ($allCustomers as $c) {
+            $cid = $c['CustomerID'];
+            
+            // Kiểm tra: Nếu ID khách này nằm trong danh sách gửi lên => Có mặt (1), ngược lại => Vắng (0)
+            $status = isset($presentCustomerIds[$cid]) ? 1 : 0;
+            
+            // Gọi hàm Model để lưu (Hàm này đã có sẵn logic merge JSON)
+            setCustomerAttendance($tourId, $cid, $_SESSION['hdv_id'], $status);
+
+            if($status == 1) $countPresent++;
+        }
+
+        $_SESSION['hdv_success'] = "Đã lưu điểm danh: {$countPresent} khách có mặt.";
+        header("Location: ?act=hdv-tour-detail&id=" . $tourId . "&tab=customers");
+        exit;
+    }
     // Bỏ điểm danh khách: đánh dấu chưa điểm danh
     public function customerCheckOutSave()
     {

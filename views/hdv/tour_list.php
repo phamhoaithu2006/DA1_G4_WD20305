@@ -52,9 +52,7 @@ $hdvName = $_SESSION['hdv_name'] ?? 'HDV';
         }
 
         .brand-gradient {
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #6f42c1;
             font-weight: 800;
             letter-spacing: -0.5px;
         }

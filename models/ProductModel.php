@@ -2,11 +2,11 @@
 class ProductModel
 {
     public $conn;
+
     public function __construct()
     {
         $this->conn = connectDB();
     }
-
 
     // 3. Thêm Tour mới
     public function insertTour($data) {
@@ -41,11 +41,64 @@ class ProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // --- [REVISED] QUẢN LÝ NHÀ CUNG CẤP (SUPPLIERS) ---
+
+    // 1. Lấy tất cả NCC (Merged duplicate method)
+    // Note: Assuming table name is 'Supplier' based on original code. Change to 'Suppliers' if needed.
     public function getAllSuppliers() {
-        $sql = "SELECT * FROM Supplier";
+        $sql = "SELECT * FROM Supplier ORDER BY SupplierID DESC";
         $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // 2. Lấy 1 NCC theo ID
+    public function getSupplierById($id) {
+        // Note: Assuming table name is 'Supplier'
+        $sql = "SELECT * FROM Supplier WHERE SupplierID = :id";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // 3. Thêm mới NCC
+   // Sửa lại tên cột cho đúng với Database của bạn
+public function insertSupplier($data) {
+    // Chỉ lưu Tên và Liên hệ (đảm bảo DB bạn có 2 cột này)
+    $sql = "INSERT INTO Supplier (SupplierName, ContactInfo) 
+            VALUES (:name, :contact)";
+            
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute([
+        ':name' => $data['SupplierName'],
+        ':contact' => $data['ContactInfo']
+    ]);
+}
+    // 4. Cập nhật NCC
+    public function updateSupplier($id, $data) {
+        $sql = "UPDATE Supplier 
+                SET SupplierName = :name, ContactInfo = :contact, Address = :addr, ServiceTypes = :type 
+                WHERE SupplierID = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id,
+            ':name' => $data['SupplierName'],
+            ':contact' => $data['ContactInfo'],
+            ':addr' => $data['Address'],
+            ':type' => $data['ServiceTypes']
+        ]);
+    }
+
+    // 5. Xóa NCC
+    public function deleteSupplier($id) {
+        try {
+            $sql = "DELETE FROM Supplier WHERE SupplierID = :id";
+            $stmt = $this->conn->prepare($sql);
+            return $stmt->execute([':id' => $id]);
+        } catch (PDOException $e) {
+            // Lỗi do ràng buộc khóa ngoại (NCC đang có trong Tour/Dịch vụ)
+            return false;
+        }
     }
 
     // ====================================================
@@ -81,7 +134,6 @@ class ProductModel
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
-    // ... Các hàm cũ giữ nguyên ...
 
     // [MỚI] Lấy danh sách ảnh Gallery
     public function getTourGallery($tourId) {
@@ -109,6 +161,7 @@ class ProductModel
         $stmt->execute([':id' => $tourId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     // [MỚI] Lấy danh sách khách hàng đã đặt Tour
     public function getTourCustomersList($tourId) {
         $sql = "
@@ -137,6 +190,7 @@ class ProductModel
         $stmt->execute([':id' => $tourId]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
     //Thêm file mới
     public function getUpcomingTours() {
         $sql = "SELECT TourID, TourName, Price, StartDate, EndDate, SupplierID 
@@ -148,7 +202,6 @@ class ProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // ... Other existing methods (getAllTour, getOneDetail, insertTour, etc.) ...
     public function getAllTour() {
         $sql = "SELECT c.CategoryID, c.CategoryName, t.TourID, t.TourName, t.Price, t.StartDate, t.EndDate, t.Image, s.SupplierName
                 FROM Category c
@@ -170,6 +223,7 @@ class ProductModel
         $stmt->execute([':TourID' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
     public function getActiveTours() {
         $sql = "SELECT TourID, TourName, StartDate, EndDate 
                 FROM Tour 
@@ -187,29 +241,33 @@ class ProductModel
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
     // Thêm ảnh vào gallery
     public function insertGalleryImage($tourId, $imageUrl) {
         $sql = "INSERT INTO tour_gallery (TourID, ImageURL) VALUES (?, ?)";
-        // Giả sử bạn dùng PDO, code sẽ tựa như sau (tùy vào class Connect của bạn):
-        // $stmt = $this->conn->prepare($sql);
-        // return $stmt->execute([$tourId, $imageUrl]);
-        
-        // Hoặc nếu dùng hàm pdo_execute có sẵn:
-        return pdo_execute($sql, $tourId, $imageUrl); 
+        // Using PDO directly via $this->conn
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$tourId, $imageUrl]);
     }
 
     // Lấy thông tin 1 ảnh gallery (để xóa file)
     public function getGalleryImageById($imageId) {
+        // Assuming pdo_query_one is a global function from a helper file.
+        // If not, replace with standard PDO logic like getOneDetail above.
         $sql = "SELECT * FROM tour_gallery WHERE ImageID = ?";
-        return pdo_query_one($sql, $imageId);
+        // Standard PDO replacement if pdo_query_one isn't available:
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$imageId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     // Xóa ảnh khỏi DB
     public function deleteGalleryImage($imageId) {
         $sql = "DELETE FROM tour_gallery WHERE ImageID = ?";
-        return pdo_execute($sql, $imageId);
+        // Standard PDO replacement if pdo_execute isn't available:
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$imageId]);
     }
-    // ... Dán vào trong class ProductModel ...
 
     // 9. Thêm dịch vụ liên kết (TourService)
     public function insertService($data) {
@@ -227,3 +285,4 @@ class ProductModel
         ]);
     }
 }
+?>
