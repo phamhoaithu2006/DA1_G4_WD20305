@@ -500,78 +500,76 @@ if (session_status() == PHP_SESSION_NONE) {
     </div>
 
     <div class="tab-pane fade" id="pills-logs">
-        <div class="glass-card p-4">
-            <h5 class="fw-bold mb-4">Nhật ký hành trình</h5>
-
-            <?php if (!empty($logs)): ?>
-                <?php foreach ($logs as $l): ?>
-                    <div class="timeline-item">
-                        <div class="timeline-dot"></div>
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div>
-                                <span class="fw-bold text-dark"><?= date('H:i', strtotime($l['LogDate'])) ?></span>
-                                <span class="text-muted small ms-1"><?= date('d/m', strtotime($l['LogDate'])) ?></span>
-                            </div>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i
-                                        class="bi bi-three-dots"></i></button>
-                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                    <li><a class="dropdown-item"
-                                            href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>&log_id=<?= $l['LogID'] ?>">Sửa</a>
-                                    </li>
-                                    <li><a class="dropdown-item text-danger"
-                                            href="?act=hdv-diary-delete&id=<?= $tour['TourID'] ?>&log_id=<?= $l['LogID'] ?>"
-                                            onclick="return confirm('Xóa?')">Xóa</a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="bg-light rounded-3 p-3 mb-2">
-                            <p class="mb-0 text-secondary" style="font-size: 0.95rem;">
-                                <?= nl2br(htmlspecialchars($l['Note'])) ?></p>
-                        </div>
-
-                        <?php if (!empty($l['Incident'])): ?>
-                            <div class="alert alert-danger border-0 d-flex align-items-start gap-2 shadow-sm"
-                                style="background-color: #fff5f5; color: #c53030;">
-                                <i class="bi bi-exclamation-octagon-fill mt-1"></i>
+        <div class="container">
+            <div class="glass-card p-4">
+                <h5 class="fw-bold mb-4">Nhật ký hành trình</h5>
+                <?php if (!empty($logs)): ?>
+                    <?php foreach ($logs as $l): ?>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
-                                    <strong>Sự cố:</strong>
-                                    <div class="small mt-1"><?= nl2br(htmlspecialchars($l['Incident'])) ?></div>
+                                    <span class="fw-bold text-dark"><?= date('H:i', strtotime($l['LogDate'])) ?></span>
+                                    <span class="text-muted small ms-1"><?= date('d/m', strtotime($l['LogDate'])) ?></span>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-link text-muted p-0" data-bs-toggle="dropdown"><i
+                                            class="bi bi-three-dots"></i></button>
+                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                        <li><a class="dropdown-item"
+                                                href="?act=hdv-diary-form&id=<?= $tour['TourID'] ?>&log_id=<?= $l['LogID'] ?>">Sửa</a>
+                                        </li>
+                                        <li><a class="dropdown-item text-danger"
+                                                href="?act=hdv-diary-delete&id=<?= $tour['TourID'] ?>&log_id=<?= $l['LogID'] ?>"
+                                                onclick="return confirm('Xóa?')">Xóa</a></li>
+                                    </ul>
                                 </div>
                             </div>
-                        <?php endif; ?>
 
-                        <?php if (!empty($l['Images'])):
-                            $images = json_decode($l['Images'], true);
-                            if (!empty($images)): ?>
-                                <div class="d-flex gap-2 overflow-auto mt-2">
-                                    <?php foreach ($images as $img): ?>
-                                        <a href="<?= $img ?>" target="_blank">
-                                            <img src="<?= $img ?>" class="rounded-3 shadow-sm"
-                                                style="width: 70px; height: 70px; object-fit: cover; border: 2px solid white;">
-                                        </a>
-                                    <?php endforeach; ?>
+                            <div class="bg-light rounded-3 p-3 mb-2">
+                                <p class="mb-0 text-secondary" style="font-size: 0.95rem;">
+                                    <?= nl2br(htmlspecialchars($l['Note'])) ?></p>
+                            </div>
+
+                            <?php if (!empty($l['Incident'])): ?>
+                                <div class="alert alert-danger border-0 d-flex align-items-start gap-2 shadow-sm"
+                                    style="background-color: #fff5f5; color: #c53030;">
+                                    <i class="bi bi-exclamation-octagon-fill mt-1"></i>
+                                    <div>
+                                        <strong>Sự cố:</strong>
+                                        <div class="small mt-1"><?= nl2br(htmlspecialchars($l['Incident'])) ?></div>
+                                    </div>
                                 </div>
-                        <?php endif;
-                        endif; ?>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <div class="text-center py-5">
-                    <div class="bg-light rounded-circle d-inline-flex p-4 mb-3">
-                        <i class="bi bi-journal-album display-4 text-muted opacity-50"></i>
-                    </div>
-                    <p class="text-muted">Chưa có nhật ký nào được ghi lại.</p>
-                    <button class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
-                        <i class="bi bi-plus-lg me-1"></i> Tạo mới ngay
-                    </button>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
+                            <?php endif; ?>
 
-    </div>
+                            <?php if (!empty($l['Images'])):
+                                $images = json_decode($l['Images'], true);
+                                if (!empty($images)): ?>
+                                    <div class="d-flex gap-2 overflow-auto mt-2">
+                                        <?php foreach ($images as $img): ?>
+                                            <a href="<?= $img ?>" target="_blank">
+                                                <img src="<?= $img ?>" class="rounded-3 shadow-sm"
+                                                    style="width: 70px; height: 70px; object-fit: cover; border: 2px solid white;">
+                                            </a>
+                                        <?php endforeach; ?>
+                                    </div>
+                            <?php endif;
+                            endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="text-center py-5">
+                        <div class="bg-light rounded-circle d-inline-flex p-4 mb-3">
+                            <i class="bi bi-journal-album display-4 text-muted opacity-50"></i>
+                        </div>
+                        <p class="text-muted">Chưa có nhật ký nào được ghi lại.</p>
+                        <button class="btn btn-primary rounded-pill px-4 shadow-sm fw-bold">
+                            <i class="bi bi-plus-lg me-1"></i> Tạo mới ngay
+                        </button>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
     </div>
 
     <div class="fab-container">

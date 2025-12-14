@@ -2,6 +2,7 @@
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+$hdvName = $_SESSION['hdv_name'] ?? 'HDV';
 ?>
 
 <!doctype html>
@@ -10,7 +11,7 @@ if (session_status() == PHP_SESSION_NONE) {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HDV Portal | Dashboard</title>
+    <title>HDV Portal</title>
 
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
